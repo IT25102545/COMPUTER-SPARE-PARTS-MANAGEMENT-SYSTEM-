@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Supplier & Purchase Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        input { margin: 4px; padding: 6px; }
+        button { padding: 6px 12px; margin: 4px; }
+        pre { background: #eee; padding: 12px; overflow: auto; }
+        section { margin-bottom: 24px; }
+    </style>
+</head>
+<body>
+<h2>Supplier & Purchase Backend Test Page</h2>
+
+<section>
+    <button onclick="load()">Load Suppliers + Purchase Orders</button>
+</section>
+
+<section>
+    <h3>Add Supplier</h3>
+    <input id="n" placeholder="Supplier name">
+    <input id="person" placeholder="Contact person">
+    <input id="p" placeholder="Phone">
+    <input id="email" placeholder="Email">
+    <button onclick="add()">Add Supplier</button>
+</section>
+
+<section>
+    <h3>Create Purchase Order</h3>
+    <input id="supplierId" placeholder="Supplier ID">
+    <input id="locationId" placeholder="Location ID">
+    <input id="createdById" placeholder="Created by user ID">
+    <input id="sparePartId" placeholder="Spare part ID">
+    <input id="qty" placeholder="Quantity">
+    <input id="unitCost" placeholder="Unit cost">
+    <button onclick="createPo()">Create PO</button>
+</section>
+
+<section>
+    <h3>Receive Purchase Order</h3>
+    <input id="poId" placeholder="Purchase order ID">
+    <button onclick="receivePo()">Receive</button>
+</section>
+
+<pre id="out"></pre>
+<script>
+const show = x => document.getElementById('out').textContent = JSON.stringify(x, null, 2);
+
+async function load() {
+    show({
+        suppliers: await (await fetch('/api/supplier/suppliers')).json(),
+        orders: await (await fetch('/api/supplier/purchase-orders')).json()
+    });
+}
+
+async function add() {
+    show(await (await fetch('/api/supplier/suppliers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            supplierName: n.value,
+            contactPerson: person.value,
+            phone: p.value,
+            email: email.value,
+            active: true
+        })
+    })).json());
+}
+
+async function createPo() {
+    show(await (await fetch('/api/supplier/purchase-orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            supplierId: +supplierId.value,
+            locationId: +locationId.value,
+            createdById: +createdById.value,
+            items: [{
+                sparePartId: +sparePartId.value,
+                quantity: +qty.value,
+                unitCost: +unitCost.value
+            }]
+        })
+    })).json());
+}
+
+async function receivePo() {
+    show(await (await fetch('/api/supplier/purchase-orders/' + poId.value + '/receive', {
+        method: 'PUT'
+    })).json());
+}
+</script>
+</body>
+</html>
