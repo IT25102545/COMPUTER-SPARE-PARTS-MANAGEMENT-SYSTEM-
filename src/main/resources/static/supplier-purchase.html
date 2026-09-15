@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Supplier & Purchase Management | Lanka Tech Components</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #1e293b;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: #172554;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 21px;
+        }
+
+        .navbar p {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .module-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .container {
+            width: 94%;
+            margin: 25px auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            color: #172554;
+            font-size: 28px;
+        }
+
+        .page-header p {
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .btn {
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            opacity: 0.88;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .number {
+            color: #172554;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .small-text {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-box {
+            display: none;
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .form-box h2 {
+            color: #172554;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 75px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            margin-top: 18px;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .section {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            color: #172554;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box,
+        .filter-box {
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #172554;
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* =========================
+           BADGES
+        ========================= */
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .PENDING {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .APPROVED {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .RECEIVED {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .CANCELLED {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           ACTION BUTTONS
+        ========================= */
+
+        .action-btn {
+            border: none;
+            border-radius: 5px;
+            padding: 6px 9px;
+            cursor: pointer;
+            margin-right: 4px;
+            font-size: 11px;
+        }
+
+        .edit-btn {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .approve-btn {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .receive-btn {
+            background: #cffafe;
+            color: #155e75;
+        }
+
+        .cancel-btn {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        #messageBox {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            padding: 22px;
+            font-size: 13px;
+        }
+
+        @media(max-width: 900px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .section {
+                overflow-x: auto;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<header class="navbar">
+
+    <div>
+        <h2>Lanka Tech Components</h2>
+        <p>Computer Spare Parts Management System</p>
+    </div>
+
+    <div class="module-name">
+        Supplier & Purchase Management
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Supplier & Purchase Management</h1>
+
+            <p>
+                Manage suppliers and purchase orders for computer spare parts.
+            </p>
+
+        </div>
+
+        <button
+                class="btn btn-primary"
+                onclick="showPurchaseForm()">
+
+            + New Purchase Order
+
+        </button>
+
+    </div>
+
+
+    <div id="messageBox"></div>
+
+
+    <!-- DASHBOARD -->
+
+    <section class="cards">
+
+        <div class="card">
+
+            <h3>Total Suppliers</h3>
+
+            <div class="number" id="supplierCount">
+                3
+            </div>
+
+            <div class="small-text">
+                Registered suppliers
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Total Purchase Orders</h3>
+
+            <div class="number" id="purchaseCount">
+                0
+            </div>
+
+            <div class="small-text">
+                All purchase orders
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Pending Orders</h3>
+
+            <div class="number" id="pendingCount">
+                0
+            </div>
+
+            <div class="small-text">
+                Waiting for approval
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Received Orders</h3>
+
+            <div class="number" id="receivedCount">
+                0
+            </div>
+
+            <div class="small-text">
+                Completed purchases
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CREATE PURCHASE ORDER FORM -->
+
+    <section
+            class="form-box"
+            id="purchaseForm">
+
+        <h2 id="formTitle">
+            Create Purchase Order
+        </h2>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Supplier
+                </label>
+
+                <select id="supplier">
+
+                    <option value="">
+                        Select Supplier
+                    </option>
+
+                    <option value="Tech Distribution Lanka">
+                        Tech Distribution Lanka
+                    </option>
+
+                    <option value="Digital Components Pvt Ltd">
+                        Digital Components Pvt Ltd
+                    </option>
+
+                    <option value="Global PC Solutions">
+                        Global PC Solutions
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Spare Part
+                </label>
+
+                <select id="sparePart">
+
+                    <option value="">
+                        Select Spare Part
+                    </option>
+
+                    <option value="Intel Core i5 Processor">
+                        Intel Core i5 Processor
+                    </option>
+
+                    <option value="16GB DDR4 RAM">
+                        16GB DDR4 RAM
+                    </option>
+
+                    <option value="1TB NVMe SSD">
+                        1TB NVMe SSD
+                    </option>
+
+                    <option value="RTX 4060 Graphics Card">
+                        RTX 4060 Graphics Card
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Quantity
+                </label>
+
+                <input
+                        type="number"
+                        id="quantity"
+                        min="1"
+                        placeholder="Example: 20">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Unit Price (LKR)
+                </label>
+
+                <input
+                        type="number"
+                        id="unitPrice"
+                        min="0"
+                        placeholder="Example: 25000">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Expected Delivery Date
+                </label>
+
+                <input
+                        type="date"
+                        id="deliveryDate">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Delivery Location
+                </label>
+
+                <select id="location">
+
+                    <option value="">
+                        Select Location
+                    </option>
+
+                    <option value="Central Warehouse">
+                        Central Warehouse
+                    </option>
+
+                    <option value="Branch 01">
+                        Branch 01
+                    </option>
+
+                    <option value="Branch 02">
+                        Branch 02
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group full-width">
+
+                <label>
+                    Notes
+                </label>
+
+                <textarea
+                        id="notes"
+                        placeholder="Enter purchase order notes..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                    class="btn btn-success"
+                    onclick="savePurchaseOrder()"
+                    id="saveButton">
+
+                Create Purchase Order
+
+            </button>
+
+
+            <button
+                    class="btn btn-secondary"
+                    onclick="hidePurchaseForm()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- SUPPLIERS -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Suppliers
+            </h2>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>Supplier ID</th>
+                <th>Supplier Name</th>
+                <th>Contact Person</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            <tr>
+
+                <td>SUP001</td>
+
+                <td>
+                    Tech Distribution Lanka
+                </td>
+
+                <td>
+                    Nimal Perera
+                </td>
+
+                <td>
+                    0771234567
+                </td>
+
+                <td>
+                    techdistribution@example.com
+                </td>
+
+                <td>
+                    <span class="badge RECEIVED">
+                        ACTIVE
+                    </span>
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>SUP002</td>
+
+                <td>
+                    Digital Components Pvt Ltd
+                </td>
+
+                <td>
+                    Kasun Silva
+                </td>
+
+                <td>
+                    0712345678
+                </td>
+
+                <td>
+                    digitalcomponents@example.com
+                </td>
+
+                <td>
+                    <span class="badge RECEIVED">
+                        ACTIVE
+                    </span>
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>SUP003</td>
+
+                <td>
+                    Global PC Solutions
+                </td>
+
+                <td>
+                    Amal Fernando
+                </td>
+
+                <td>
+                    0769876543
+                </td>
+
+                <td>
+                    globalpc@example.com
+                </td>
+
+                <td>
+                    <span class="badge RECEIVED">
+                        ACTIVE
+                    </span>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+
+    <!-- PURCHASE ORDERS -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Purchase Orders
+            </h2>
+
+
+            <div class="controls">
+
+                <input
+                        type="text"
+                        id="searchInput"
+                        class="search-box"
+                        placeholder="Search purchase orders..."
+                        onkeyup="renderPurchaseOrders()">
+
+
+                <select
+                        id="statusFilter"
+                        class="filter-box"
+                        onchange="renderPurchaseOrders()">
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="PENDING">
+                        Pending
+                    </option>
+
+                    <option value="APPROVED">
+                        Approved
+                    </option>
+
+                    <option value="RECEIVED">
+                        Received
+                    </option>
+
+                    <option value="CANCELLED">
+                        Cancelled
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>PO ID</th>
+
+                <th>Supplier</th>
+
+                <th>Spare Part</th>
+
+                <th>Qty</th>
+
+                <th>Total Amount</th>
+
+                <th>Delivery Date</th>
+
+                <th>Location</th>
+
+                <th>Status</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody id="purchaseTableBody"></tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    Lanka Tech Components (Pvt) Ltd |
+    Computer Spare Parts Management System
+
+</footer>
+
+
+<script>
+
+    /*
+    =====================================
+    SAMPLE PURCHASE ORDERS
+    =====================================
+    */
+
+    let purchaseOrders = [
+
+        {
+            id: 1,
+            supplier: "Tech Distribution Lanka",
+            sparePart: "16GB DDR4 RAM",
+            quantity: 20,
+            unitPrice: 11000,
+            deliveryDate: "2026-09-20",
+            location: "Central Warehouse",
+            notes: "Urgent stock replenishment",
+            status: "PENDING"
+        },
+
+        {
+            id: 2,
+            supplier: "Digital Components Pvt Ltd",
+            sparePart: "1TB NVMe SSD",
+            quantity: 10,
+            unitPrice: 25500,
+            deliveryDate: "2026-09-18",
+            location: "Central Warehouse",
+            notes: "",
+            status: "APPROVED"
+        }
+
+    ];
+
+
+    let nextId = 3;
+
+
+    /*
+    =====================================
+    SHOW FORM
+    =====================================
+    */
+
+    function showPurchaseForm() {
+
+        document
+            .getElementById("purchaseForm")
+            .style.display = "block";
+
+
+        window.scrollTo({
+            top: 250,
+            behavior: "smooth"
+        });
+    }
+
+
+    /*
+    =====================================
+    HIDE FORM
+    =====================================
+    */
+
+    function hidePurchaseForm() {
+
+        document
+            .getElementById("purchaseForm")
+            .style.display = "none";
+
+
+        clearForm();
+    }
+
+
+    /*
+    =====================================
+    CREATE PURCHASE ORDER
+    =====================================
+    */
+
+    function savePurchaseOrder() {
+
+        const supplier =
+            document
+                .getElementById("supplier")
+                .value;
+
+
+        const sparePart =
+            document
+                .getElementById("sparePart")
+                .value;
+
+
+        const quantity =
+            Number(
+                document
+                    .getElementById("quantity")
+                    .value
+            );
+
+
+        const unitPrice =
+            Number(
+                document
+                    .getElementById("unitPrice")
+                    .value
+            );
+
+
+        const deliveryDate =
+            document
+                .getElementById("deliveryDate")
+                .value;
+
+
+        const location =
+            document
+                .getElementById("location")
+                .value;
+
+
+        const notes =
+            document
+                .getElementById("notes")
+                .value;
+
+
+        if (
+            supplier === "" ||
+            sparePart === "" ||
+            quantity <= 0 ||
+            unitPrice <= 0 ||
+            deliveryDate === "" ||
+            location === ""
+        ) {
+
+            showMessage(
+                "Please complete all required fields.",
+                false
+            );
+
+            return;
+        }
+
+
+        const purchaseOrder = {
+
+            id: nextId++,
+
+            supplier: supplier,
+
+            sparePart: sparePart,
+
+            quantity: quantity,
+
+            unitPrice: unitPrice,
+
+            deliveryDate: deliveryDate,
+
+            location: location,
+
+            notes: notes,
+
+            status: "PENDING"
+        };
+
+
+        purchaseOrders.push(
+            purchaseOrder
+        );
+
+
+        renderPurchaseOrders();
+
+        updateDashboard();
+
+        hidePurchaseForm();
+
+
+        showMessage(
+            "Purchase order created successfully."
+        );
+    }
+
+
+    /*
+    =====================================
+    APPROVE PURCHASE ORDER
+    =====================================
+    */
+
+    function approveOrder(index) {
+
+        if (
+            purchaseOrders[index].status
+            !==
+            "PENDING"
+        ) {
+            return;
+        }
+
+
+        purchaseOrders[index].status =
+            "APPROVED";
+
+
+        renderPurchaseOrders();
+
+        updateDashboard();
+
+
+        showMessage(
+            "Purchase order approved."
+        );
+    }
+
+
+    /*
+    =====================================
+    RECEIVE PURCHASE ORDER
+    =====================================
+    */
+
+    function receiveOrder(index) {
+
+        if (
+            purchaseOrders[index].status
+            !==
+            "APPROVED"
+        ) {
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                "Confirm that this purchase order has been received?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        purchaseOrders[index].status =
+            "RECEIVED";
+
+
+        renderPurchaseOrders();
+
+        updateDashboard();
+
+
+        showMessage(
+            "Purchase order received successfully."
+        );
+    }
+
+
+    /*
+    =====================================
+    CANCEL ORDER
+    =====================================
+    */
+
+    function cancelOrder(index) {
+
+        if (
+            purchaseOrders[index].status
+            ===
+            "RECEIVED"
+        ) {
+
+            showMessage(
+                "Received purchase orders cannot be cancelled.",
+                false
+            );
+
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to cancel this order?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        purchaseOrders[index].status =
+            "CANCELLED";
+
+
+        renderPurchaseOrders();
+
+        updateDashboard();
+
+
+        showMessage(
+            "Purchase order cancelled."
+        );
+    }
+
+
+    /*
+    =====================================
+    BUILD ACTION BUTTONS
+    =====================================
+    */
+
+    function buildButtons(index, status) {
+
+        if (status === "PENDING") {
+
+            return `
+
+                <button
+                    class="action-btn approve-btn"
+                    onclick="approveOrder(${index})">
+
+                    Approve
+
+                </button>
+
+
+                <button
+                    class="action-btn cancel-btn"
+                    onclick="cancelOrder(${index})">
+
+                    Cancel
+
+                </button>
+            `;
+        }
+
+
+        if (status === "APPROVED") {
+
+            return `
+
+                <button
+                    class="action-btn receive-btn"
+                    onclick="receiveOrder(${index})">
+
+                    Receive
+
+                </button>
+
+
+                <button
+                    class="action-btn cancel-btn"
+                    onclick="cancelOrder(${index})">
+
+                    Cancel
+
+                </button>
+            `;
+        }
+
+
+        return `
+            <span style="color:#64748b">
+                Completed
+            </span>
+        `;
+    }
+
+
+    /*
+    =====================================
+    RENDER PURCHASE ORDERS
+    =====================================
+    */
+
+    function renderPurchaseOrders() {
+
+        const tbody =
+            document
+                .getElementById(
+                    "purchaseTableBody"
+                );
+
+
+        const search =
+            document
+                .getElementById(
+                    "searchInput"
+                )
+                .value
+                .toLowerCase();
+
+
+        const statusFilter =
+            document
+                .getElementById(
+                    "statusFilter"
+                )
+                .value;
+
+
+        tbody.innerHTML = "";
+
+
+        let found = false;
+
+
+        purchaseOrders.forEach(
+            (order, index) => {
+
+                const searchText =
+                    (
+                        order.id +
+                        " " +
+                        order.supplier +
+                        " " +
+                        order.sparePart +
+                        " " +
+                        order.location +
+                        " " +
+                        order.status
+                    )
+                    .toLowerCase();
+
+
+                const searchMatch =
+                    searchText.includes(search);
+
+
+                const statusMatch =
+                    statusFilter === ""
+                    ||
+                    order.status === statusFilter;
+
+
+                if (
+                    !searchMatch ||
+                    !statusMatch
+                ) {
+                    return;
+                }
+
+
+                found = true;
+
+
+                const totalAmount =
+                    order.quantity *
+                    order.unitPrice;
+
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                row.innerHTML = `
+
+                    <td>
+                        PO${String(order.id).padStart(3, "0")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.supplier)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.sparePart)}
+                    </td>
+
+                    <td>
+                        ${order.quantity}
+                    </td>
+
+                    <td>
+                        LKR ${formatMoney(totalAmount)}
+                    </td>
+
+                    <td>
+                        ${order.deliveryDate}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.location)}
+                    </td>
+
+                    <td>
+
+                        <span class="badge ${order.status}">
+                            ${order.status}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        ${buildButtons(
+                            index,
+                            order.status
+                        )}
+
+                    </td>
+                `;
+
+
+                tbody.appendChild(row);
+            }
+        );
+
+
+        if (!found) {
+
+            tbody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        style="
+                            text-align:center;
+                            padding:25px;
+                            color:#64748b;
+                        ">
+
+                        No purchase orders found.
+
+                    </td>
+
+                </tr>
+            `;
+        }
+    }
+
+
+    /*
+    =====================================
+    DASHBOARD
+    =====================================
+    */
+
+    function updateDashboard() {
+
+        document
+            .getElementById(
+                "purchaseCount"
+            )
+            .innerText =
+            purchaseOrders.length;
+
+
+        document
+            .getElementById(
+                "pendingCount"
+            )
+            .innerText =
+            purchaseOrders.filter(
+                order =>
+                    order.status ===
+                    "PENDING"
+            ).length;
+
+
+        document
+            .getElementById(
+                "receivedCount"
+            )
+            .innerText =
+            purchaseOrders.filter(
+                order =>
+                    order.status ===
+                    "RECEIVED"
+            ).length;
+    }
+
+
+    /*
+    =====================================
+    CLEAR FORM
+    =====================================
+    */
+
+    function clearForm() {
+
+        document.getElementById("supplier").value = "";
+
+        document.getElementById("sparePart").value = "";
+
+        document.getElementById("quantity").value = "";
+
+        document.getElementById("unitPrice").value = "";
+
+        document.getElementById("deliveryDate").value = "";
+
+        document.getElementById("location").value = "";
+
+        document.getElementById("notes").value = "";
+    }
+
+
+    /*
+    =====================================
+    MESSAGE
+    =====================================
+    */
+
+    function showMessage(
+        message,
+        success = true
+    ) {
+
+        const box =
+            document
+                .getElementById(
+                    "messageBox"
+                );
+
+
+        box.style.display =
+            "block";
+
+
+        box.className =
+            success
+                ? "success"
+                : "error";
+
+
+        box.innerText =
+            message;
+
+
+        setTimeout(
+            () => {
+
+                box.style.display =
+                    "none";
+
+            },
+            4000
+        );
+    }
+
+
+    /*
+    =====================================
+    FORMAT MONEY
+    =====================================
+    */
+
+    function formatMoney(value) {
+
+        return Number(value)
+            .toLocaleString();
+    }
+
+
+    /*
+    =====================================
+    HTML SAFETY
+    =====================================
+    */
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replaceAll("&", "&amp;")
+
+            .replaceAll("<", "&lt;")
+
+            .replaceAll(">", "&gt;")
+
+            .replaceAll('"', "&quot;")
+
+            .replaceAll("'", "&#039;");
+    }
+
+
+    /*
+    =====================================
+    PAGE LOAD
+    =====================================
+    */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            renderPurchaseOrders();
+
+            updateDashboard();
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
