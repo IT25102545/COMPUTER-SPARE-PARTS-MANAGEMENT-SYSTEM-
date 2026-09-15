@@ -5,8 +5,10 @@ import com.lankatech.spareparts.transfer.dto.StockTransferRequestDTO;
 import com.lankatech.spareparts.transfer.entity.StockTransfer;
 import com.lankatech.spareparts.transfer.enums.TransferStatus;
 import com.lankatech.spareparts.transfer.service.StockTransferService;
-
+import com.lankatech.spareparts.transfer.dto.ApproveTransferRequestDTO;
 import jakarta.validation.Valid;
+import com.lankatech.spareparts.transfer.dto.CancelTransferRequestDTO;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -56,9 +58,12 @@ public class StockTransferController {
     @PutMapping("/{id}/approve")
     public StockTransfer approveTransfer(
             @PathVariable Long id,
-            @RequestBody User approvedBy) {
+            @Valid @RequestBody ApproveTransferRequestDTO request) {
 
-        return stockTransferService.approveTransfer(id, approvedBy);
+        return stockTransferService.approveTransfer(
+                id,
+                request.getApprovedById()
+        );
     }
 
     // Reject pending stock transfer
@@ -93,9 +98,11 @@ public class StockTransferController {
     @PutMapping("/{id}/cancel")
     public StockTransfer cancelTransfer(
             @PathVariable Long id,
-            @RequestParam String reason) {
+            @Valid @RequestBody CancelTransferRequestDTO request) {
 
-        return stockTransferService.cancelTransfer(id, reason);
-
+        return stockTransferService.cancelTransfer(
+                id,
+                request.getReason()
+        );
     }
 }

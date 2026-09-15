@@ -7,6 +7,9 @@ import com.lankatech.spareparts.common.repository.LocationRepository;
 import com.lankatech.spareparts.transfer.dto.StockTransferRequestDTO;
 import com.lankatech.spareparts.transfer.entity.StockTransfer;
 import com.lankatech.spareparts.transfer.enums.TransferStatus;
+import com.lankatech.spareparts.transfer.exception.InsufficientStockException;
+import com.lankatech.spareparts.transfer.exception.InvalidTransferStateException;
+import com.lankatech.spareparts.transfer.exception.ResourceNotFoundException;
 import com.lankatech.spareparts.transfer.repository.StockTransferRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +48,7 @@ public class StockTransferService {
         return stockTransferRepository
                 .findById(transferId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
+                        new ResourceNotFoundException(
                                 "Stock transfer not found: " + transferId
                         )
                 );
@@ -60,8 +63,9 @@ public class StockTransferService {
                 locationRepository
                         .findById(request.getSourceLocationId())
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Source location not found"
+                                new ResourceNotFoundException(
+                                        "Source location not found: "
+                                                + request.getSourceLocationId()
                                 )
                         );
 
@@ -70,8 +74,9 @@ public class StockTransferService {
                 locationRepository
                         .findById(request.getDestinationLocationId())
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Destination location not found"
+                                new ResourceNotFoundException(
+                                        "Destination location not found: "
+                                                + request.getDestinationLocationId()
                                 )
                         );
 
@@ -80,8 +85,9 @@ public class StockTransferService {
                 userRepository
                         .findById(request.getRequestedById())
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Requested user not found"
+                                new ResourceNotFoundException(
+                                        "Requested user not found: "
+                                                + request.getRequestedById()
                                 )
                         );
 
@@ -111,7 +117,7 @@ public class StockTransferService {
     // Approve transfer
     public StockTransfer approveTransfer(
             Long transferId,
-            User approvedBy) {
+            Long approvedById) {
 
         StockTransfer transfer =
                 getTransferById(transferId);
@@ -119,16 +125,48 @@ public class StockTransferService {
         if (transfer.getStatus()
                 != TransferStatus.PENDING) {
 
-            throw new IllegalStateException(
+            throw new InvalidTransferStateException(
                     "Only pending transfers can be approved"
             );
         }
 
-        transfer.setStatus(TransferStatus.APPROVED);
-        transfer.setApprovedBy(approvedBy);
-        transfer.setApprovedDate(LocalDateTime.now());
+        User approvedBy =
+                userRepository
+                        .findById(approvedById)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Approved user not found: "
+                                                + approvedById
+                                )
+                        );
 
-        return stockTransferRepository.save(transfer);
+        if (approvedBy.getRole() == null ||
+                !"INVENTORY_SUPERVISOR"
+                        .equalsIgnoreCase(
+                                approvedBy
+                                        .getRole()
+                                        .getRoleName()
+                        )) {
+
+            throw new IllegalArgumentException(
+                    "Only an Inventory Supervisor can approve transfers"
+            );
+        }
+
+        transfer.setStatus(
+                TransferStatus.APPROVED
+        );
+
+        transfer.setApprovedBy(
+                approvedBy
+        );
+
+        transfer.setApprovedDate(
+                LocalDateTime.now()
+        );
+
+        return stockTransferRepository
+                .save(transfer);
     }
 
     // Reject transfer
@@ -140,7 +178,7 @@ public class StockTransferService {
         if (transfer.getStatus()
                 != TransferStatus.PENDING) {
 
-            throw new IllegalStateException(
+            throw new InvalidTransferStateException(
                     "Only pending transfers can be rejected"
             );
         }
@@ -159,7 +197,7 @@ public class StockTransferService {
         if (transfer.getStatus()
                 != TransferStatus.APPROVED) {
 
-            throw new IllegalStateException(
+            throw new InvalidTransferStateException(
                     "Only approved transfers can be dispatched"
             );
         }
@@ -179,7 +217,7 @@ public class StockTransferService {
         if (transfer.getStatus()
                 != TransferStatus.DISPATCHED) {
 
-            throw new IllegalStateException(
+            throw new InvalidTransferStateException(
                     "Only dispatched transfers can be marked as in transit"
             );
         }
@@ -201,7 +239,7 @@ public class StockTransferService {
                 transfer.getStatus()
                         != TransferStatus.DISPATCHED) {
 
-            throw new IllegalStateException(
+            throw new InvalidTransferStateException(
                     "Transfer must be dispatched before receiving"
             );
         }
@@ -220,17 +258,11 @@ public class StockTransferService {
         StockTransfer transfer =
                 getTransferById(transferId);
 
-        if (transfer.getStatus()
-                == TransferStatus.DISPATCHED
-                ||
-                transfer.getStatus()
-                        == TransferStatus.IN_TRANSIT
-                ||
-                transfer.getStatus()
-                        == TransferStatus.RECEIVED) {
+        if (transfer.getStatus() != TransferStatus.PENDING &&
+                transfer.getStatus() != TransferStatus.APPROVED) {
 
-            throw new IllegalStateException(
-                    "Dispatched or received transfers cannot be cancelled"
+            throw new InvalidTransferStateException(
+                    "Only pending or approved transfers can be cancelled"
             );
         }
 
