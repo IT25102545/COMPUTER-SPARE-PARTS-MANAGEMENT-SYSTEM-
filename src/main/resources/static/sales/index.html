@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Sales Backend Test</h2>
+
+<button onclick="load()">Load Sales</button>
+
+<pre id="out"></pre>
+
+<script>
+    async function load() {
+        out.textContent =
+            JSON.stringify(
+                await (await fetch('/api/sales')).json(),
+                null,
+                2
+            );
+    }
+</script>
+
+</body>
+</html>
