@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stock Transfer Management | Lanka Tech Components</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #1e293b;
+        }
+
+        /* =========================
+           TOP NAVIGATION
+        ========================== */
+
+        .navbar {
+            background: #172554;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 21px;
+        }
+
+        .navbar p {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .module-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           MAIN CONTAINER
+        ========================== */
+
+        .container {
+            width: 94%;
+            margin: 25px auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            color: #172554;
+            font-size: 28px;
+        }
+
+        .page-header p {
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================== */
+
+        .btn {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.88;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #d97706;
+            color: white;
+        }
+
+        .btn-info {
+            background: #0284c7;
+            color: white;
+        }
+
+        .btn-purple {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-dark {
+            background: #334155;
+            color: white;
+        }
+
+        /* =========================
+           DASHBOARD CARDS
+        ========================== */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .card .number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+        .card .small-text {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        /* =========================
+           CREATE FORM
+        ========================== */
+
+        .form-box {
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .form-box h2 {
+            color: #172554;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            margin-top: 18px;
+        }
+
+        /* =========================
+           TABLE SECTION
+        ========================== */
+
+        .section {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            color: #172554;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box,
+        .filter-box {
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #172554;
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* =========================
+           STATUS BADGES
+        ========================== */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .PENDING {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .APPROVED {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .REJECTED {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .DISPATCHED {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .IN_TRANSIT {
+            background: #cffafe;
+            color: #155e75;
+        }
+
+        .RECEIVED {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .CANCELLED {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        /* =========================
+           ACTION BUTTONS
+        ========================== */
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .action-button {
+            border: none;
+            border-radius: 5px;
+            padding: 6px 9px;
+            cursor: pointer;
+            font-size: 11px;
+            color: white;
+        }
+
+        .approve {
+            background: #16a34a;
+        }
+
+        .reject {
+            background: #dc2626;
+        }
+
+        .dispatch {
+            background: #7c3aed;
+        }
+
+        .transit {
+            background: #0284c7;
+        }
+
+        .receive {
+            background: #059669;
+        }
+
+        .cancel {
+            background: #64748b;
+        }
+
+        /* =========================
+           MESSAGE BOX
+        ========================== */
+
+        #messageBox {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .message-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loading {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media(max-width: 1000px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .section {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION
+========================== -->
+
+<header class="navbar">
+
+    <div>
+        <h2>Lanka Tech Components</h2>
+        <p>Computer Spare Parts Management System</p>
+    </div>
+
+    <div class="module-name">
+        Stock Transfer Management
+    </div>
+
+</header>
+
+<main class="container">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+            <h1>Stock Transfer Management</h1>
+            <p>
+                Manage spare-part transfers between the central warehouse
+                and sales branches.
+            </p>
+        </div>
+
+        <button
+                class="btn btn-primary"
+                onclick="showCreateForm()">
+            + New Transfer Request
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         MESSAGE BOX
+    ========================== -->
+
+    <div id="messageBox"></div>
+
+
+    <!-- =========================
+         DASHBOARD CARDS
+    ========================== -->
+
+    <section class="cards">
+
+        <div class="card">
+            <h3>Total Transfers</h3>
+            <div class="number" id="totalCount">0</div>
+            <div class="small-text">All transfer requests</div>
+        </div>
+
+        <div class="card">
+            <h3>Pending</h3>
+            <div class="number" id="pendingCount">0</div>
+            <div class="small-text">Waiting for approval</div>
+        </div>
+
+        <div class="card">
+            <h3>In Transit</h3>
+            <div class="number" id="transitCount">0</div>
+            <div class="small-text">Currently moving</div>
+        </div>
+
+        <div class="card">
+            <h3>Received</h3>
+            <div class="number" id="receivedCount">0</div>
+            <div class="small-text">Successfully completed</div>
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CREATE TRANSFER FORM
+    ========================== -->
+
+    <section class="form-box" id="createTransferForm">
+
+        <h2>Create Stock Transfer Request</h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Source Location ID
+                </label>
+
+                <select id="sourceLocationId">
+
+                    <option value="">
+                        Select Source Location
+                    </option>
+
+                    <option value="1">
+                        Central Warehouse - ID 1
+                    </option>
+
+                    <option value="2">
+                        Branch 01 - ID 2
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Destination Location ID
+                </label>
+
+                <select id="destinationLocationId">
+
+                    <option value="">
+                        Select Destination Location
+                    </option>
+
+                    <option value="1">
+                        Central Warehouse - ID 1
+                    </option>
+
+                    <option value="2">
+                        Branch 01 - ID 2
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Requested By User ID
+                </label>
+
+                <input
+                        type="number"
+                        id="requestedById"
+                        value="1"
+                        min="1">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Inventory Supervisor ID
+                </label>
+
+                <input
+                        type="number"
+                        id="approvedById"
+                        value="2"
+                        min="1">
+
+            </div>
+
+
+            <div class="form-group full-width">
+
+                <label>
+                    Notes
+                </label>
+
+                <textarea
+                        id="notes"
+                        placeholder="Enter transfer request notes..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                    class="btn btn-success"
+                    onclick="createTransfer()">
+                Create Request
+            </button>
+
+            <button
+                    class="btn btn-secondary"
+                    onclick="hideCreateForm()">
+                Cancel
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         TRANSFER TABLE
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Transfer Requests
+            </h2>
+
+            <div class="controls">
+
+                <input
+                        type="text"
+                        id="searchInput"
+                        class="search-box"
+                        placeholder="Search..."
+                        onkeyup="renderTransfers()">
+
+                <select
+                        id="statusFilter"
+                        class="filter-box"
+                        onchange="renderTransfers()">
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="PENDING">
+                        Pending
+                    </option>
+
+                    <option value="APPROVED">
+                        Approved
+                    </option>
+
+                    <option value="REJECTED">
+                        Rejected
+                    </option>
+
+                    <option value="DISPATCHED">
+                        Dispatched
+                    </option>
+
+                    <option value="IN_TRANSIT">
+                        In Transit
+                    </option>
+
+                    <option value="RECEIVED">
+                        Received
+                    </option>
+
+                    <option value="CANCELLED">
+                        Cancelled
+                    </option>
+
+                </select>
+
+                <button
+                        class="btn btn-dark"
+                        onclick="loadTransfers()">
+                    Refresh
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div id="loadingMessage" class="loading">
+            Loading transfer records...
+        </div>
+
+
+        <table id="transferTable" style="display:none;">
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Source</th>
+
+                <th>Destination</th>
+
+                <th>Requested By</th>
+
+                <th>Request Date</th>
+
+                <th>Status</th>
+
+                <th>Notes</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody id="transferTableBody">
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+
+<footer>
+    Lanka Tech Components (Pvt) Ltd |
+    Computer Spare Parts Management System
+</footer>
+
+
+<script>
+
+    /*
+     =====================================================
+     API BASE URL
+     =====================================================
+     */
+
+    const API_URL =
+        "/api/stock-transfers";
+
+
+    /*
+     =====================================================
+     TEMPORARY LOCAL ARRAY
+     Data loaded from backend API is stored here.
+     =====================================================
+     */
+
+    let transfers = [];
+
+
+    /*
+     =====================================================
+     SHOW CREATE FORM
+     =====================================================
+     */
+
+    function showCreateForm() {
+
+        document
+            .getElementById("createTransferForm")
+            .style.display = "block";
+
+        window.scrollTo({
+            top: 250,
+            behavior: "smooth"
+        });
+    }
+
+
+    /*
+     =====================================================
+     HIDE CREATE FORM
+     =====================================================
+     */
+
+    function hideCreateForm() {
+
+        document
+            .getElementById("createTransferForm")
+            .style.display = "none";
+    }
+
+
+    /*
+     =====================================================
+     SHOW SUCCESS / ERROR MESSAGE
+     =====================================================
+     */
+
+    function showMessage(message, success = true) {
+
+        const box =
+            document.getElementById("messageBox");
+
+        box.style.display = "block";
+
+        box.className =
+            success
+                ? "message-success"
+                : "message-error";
+
+        box.innerText = message;
+
+
+        setTimeout(() => {
+
+            box.style.display = "none";
+
+        }, 5000);
+    }
+
+
+    /*
+     =====================================================
+     LOAD ALL TRANSFERS
+     GET /api/stock-transfers
+     =====================================================
+     */
+
+    async function loadTransfers() {
+
+        const loading =
+            document.getElementById("loadingMessage");
+
+        const table =
+            document.getElementById("transferTable");
+
+
+        loading.style.display = "block";
+
+        table.style.display = "none";
+
+
+        try {
+
+            const response =
+                await fetch(API_URL);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load stock transfers."
+                );
+            }
+
+
+            transfers =
+                await response.json();
+
+
+            renderTransfers();
+
+            updateDashboard();
+
+
+            loading.style.display = "none";
+
+            table.style.display = "table";
+
+        }
+        catch (error) {
+
+            loading.style.display = "none";
+
+            showMessage(
+                error.message,
+                false
+            );
+
+            console.error(error);
+        }
+    }
+
+
+    /*
+     =====================================================
+     CREATE TRANSFER
+     POST /api/stock-transfers
+     =====================================================
+     */
+
+    async function createTransfer() {
+
+        const sourceLocationId =
+            document
+                .getElementById("sourceLocationId")
+                .value;
+
+
+        const destinationLocationId =
+            document
+                .getElementById("destinationLocationId")
+                .value;
+
+
+        const requestedById =
+            document
+                .getElementById("requestedById")
+                .value;
+
+
+        const notes =
+            document
+                .getElementById("notes")
+                .value;
+
+
+        if (
+            sourceLocationId === "" ||
+            destinationLocationId === "" ||
+            requestedById === ""
+        ) {
+
+            showMessage(
+                "Please complete all required fields.",
+                false
+            );
+
+            return;
+        }
+
+
+        if (
+            sourceLocationId ===
+            destinationLocationId
+        ) {
+
+            showMessage(
+                "Source and destination cannot be the same.",
+                false
+            );
+
+            return;
+        }
+
+
+        const requestBody = {
+
+            sourceLocationId:
+                Number(sourceLocationId),
+
+            destinationLocationId:
+                Number(destinationLocationId),
+
+            requestedById:
+                Number(requestedById),
+
+            notes:
+            notes
+        };
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                requestBody
+                            )
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(response);
+
+                throw new Error(error);
+            }
+
+
+            showMessage(
+                "Stock transfer request created successfully."
+            );
+
+
+            clearCreateForm();
+
+            hideCreateForm();
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     APPROVE TRANSFER
+     PUT /{id}/approve
+     =====================================================
+     */
+
+    async function approveTransfer(id) {
+
+        const approvedById =
+            Number(
+                document
+                    .getElementById("approvedById")
+                    .value
+            );
+
+
+        if (!approvedById) {
+
+            showMessage(
+                "Inventory Supervisor ID is required.",
+                false
+            );
+
+            return;
+        }
+
+
+        await performAction(
+
+            `${API_URL}/${id}/approve`,
+
+            {
+                approvedById:
+                approvedById
+            },
+
+            "Transfer approved successfully."
+        );
+    }
+
+
+    /*
+     =====================================================
+     REJECT TRANSFER
+     PUT /{id}/reject
+     =====================================================
+     */
+
+    async function rejectTransfer(id) {
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to reject this transfer?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        await performSimpleAction(
+
+            `${API_URL}/${id}/reject`,
+
+            "Transfer rejected successfully."
+        );
+    }
+
+
+    /*
+     =====================================================
+     DISPATCH TRANSFER
+     PUT /{id}/dispatch
+     =====================================================
+     */
+
+    async function dispatchTransfer(id) {
+
+        const confirmed =
+            confirm(
+                "Confirm dispatch of this transfer?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        await performSimpleAction(
+
+            `${API_URL}/${id}/dispatch`,
+
+            "Transfer dispatched successfully."
+        );
+    }
+
+
+    /*
+     =====================================================
+     MARK AS IN TRANSIT
+     PUT /{id}/in-transit
+     =====================================================
+     */
+
+    async function markInTransit(id) {
+
+        await performSimpleAction(
+
+            `${API_URL}/${id}/in-transit`,
+
+            "Transfer marked as In Transit."
+        );
+    }
+
+
+    /*
+     =====================================================
+     RECEIVE TRANSFER
+     PUT /{id}/receive
+     =====================================================
+     */
+
+    async function receiveTransfer(id) {
+
+        const confirmed =
+            confirm(
+                "Confirm that this transfer has been received?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        await performSimpleAction(
+
+            `${API_URL}/${id}/receive`,
+
+            "Transfer received successfully."
+        );
+    }
+
+
+    /*
+     =====================================================
+     CANCEL TRANSFER
+     PUT /{id}/cancel
+     =====================================================
+     */
+
+    async function cancelTransfer(id) {
+
+        const reason =
+            prompt(
+                "Enter cancellation reason:"
+            );
+
+
+        if (reason === null) {
+            return;
+        }
+
+
+        if (reason.trim() === "") {
+
+            showMessage(
+                "Cancellation reason is required.",
+                false
+            );
+
+            return;
+        }
+
+
+        await performAction(
+
+            `${API_URL}/${id}/cancel`,
+
+            {
+                reason:
+                    reason.trim()
+            },
+
+            "Transfer cancelled successfully."
+        );
+    }
+
+
+    /*
+     =====================================================
+     ACTION WITH JSON BODY
+     =====================================================
+     */
+
+    async function performAction(
+        url,
+        body,
+        successMessage
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(body)
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(response);
+
+                throw new Error(error);
+            }
+
+
+            showMessage(
+                successMessage
+            );
+
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     ACTION WITHOUT JSON BODY
+     =====================================================
+     */
+
+    async function performSimpleAction(
+        url,
+        successMessage
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "PUT"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(response);
+
+                throw new Error(error);
+            }
+
+
+            showMessage(
+                successMessage
+            );
+
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     READ BACKEND ERROR RESPONSE
+     =====================================================
+     */
+
+    async function readErrorResponse(response) {
+
+        try {
+
+            const data =
+                await response.json();
+
+
+            if (data.message) {
+                return data.message;
+            }
+
+
+            if (data.fieldErrors) {
+
+                return Object
+                    .values(data.fieldErrors)
+                    .join(", ");
+            }
+
+
+            if (data.error) {
+                return data.error;
+            }
+
+        }
+        catch (e) {
+
+            return "Request failed.";
+        }
+
+
+        return "Request failed.";
+    }
+
+
+    /*
+     =====================================================
+     RENDER TABLE
+     =====================================================
+     */
+
+    function renderTransfers() {
+
+        const tbody =
+            document
+                .getElementById("transferTableBody");
+
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const statusFilter =
+            document
+                .getElementById("statusFilter")
+                .value;
+
+
+        tbody.innerHTML = "";
+
+
+        let filtered =
+            transfers.filter(transfer => {
+
+
+                const status =
+                    transfer.status || "";
+
+
+                const text =
+                    JSON.stringify(transfer)
+                        .toLowerCase();
+
+
+                const searchMatch =
+                    text.includes(search);
+
+
+                const statusMatch =
+                    statusFilter === "" ||
+                    status === statusFilter;
+
+
+                return (
+                    searchMatch &&
+                    statusMatch
+                );
+            });
+
+
+        if (filtered.length === 0) {
+
+            tbody.innerHTML = `
+
+                <tr>
+                    <td colspan="8"
+                        style="
+                            text-align:center;
+                            color:#64748b;
+                            padding:25px;
+                        ">
+                        No stock transfer records found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        filtered.forEach(transfer => {
+
+            const row =
+                document.createElement("tr");
+
+
+            const id =
+                transfer.transferId ?? "-";
+
+
+            const status =
+                transfer.status ?? "UNKNOWN";
+
+
+            const source =
+                getLocationName(
+                    transfer.sourceLocation
+                );
+
+
+            const destination =
+                getLocationName(
+                    transfer.destinationLocation
+                );
+
+
+            const requestedBy =
+                getUserName(
+                    transfer.requestedBy
+                );
+
+
+            const requestDate =
+                formatDate(
+                    transfer.requestDate
+                );
+
+
+            const notes =
+                transfer.notes || "-";
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${id}
+                </td>
+
+                <td>
+                    ${escapeHtml(source)}
+                </td>
+
+                <td>
+                    ${escapeHtml(destination)}
+                </td>
+
+                <td>
+                    ${escapeHtml(requestedBy)}
+                </td>
+
+                <td>
+                    ${requestDate}
+                </td>
+
+                <td>
+
+                    <span class="badge ${status}">
+                        ${status.replace("_", " ")}
+                    </span>
+
+                </td>
+
+                <td>
+                    ${escapeHtml(notes)}
+                </td>
+
+                <td>
+
+                    <div class="actions">
+
+                        ${buildActionButtons(
+                id,
+                status
+            )}
+
+                    </div>
+
+                </td>
+            `;
+
+
+            tbody.appendChild(row);
+        });
+    }
+
+
+    /*
+     =====================================================
+     DISPLAY CORRECT BUTTONS
+     BASED ON TRANSFER STATUS
+     =====================================================
+     */
+
+    function buildActionButtons(
+        id,
+        status
+    ) {
+
+        let buttons = "";
+
+
+        if (status === "PENDING") {
+
+            buttons += `
+
+                <button
+                    class="action-button approve"
+                    onclick="approveTransfer(${id})">
+                    Approve
+                </button>
+
+                <button
+                    class="action-button reject"
+                    onclick="rejectTransfer(${id})">
+                    Reject
+                </button>
+
+                <button
+                    class="action-button cancel"
+                    onclick="cancelTransfer(${id})">
+                    Cancel
+                </button>
+            `;
+        }
+
+
+        else if (status === "APPROVED") {
+
+            buttons += `
+
+                <button
+                    class="action-button dispatch"
+                    onclick="dispatchTransfer(${id})">
+                    Dispatch
+                </button>
+
+                <button
+                    class="action-button cancel"
+                    onclick="cancelTransfer(${id})">
+                    Cancel
+                </button>
+            `;
+        }
+
+
+        else if (status === "DISPATCHED") {
+
+            buttons += `
+
+                <button
+                    class="action-button transit"
+                    onclick="markInTransit(${id})">
+                    In Transit
+                </button>
+
+                <button
+                    class="action-button receive"
+                    onclick="receiveTransfer(${id})">
+                    Receive
+                </button>
+            `;
+        }
+
+
+        else if (status === "IN_TRANSIT") {
+
+            buttons += `
+
+                <button
+                    class="action-button receive"
+                    onclick="receiveTransfer(${id})">
+                    Receive
+                </button>
+            `;
+        }
+
+
+        else {
+
+            buttons = `
+                <span style="
+                    color:#64748b;
+                    font-size:12px;
+                ">
+                    Completed
+                </span>
+            `;
+        }
+
+
+        return buttons;
+    }
+
+
+    /*
+     =====================================================
+     UPDATE DASHBOARD COUNTERS
+     =====================================================
+     */
+
+    function updateDashboard() {
+
+        const total =
+            transfers.length;
+
+
+        const pending =
+            transfers.filter(
+                t =>
+                    t.status === "PENDING"
+            ).length;
+
+
+        const inTransit =
+            transfers.filter(
+                t =>
+                    t.status === "IN_TRANSIT"
+            ).length;
+
+
+        const received =
+            transfers.filter(
+                t =>
+                    t.status === "RECEIVED"
+            ).length;
+
+
+        document
+            .getElementById("totalCount")
+            .innerText = total;
+
+
+        document
+            .getElementById("pendingCount")
+            .innerText = pending;
+
+
+        document
+            .getElementById("transitCount")
+            .innerText = inTransit;
+
+
+        document
+            .getElementById("receivedCount")
+            .innerText = received;
+    }
+
+
+    /*
+     =====================================================
+     CLEAR FORM AFTER CREATE
+     =====================================================
+     */
+
+    function clearCreateForm() {
+
+        document
+            .getElementById("sourceLocationId")
+            .value = "";
+
+
+        document
+            .getElementById("destinationLocationId")
+            .value = "";
+
+
+        document
+            .getElementById("notes")
+            .value = "";
+    }
+
+
+    /*
+     =====================================================
+     LOCATION NAME HELPER
+     =====================================================
+     */
+
+    function getLocationName(location) {
+
+        if (!location) {
+            return "-";
+        }
+
+
+        return (
+            location.locationName ||
+            location.name ||
+            location.locationType ||
+            (
+                location.locationId
+                    ? "Location " +
+                    location.locationId
+                    : "-"
+            )
+        );
+    }
+
+
+    /*
+     =====================================================
+     USER NAME HELPER
+     =====================================================
+     */
+
+    function getUserName(user) {
+
+        if (!user) {
+            return "-";
+        }
+
+
+        return (
+            user.fullName ||
+            user.userName ||
+            user.username ||
+            user.name ||
+            user.email ||
+            (
+                user.userId
+                    ? "User " +
+                    user.userId
+                    : "-"
+            )
+        );
+    }
+
+
+    /*
+     =====================================================
+     FORMAT DATE
+     =====================================================
+     */
+
+    function formatDate(dateValue) {
+
+        if (!dateValue) {
+            return "-";
+        }
+
+
+        const date =
+            new Date(dateValue);
+
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return dateValue;
+        }
+
+
+        return date.toLocaleString();
+    }
+
+
+    /*
+     =====================================================
+     PREVENT HTML INJECTION
+     =====================================================
+     */
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
+    }
+
+
+    /*
+     =====================================================
+     AUTOMATICALLY LOAD DATA
+     WHEN PAGE OPENS
+     =====================================================
+     */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        loadTransfers
+    );
+
+</script>
+
+</body>
+</html>
