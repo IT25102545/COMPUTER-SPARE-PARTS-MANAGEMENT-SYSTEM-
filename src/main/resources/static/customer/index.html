@@ -1,0 +1,9 @@
+<!-- src/main/resources/static/customer/index.html -->
+<!DOCTYPE html><html><body><h2>Customer Service Backend Test</h2>
+<input id="n" placeholder="Customer name"><input id="p" placeholder="Phone"><button onclick="add()">Add Customer</button>
+<button onclick="load()">Load All</button><pre id="out"></pre>
+<script>const show=x=>out.textContent=JSON.stringify(x,null,2);async function add(){show(await(await
+fetch('/api/customer/customers',{method:'POST',headers:{'ContentType':'application/json'},body:JSON.stringify({customerName:n.value,phone:p.value})})).json())}async function
+load(){show({customers:await(await fetch('/api/customer/customers')).json(),complaints:await(await
+fetch('/api/customer/complaints')).json(),reservations:await(await
+fetch('/api/customer/reservations')).json()})}</script></body></html>
