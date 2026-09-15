@@ -1,9 +1,728 @@
-<!-- src/main/resources/static/customer/index.html -->
-<!DOCTYPE html><html><body><h2>Customer Service Backend Test</h2>
-<input id="n" placeholder="Customer name"><input id="p" placeholder="Phone"><button onclick="add()">Add Customer</button>
-<button onclick="load()">Load All</button><pre id="out"></pre>
-<script>const show=x=>out.textContent=JSON.stringify(x,null,2);async function add(){show(await(await
-fetch('/api/customer/customers',{method:'POST',headers:{'ContentType':'application/json'},body:JSON.stringify({customerName:n.value,phone:p.value})})).json())}async function
-load(){show({customers:await(await fetch('/api/customer/customers')).json(),complaints:await(await
-fetch('/api/customer/complaints')).json(),reservations:await(await
-fetch('/api/customer/reservations')).json()})}</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Service | Lanka Tech Components</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/customer-service.css">
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION BAR
+========================= -->
+
+<header class="navbar">
+
+    <div>
+        <h2>Lanka Tech Components</h2>
+        <p>Computer Spare Parts Management System</p>
+    </div>
+
+    <div class="module-name">
+        Customer Service, Reservations & Complaints
+    </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<main class="container">
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div>
+            <h1>Customer Service Management</h1>
+
+            <p>
+                Manage customer reservations, complaints and service requests.
+            </p>
+        </div>
+
+
+        <div class="header-buttons">
+
+            <button
+                    class="btn btn-primary"
+                    onclick="showReservationForm()">
+
+                + New Reservation
+
+            </button>
+
+
+            <button
+                    class="btn btn-purple"
+                    onclick="showComplaintForm()">
+
+                + New Complaint
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MESSAGE BOX -->
+
+    <div id="messageBox"></div>
+
+
+    <!-- =========================
+         DASHBOARD CARDS
+    ========================= -->
+
+    <section class="cards">
+
+        <!-- TOTAL RESERVATIONS -->
+
+        <div class="card">
+
+            <h3>Total Reservations</h3>
+
+            <div
+                    class="number"
+                    id="reservationCount">
+
+                0
+
+            </div>
+
+            <div class="small-text">
+                All customer reservations
+            </div>
+
+        </div>
+
+
+        <!-- PENDING RESERVATIONS -->
+
+        <div class="card">
+
+            <h3>Pending Reservations</h3>
+
+            <div
+                    class="number"
+                    id="pendingReservationCount">
+
+                0
+
+            </div>
+
+            <div class="small-text">
+                Waiting for confirmation
+            </div>
+
+        </div>
+
+
+        <!-- OPEN COMPLAINTS -->
+
+        <div class="card">
+
+            <h3>Open Complaints</h3>
+
+            <div
+                    class="number"
+                    id="openComplaintCount">
+
+                0
+
+            </div>
+
+            <div class="small-text">
+                Require attention
+            </div>
+
+        </div>
+
+
+        <!-- RESOLVED COMPLAINTS -->
+
+        <div class="card">
+
+            <h3>Resolved Complaints</h3>
+
+            <div
+                    class="number"
+                    id="resolvedComplaintCount">
+
+                0
+
+            </div>
+
+            <div class="small-text">
+                Successfully resolved
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         RESERVATION FORM
+    ========================= -->
+
+    <section
+            class="form-box"
+            id="reservationForm">
+
+        <h2>
+            Create Spare Part Reservation
+        </h2>
+
+
+        <div class="form-grid">
+
+            <!-- CUSTOMER NAME -->
+
+            <div class="form-group">
+
+                <label for="reservationCustomerName">
+                    Customer Name
+                </label>
+
+                <input
+                        type="text"
+                        id="reservationCustomerName"
+                        placeholder="Example: Nimal Perera">
+
+            </div>
+
+
+            <!-- CUSTOMER PHONE -->
+
+            <div class="form-group">
+
+                <label for="reservationPhone">
+                    Customer Phone
+                </label>
+
+                <input
+                        type="text"
+                        id="reservationPhone"
+                        placeholder="0771234567">
+
+            </div>
+
+
+            <!-- SPARE PART -->
+
+            <div class="form-group">
+
+                <label for="reservationPart">
+                    Spare Part
+                </label>
+
+                <select id="reservationPart">
+
+                    <option value="">
+                        Select Spare Part
+                    </option>
+
+                    <option value="Intel Core i5 Processor">
+                        Intel Core i5 Processor
+                    </option>
+
+                    <option value="16GB DDR4 RAM">
+                        16GB DDR4 RAM
+                    </option>
+
+                    <option value="1TB NVMe SSD">
+                        1TB NVMe SSD
+                    </option>
+
+                    <option value="RTX 4060 Graphics Card">
+                        RTX 4060 Graphics Card
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- QUANTITY -->
+
+            <div class="form-group">
+
+                <label for="reservationQuantity">
+                    Quantity
+                </label>
+
+                <input
+                        type="number"
+                        id="reservationQuantity"
+                        min="1"
+                        value="1">
+
+            </div>
+
+
+            <!-- PICKUP LOCATION -->
+
+            <div class="form-group">
+
+                <label for="reservationLocation">
+                    Pickup Location
+                </label>
+
+                <select id="reservationLocation">
+
+                    <option value="">
+                        Select Location
+                    </option>
+
+                    <option value="Branch 01">
+                        Branch 01
+                    </option>
+
+                    <option value="Branch 02">
+                        Branch 02
+                    </option>
+
+                    <option value="Central Warehouse">
+                        Central Warehouse
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- RESERVATION DATE -->
+
+            <div class="form-group">
+
+                <label for="reservationDate">
+                    Reservation Date
+                </label>
+
+                <input
+                        type="date"
+                        id="reservationDate">
+
+            </div>
+
+
+            <!-- NOTES -->
+
+            <div class="form-group full-width">
+
+                <label for="reservationNotes">
+                    Notes
+                </label>
+
+                <textarea
+                        id="reservationNotes"
+                        placeholder="Enter reservation notes..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM BUTTONS -->
+
+        <div class="form-actions">
+
+            <button
+                    class="btn btn-success"
+                    onclick="createReservation()">
+
+                Create Reservation
+
+            </button>
+
+
+            <button
+                    class="btn btn-secondary"
+                    onclick="hideReservationForm()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         COMPLAINT FORM
+    ========================= -->
+
+    <section
+            class="form-box"
+            id="complaintForm">
+
+        <h2>
+            Register Customer Complaint
+        </h2>
+
+
+        <div class="form-grid">
+
+            <!-- CUSTOMER NAME -->
+
+            <div class="form-group">
+
+                <label for="complaintCustomerName">
+                    Customer Name
+                </label>
+
+                <input
+                        type="text"
+                        id="complaintCustomerName"
+                        placeholder="Example: Kamal Silva">
+
+            </div>
+
+
+            <!-- CONTACT NUMBER -->
+
+            <div class="form-group">
+
+                <label for="complaintPhone">
+                    Contact Number
+                </label>
+
+                <input
+                        type="text"
+                        id="complaintPhone"
+                        placeholder="0712345678">
+
+            </div>
+
+
+            <!-- COMPLAINT TYPE -->
+
+            <div class="form-group">
+
+                <label for="complaintType">
+                    Complaint Type
+                </label>
+
+                <select id="complaintType">
+
+                    <option value="">
+                        Select Complaint Type
+                    </option>
+
+                    <option value="Product Issue">
+                        Product Issue
+                    </option>
+
+                    <option value="Payment Issue">
+                        Payment Issue
+                    </option>
+
+                    <option value="Reservation Issue">
+                        Reservation Issue
+                    </option>
+
+                    <option value="Service Issue">
+                        Service Issue
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PRIORITY -->
+
+            <div class="form-group">
+
+                <label for="complaintPriority">
+                    Priority
+                </label>
+
+                <select id="complaintPriority">
+
+                    <option value="LOW">
+                        Low
+                    </option>
+
+                    <option value="MEDIUM">
+                        Medium
+                    </option>
+
+                    <option value="HIGH">
+                        High
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group full-width">
+
+                <label for="complaintDescription">
+                    Complaint Description
+                </label>
+
+                <textarea
+                        id="complaintDescription"
+                        placeholder="Describe the customer complaint..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLAINT BUTTONS -->
+
+        <div class="form-actions">
+
+            <button
+                    class="btn btn-success"
+                    onclick="createComplaint()">
+
+                Register Complaint
+
+            </button>
+
+
+            <button
+                    class="btn btn-secondary"
+                    onclick="hideComplaintForm()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         RESERVATION TABLE
+    ========================= -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Customer Reservations
+            </h2>
+
+
+            <div class="controls">
+
+                <!-- SEARCH -->
+
+                <input
+                        type="text"
+                        class="search-box"
+                        id="reservationSearch"
+                        placeholder="Search reservations..."
+                        onkeyup="renderReservations()">
+
+
+                <!-- FILTER -->
+
+                <select
+                        class="filter-box"
+                        id="reservationFilter"
+                        onchange="renderReservations()">
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="PENDING">
+                        Pending
+                    </option>
+
+                    <option value="CONFIRMED">
+                        Confirmed
+                    </option>
+
+                    <option value="COMPLETED">
+                        Completed
+                    </option>
+
+                    <option value="CANCELLED">
+                        Cancelled
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Customer</th>
+
+                <th>Phone</th>
+
+                <th>Spare Part</th>
+
+                <th>Qty</th>
+
+                <th>Pickup Location</th>
+
+                <th>Date</th>
+
+                <th>Status</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody id="reservationTableBody">
+
+            <!-- Reservation data added using JavaScript -->
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+
+    <!-- =========================
+         COMPLAINT TABLE
+    ========================= -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Customer Complaints
+            </h2>
+
+
+            <div class="controls">
+
+                <!-- SEARCH -->
+
+                <input
+                        type="text"
+                        class="search-box"
+                        id="complaintSearch"
+                        placeholder="Search complaints..."
+                        onkeyup="renderComplaints()">
+
+
+                <!-- FILTER -->
+
+                <select
+                        class="filter-box"
+                        id="complaintFilter"
+                        onchange="renderComplaints()">
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="OPEN">
+                        Open
+                    </option>
+
+                    <option value="IN_PROGRESS">
+                        In Progress
+                    </option>
+
+                    <option value="RESOLVED">
+                        Resolved
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Customer</th>
+
+                <th>Type</th>
+
+                <th>Priority</th>
+
+                <th>Description</th>
+
+                <th>Status</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody id="complaintTableBody">
+
+            <!-- Complaint data added using JavaScript -->
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    Lanka Tech Components (Pvt) Ltd |
+    Computer Spare Parts Management System
+
+</footer>
+
+
+<!-- External JavaScript -->
+
+<script src="js/customer-service.js"></script>
+
+</body>
+
+</html>
