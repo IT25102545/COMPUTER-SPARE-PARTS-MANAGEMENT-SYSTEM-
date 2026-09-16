@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Inventory Management | Lanka Tech Components</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #1e293b;
+        }
+
+        /* ==============================
+           NAVIGATION
+        ============================== */
+
+        .navbar {
+            background: #172554;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 21px;
+        }
+
+        .navbar p {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .module-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* ==============================
+           MAIN
+        ============================== */
+
+        .container {
+            width: 94%;
+            margin: 25px auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            color: #172554;
+            font-size: 28px;
+        }
+
+        .page-header p {
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        /* ==============================
+           BUTTONS
+        ============================== */
+
+        .btn {
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            opacity: 0.88;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+
+        /* ==============================
+           DASHBOARD CARDS
+        ============================== */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+        .small-text {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        /* ==============================
+           FORM
+        ============================== */
+
+        .form-box {
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .form-box h2 {
+            color: #172554;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .form-actions {
+            margin-top: 18px;
+        }
+
+        /* ==============================
+           TABLE
+        ============================== */
+
+        .section {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            color: #172554;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box,
+        .filter-box {
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #172554;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* ==============================
+           STATUS BADGES
+        ============================== */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .low {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .out {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        /* ==============================
+           ACTION BUTTONS
+        ============================== */
+
+        .action-btn {
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 4px;
+        }
+
+        .edit-btn {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* ==============================
+           MESSAGE
+        ============================== */
+
+        #messageBox {
+            display: none;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            padding: 22px;
+            font-size: 13px;
+        }
+
+        @media(max-width: 900px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                overflow-x: auto;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div>
+        <h2>Lanka Tech Components</h2>
+        <p>Computer Spare Parts Management System</p>
+    </div>
+
+    <div class="module-name">
+        Inventory & Stock Management
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Inventory Management</h1>
+
+            <p>
+                Manage computer spare parts and current stock levels.
+            </p>
+
+        </div>
+
+        <button
+                class="btn btn-primary"
+                onclick="showAddForm()">
+
+            + Add Spare Part
+
+        </button>
+
+    </div>
+
+
+    <!-- MESSAGE BOX -->
+
+    <div id="messageBox"></div>
+
+
+    <!-- DASHBOARD CARDS -->
+
+    <section class="cards">
+
+        <div class="card">
+
+            <h3>Total Spare Parts</h3>
+
+            <div
+                    class="number"
+                    id="totalParts">
+                0
+            </div>
+
+            <div class="small-text">
+                Registered spare parts
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Total Stock</h3>
+
+            <div
+                    class="number"
+                    id="totalStock">
+                0
+            </div>
+
+            <div class="small-text">
+                Available units
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Low Stock Items</h3>
+
+            <div
+                    class="number"
+                    id="lowStockCount">
+                0
+            </div>
+
+            <div class="small-text">
+                Require attention
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Categories</h3>
+
+            <div
+                    class="number"
+                    id="categoryCount">
+                0
+            </div>
+
+            <div class="small-text">
+                Spare part categories
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ADD / EDIT FORM -->
+
+    <section
+            class="form-box"
+            id="partForm">
+
+        <h2 id="formTitle">
+            Add New Spare Part
+        </h2>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Part Code
+                </label>
+
+                <input
+                        type="text"
+                        id="partCode"
+                        placeholder="Example: CPU001">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Part Name
+                </label>
+
+                <input
+                        type="text"
+                        id="partName"
+                        placeholder="Example: Intel Core i5">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Category
+                </label>
+
+                <select id="category">
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                    <option value="Processor">
+                        Processor
+                    </option>
+
+                    <option value="RAM">
+                        RAM
+                    </option>
+
+                    <option value="Storage">
+                        Storage
+                    </option>
+
+                    <option value="Motherboard">
+                        Motherboard
+                    </option>
+
+                    <option value="Graphics Card">
+                        Graphics Card
+                    </option>
+
+                    <option value="Power Supply">
+                        Power Supply
+                    </option>
+
+                    <option value="Cooling">
+                        Cooling
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Brand
+                </label>
+
+                <input
+                        type="text"
+                        id="brand"
+                        placeholder="Example: Intel">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Location
+                </label>
+
+                <select id="location">
+
+                    <option value="">
+                        Select Location
+                    </option>
+
+                    <option value="Central Warehouse">
+                        Central Warehouse
+                    </option>
+
+                    <option value="Branch 01">
+                        Branch 01
+                    </option>
+
+                    <option value="Branch 02">
+                        Branch 02
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Quantity
+                </label>
+
+                <input
+                        type="number"
+                        id="quantity"
+                        min="0"
+                        placeholder="Example: 20">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Unit Price (LKR)
+                </label>
+
+                <input
+                        type="number"
+                        id="price"
+                        min="0"
+                        placeholder="Example: 45000">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Reorder Level
+                </label>
+
+                <input
+                        type="number"
+                        id="reorderLevel"
+                        min="0"
+                        value="5">
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                    class="btn btn-success"
+                    onclick="savePart()"
+                    id="saveButton">
+
+                Save Spare Part
+
+            </button>
+
+
+            <button
+                    class="btn btn-secondary"
+                    onclick="hideForm()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- INVENTORY TABLE -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Spare Parts Inventory
+            </h2>
+
+
+            <div class="controls">
+
+                <input
+                        type="text"
+                        id="searchInput"
+                        class="search-box"
+                        placeholder="Search spare parts..."
+                        onkeyup="renderTable()">
+
+
+                <select
+                        id="statusFilter"
+                        class="filter-box"
+                        onchange="renderTable()">
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="Available">
+                        Available
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="Low Stock">
+                        Low Stock
+                    </option>
+
+                    <option value="Out of Stock">
+                        Out of Stock
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>Part Code</th>
+
+                <th>Part Name</th>
+
+                <th>Category</th>
+
+                <th>Brand</th>
+
+                <th>Location</th>
+
+                <th>Quantity</th>
+
+                <th>Unit Price</th>
+
+                <th>Status</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody id="inventoryTableBody">
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    Lanka Tech Components (Pvt) Ltd |
+    Computer Spare Parts Management System
+
+</footer>
+
+
+<script>
+
+    /*
+    ======================================
+    SAMPLE INVENTORY DATA
+    ======================================
+    */
+
+    let inventory = [
+
+        {
+            code: "CPU001",
+            name: "Intel Core i5 Processor",
+            category: "Processor",
+            brand: "Intel",
+            location: "Central Warehouse",
+            quantity: 25,
+            price: 45000,
+            reorderLevel: 5
+        },
+
+        {
+            code: "RAM002",
+            name: "16GB DDR4 RAM",
+            category: "RAM",
+            brand: "Kingston",
+            location: "Central Warehouse",
+            quantity: 8,
+            price: 12500,
+            reorderLevel: 5
+        },
+
+        {
+            code: "SSD003",
+            name: "1TB NVMe SSD",
+            category: "Storage",
+            brand: "Samsung",
+            location: "Branch 01",
+            quantity: 3,
+            price: 28000,
+            reorderLevel: 5
+        },
+
+        {
+            code: "GPU004",
+            name: "RTX 4060 Graphics Card",
+            category: "Graphics Card",
+            brand: "Gigabyte",
+            location: "Central Warehouse",
+            quantity: 15,
+            price: 145000,
+            reorderLevel: 5
+        }
+
+    ];
+
+
+    /*
+    ======================================
+    CURRENT EDIT INDEX
+    ======================================
+    */
+
+    let editingIndex = null;
+
+
+    /*
+    ======================================
+    SHOW ADD FORM
+    ======================================
+    */
+
+    function showAddForm() {
+
+        editingIndex = null;
+
+        document
+            .getElementById("formTitle")
+            .innerText =
+            "Add New Spare Part";
+
+
+        document
+            .getElementById("saveButton")
+            .innerText =
+            "Save Spare Part";
+
+
+        clearForm();
+
+
+        document
+            .getElementById("partForm")
+            .style.display =
+            "block";
+
+
+        window.scrollTo({
+            top: 250,
+            behavior: "smooth"
+        });
+    }
+
+
+    /*
+    ======================================
+    HIDE FORM
+    ======================================
+    */
+
+    function hideForm() {
+
+        document
+            .getElementById("partForm")
+            .style.display =
+            "none";
+
+
+        clearForm();
+
+
+        editingIndex = null;
+    }
+
+
+    /*
+    ======================================
+    SAVE / UPDATE PART
+    ======================================
+    */
+
+    function savePart() {
+
+        const code =
+            document
+                .getElementById("partCode")
+                .value
+                .trim();
+
+
+        const name =
+            document
+                .getElementById("partName")
+                .value
+                .trim();
+
+
+        const category =
+            document
+                .getElementById("category")
+                .value;
+
+
+        const brand =
+            document
+                .getElementById("brand")
+                .value
+                .trim();
+
+
+        const location =
+            document
+                .getElementById("location")
+                .value;
+
+
+        const quantity =
+            Number(
+                document
+                    .getElementById("quantity")
+                    .value
+            );
+
+
+        const price =
+            Number(
+                document
+                    .getElementById("price")
+                    .value
+            );
+
+
+        const reorderLevel =
+            Number(
+                document
+                    .getElementById("reorderLevel")
+                    .value
+            );
+
+
+        /*
+        VALIDATION
+        */
+
+        if (
+            code === "" ||
+            name === "" ||
+            category === "" ||
+            brand === "" ||
+            location === ""
+        ) {
+
+            showMessage(
+                "Please complete all required fields.",
+                false
+            );
+
+            return;
+        }
+
+
+        if (
+            quantity < 0 ||
+            price < 0 ||
+            reorderLevel < 0
+        ) {
+
+            showMessage(
+                "Quantity, price and reorder level cannot be negative.",
+                false
+            );
+
+            return;
+        }
+
+
+        /*
+        DUPLICATE PART CODE CHECK
+        */
+
+        const duplicate =
+            inventory.some(
+                (part, index) =>
+                    part.code.toLowerCase()
+                    ===
+                    code.toLowerCase()
+                    &&
+                    index !== editingIndex
+            );
+
+
+        if (duplicate) {
+
+            showMessage(
+                "Part code already exists.",
+                false
+            );
+
+            return;
+        }
+
+
+        const part = {
+
+            code: code,
+
+            name: name,
+
+            category: category,
+
+            brand: brand,
+
+            location: location,
+
+            quantity: quantity,
+
+            price: price,
+
+            reorderLevel: reorderLevel
+        };
+
+
+        /*
+        ADD MODE
+        */
+
+        if (editingIndex === null) {
+
+            inventory.push(part);
+
+
+            showMessage(
+                "Spare part added successfully."
+            );
+        }
+
+        /*
+        EDIT MODE
+        */
+
+        else {
+
+            inventory[editingIndex] =
+                part;
+
+
+            showMessage(
+                "Spare part updated successfully."
+            );
+        }
+
+
+        hideForm();
+
+        renderTable();
+
+        updateDashboard();
+    }
+
+
+    /*
+    ======================================
+    EDIT PART
+    ======================================
+    */
+
+    function editPart(index) {
+
+        const part =
+            inventory[index];
+
+
+        editingIndex =
+            index;
+
+
+        document
+            .getElementById("formTitle")
+            .innerText =
+            "Edit Spare Part";
+
+
+        document
+            .getElementById("saveButton")
+            .innerText =
+            "Update Spare Part";
+
+
+        document
+            .getElementById("partCode")
+            .value =
+            part.code;
+
+
+        document
+            .getElementById("partName")
+            .value =
+            part.name;
+
+
+        document
+            .getElementById("category")
+            .value =
+            part.category;
+
+
+        document
+            .getElementById("brand")
+            .value =
+            part.brand;
+
+
+        document
+            .getElementById("location")
+            .value =
+            part.location;
+
+
+        document
+            .getElementById("quantity")
+            .value =
+            part.quantity;
+
+
+        document
+            .getElementById("price")
+            .value =
+            part.price;
+
+
+        document
+            .getElementById("reorderLevel")
+            .value =
+            part.reorderLevel;
+
+
+        document
+            .getElementById("partForm")
+            .style.display =
+            "block";
+
+
+        window.scrollTo({
+            top: 250,
+            behavior: "smooth"
+        });
+    }
+
+
+    /*
+    ======================================
+    DELETE PART
+    ======================================
+    */
+
+    function deletePart(index) {
+
+        const part =
+            inventory[index];
+
+
+        const confirmed =
+            confirm(
+                "Delete " +
+                part.name +
+                "?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        inventory.splice(
+            index,
+            1
+        );
+
+
+        renderTable();
+
+        updateDashboard();
+
+
+        showMessage(
+            "Spare part deleted successfully."
+        );
+    }
+
+
+    /*
+    ======================================
+    GET STOCK STATUS
+    ======================================
+    */
+
+    function getStatus(part) {
+
+        if (part.quantity === 0) {
+
+            return {
+                text: "Out of Stock",
+                css: "out"
+            };
+        }
+
+
+        if (
+            part.quantity <=
+            part.reorderLevel
+        ) {
+
+            return {
+                text: "Low Stock",
+                css: "low"
+            };
+        }
+
+
+        if (
+            part.quantity <=
+            part.reorderLevel * 2
+        ) {
+
+            return {
+                text: "Medium",
+                css: "medium"
+            };
+        }
+
+
+        return {
+            text: "Available",
+            css: "available"
+        };
+    }
+
+
+    /*
+    ======================================
+    RENDER TABLE
+    ======================================
+    */
+
+    function renderTable() {
+
+        const tbody =
+            document
+                .getElementById(
+                    "inventoryTableBody"
+                );
+
+
+        const search =
+            document
+                .getElementById(
+                    "searchInput"
+                )
+                .value
+                .toLowerCase();
+
+
+        const statusFilter =
+            document
+                .getElementById(
+                    "statusFilter"
+                )
+                .value;
+
+
+        tbody.innerHTML = "";
+
+
+        let found = false;
+
+
+        inventory.forEach(
+            (part, index) => {
+
+                const status =
+                    getStatus(part);
+
+
+                const text =
+                    (
+                        part.code +
+                        " " +
+                        part.name +
+                        " " +
+                        part.category +
+                        " " +
+                        part.brand +
+                        " " +
+                        part.location
+                    )
+                    .toLowerCase();
+
+
+                const matchesSearch =
+                    text.includes(search);
+
+
+                const matchesStatus =
+                    statusFilter === ""
+                    ||
+                    status.text === statusFilter;
+
+
+                if (
+                    !matchesSearch ||
+                    !matchesStatus
+                ) {
+
+                    return;
+                }
+
+
+                found = true;
+
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${escapeHtml(part.code)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(part.name)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(part.category)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(part.brand)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(part.location)}
+                    </td>
+
+                    <td>
+                        ${part.quantity}
+                    </td>
+
+                    <td>
+                        LKR ${formatMoney(part.price)}
+                    </td>
+
+                    <td>
+
+                        <span class="badge ${status.css}">
+                            ${status.text}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="action-btn edit-btn"
+                            onclick="editPart(${index})">
+
+                            Edit
+
+                        </button>
+
+
+                        <button
+                            class="action-btn delete-btn"
+                            onclick="deletePart(${index})">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+                `;
+
+
+                tbody.appendChild(
+                    row
+                );
+            }
+        );
+
+
+        if (!found) {
+
+            tbody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        style="
+                            text-align:center;
+                            color:#64748b;
+                            padding:25px;
+                        ">
+
+                        No inventory records found.
+
+                    </td>
+
+                </tr>
+            `;
+        }
+    }
+
+
+    /*
+    ======================================
+    DASHBOARD COUNTERS
+    ======================================
+    */
+
+    function updateDashboard() {
+
+        const totalParts =
+            inventory.length;
+
+
+        const totalStock =
+            inventory.reduce(
+                (total, part) =>
+                    total +
+                    Number(part.quantity),
+                0
+            );
+
+
+        const lowStock =
+            inventory.filter(
+                part =>
+                    part.quantity <=
+                    part.reorderLevel
+            ).length;
+
+
+        const categories =
+            new Set(
+                inventory.map(
+                    part =>
+                        part.category
+                )
+            );
+
+
+        document
+            .getElementById(
+                "totalParts"
+            )
+            .innerText =
+            totalParts;
+
+
+        document
+            .getElementById(
+                "totalStock"
+            )
+            .innerText =
+            totalStock;
+
+
+        document
+            .getElementById(
+                "lowStockCount"
+            )
+            .innerText =
+            lowStock;
+
+
+        document
+            .getElementById(
+                "categoryCount"
+            )
+            .innerText =
+            categories.size;
+    }
+
+
+    /*
+    ======================================
+    CLEAR FORM
+    ======================================
+    */
+
+    function clearForm() {
+
+        document
+            .getElementById(
+                "partCode"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "partName"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "category"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "brand"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "location"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "quantity"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "price"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "reorderLevel"
+            )
+            .value = "5";
+    }
+
+
+    /*
+    ======================================
+    MESSAGE
+    ======================================
+    */
+
+    function showMessage(
+        message,
+        success = true
+    ) {
+
+        const box =
+            document
+                .getElementById(
+                    "messageBox"
+                );
+
+
+        box.style.display =
+            "block";
+
+
+        box.className =
+            success
+                ? "success"
+                : "error";
+
+
+        box.innerText =
+            message;
+
+
+        setTimeout(
+            () => {
+
+                box.style.display =
+                    "none";
+
+            },
+            4000
+        );
+    }
+
+
+    /*
+    ======================================
+    FORMAT PRICE
+    ======================================
+    */
+
+    function formatMoney(value) {
+
+        return Number(value)
+            .toLocaleString();
+    }
+
+
+    /*
+    ======================================
+    HTML SAFETY
+    ======================================
+    */
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
+    }
+
+
+    /*
+    ======================================
+    PAGE LOAD
+    ======================================
+    */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            renderTable();
+
+            updateDashboard();
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
