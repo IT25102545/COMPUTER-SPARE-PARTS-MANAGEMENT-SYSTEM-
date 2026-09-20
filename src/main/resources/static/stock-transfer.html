@@ -1,0 +1,4583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stock Transfer Management | Lanka Tech Components</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #1e293b;
+        }
+
+        /* =========================
+           TOP NAVIGATION
+        ========================== */
+
+        .navbar {
+            background: #172554;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 21px;
+        }
+
+        .navbar p {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .module-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           MAIN CONTAINER
+        ========================== */
+
+        .container {
+            width: 94%;
+            margin: 25px auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            color: #172554;
+            font-size: 28px;
+        }
+
+        .page-header p {
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================== */
+
+        .btn {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.88;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #d97706;
+            color: white;
+        }
+
+        .btn-info {
+            background: #0284c7;
+            color: white;
+        }
+
+        .btn-purple {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-dark {
+            background: #334155;
+            color: white;
+        }
+
+        /* =========================
+           DASHBOARD CARDS
+        ========================== */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 5px solid #cbd5e1;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+        }
+
+        .card-total { border-left-color: #172554; }
+        .card-pending { border-left-color: #f59e0b; }
+        .card-approved { border-left-color: #2563eb; }
+        .card-rejected { border-left-color: #dc2626; }
+        .card-dispatched { border-left-color: #7c3aed; }
+        .card-transit { border-left-color: #0284c7; }
+        .card-received { border-left-color: #16a34a; }
+        .card-discrepancy { border-left-color: #db2777; }
+        .card-cancelled { border-left-color: #64748b; }
+
+        .card h3 {
+            font-size: 14px;
+            color: #000000;
+            margin-bottom: 12px;
+        }
+
+        .card .number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+        .card .small-text {
+            color: #000000;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        /* =========================
+           CREATE FORM
+        ========================== */
+
+        .form-box {
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .form-box h2 {
+            color: #172554;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            margin-top: 18px;
+        }
+
+        /* =========================
+           TRANSFER ITEMS
+        ========================== */
+
+        .item-builder {
+            grid-column: 1 / -1;
+            border: 1px solid #dbeafe;
+            background: #f8fbff;
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .item-builder h3 {
+            color: #172554;
+            font-size: 15px;
+            margin-bottom: 14px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .stock-info {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            min-height: 38px;
+            font-weight: bold;
+            color: #0f766e;
+        }
+
+        .selected-items-box {
+            margin-top: 16px;
+            border-top: 1px solid #dbeafe;
+            padding-top: 14px;
+        }
+
+        .selected-items-box h4 {
+            color: #334155;
+            margin-bottom: 10px;
+        }
+
+        .selected-items-table th,
+        .selected-items-table td {
+            padding: 9px;
+            font-size: 12px;
+        }
+
+        .empty-items {
+            color: #64748b;
+            font-size: 12px;
+            padding: 10px 0;
+        }
+
+        .item-summary {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /*
+         * Keep each transfer item aligned with its own
+         * discrepancy details in the next table column.
+         */
+        .item-detail-block,
+        .discrepancy-detail-block {
+            min-height: 86px;
+            padding: 9px 0;
+            border-bottom: 1px solid #e2e8f0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .item-detail-block:last-child,
+        .discrepancy-detail-block:last-child {
+            border-bottom: none;
+        }
+
+        .item-detail-name {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .item-detail-qty {
+            margin-top: 4px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .discrepancy-part-name {
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           TABLE SECTION
+        ========================== */
+
+        .section {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            color: #172554;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box,
+        .filter-box {
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #172554;
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* =========================
+           STATUS BADGES
+        ========================== */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .PENDING {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .APPROVED {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .REJECTED {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .DISPATCHED {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .IN_TRANSIT {
+            background: #cffafe;
+            color: #155e75;
+        }
+
+        .RECEIVED {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .CANCELLED {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        /* =========================
+           ACTION BUTTONS
+        ========================== */
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .action-button {
+            border: none;
+            border-radius: 5px;
+            padding: 6px 9px;
+            cursor: pointer;
+            font-size: 11px;
+            color: white;
+        }
+
+        .approve {
+            background: #16a34a;
+        }
+
+        .reject {
+            background: #dc2626;
+        }
+
+        .dispatch {
+            background: #7c3aed;
+        }
+
+        .transit {
+            background: #0284c7;
+        }
+
+        .receive {
+            background: #059669;
+        }
+
+        .cancel {
+            background: #64748b;
+        }
+        /* =========================
+           RECEIVE TRANSFER MODAL
+        ========================== */
+
+        .receive-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.55);
+            overflow-y: auto;
+            padding: 40px 15px;
+        }
+
+        .receive-modal-content {
+            background: white;
+            width: 100%;
+            max-width: 760px;
+            margin: auto;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.20);
+            padding: 24px;
+        }
+
+        .receive-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .receive-modal-header h2 {
+            color: #172554;
+            margin-bottom: 5px;
+        }
+
+        .receive-modal-header p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            font-size: 28px;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .receive-item-card {
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .receive-item-card h4 {
+            color: #172554;
+            margin-bottom: 12px;
+        }
+
+        .receive-item-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .receive-item-card label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .receive-item-card input,
+        .receive-item-card textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 9px;
+        }
+
+        .receive-item-card textarea {
+            min-height: 65px;
+            resize: vertical;
+        }
+
+        .expected-quantity {
+            padding: 9px;
+            background: #e0e7ff;
+            color: #3730a3;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .receive-modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        /* =========================
+           MESSAGE BOX
+        ========================== */
+
+        #messageBox {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .message-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loading {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media(max-width: 1400px) {
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media(max-width: 1000px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .item-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .receive-item-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .section {
+                overflow-x: auto;
+            }
+        }
+        /* =========================================
+   CHANGE ALL GRAY TEXT TO BLACK
+========================================= */
+
+        /* Dashboard */
+        .card h3,
+        .card .small-text {
+            color: #000000 !important;
+        }
+
+        /* Page descriptions */
+        .page-header p {
+            color: #000000 !important;
+        }
+
+        /* Form / empty / loading text */
+        .empty-items,
+        .loading {
+            color: #000000 !important;
+        }
+
+        /* Item quantity/detail text */
+        .item-detail-qty {
+            color: #000000 !important;
+        }
+
+        /* Modal descriptions */
+        .receive-modal-header p,
+        .receive-modal-header .modal-close {
+            color: #000000 !important;
+        }
+
+        /* Table gray helper text */
+        .section [style*="color:#64748b"],
+        .section [style*="color: #64748b"],
+        .section [style*="color:#94a3b8"],
+        .section [style*="color: #94a3b8"] {
+            color: #000000 !important;
+        }
+
+        /* Modal gray helper text */
+        .receive-modal [style*="color:#64748b"],
+        .receive-modal [style*="color: #64748b"],
+        .receive-modal [style*="color:#94a3b8"],
+        .receive-modal [style*="color: #94a3b8"] {
+            color: #000000 !important;
+        }
+
+        /* Footer */
+        footer {
+            color: #000000 !important;
+        }
+
+        /* Input placeholder text */
+        input::placeholder,
+        textarea::placeholder {
+            color: #000000;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION
+========================== -->
+
+<header class="navbar">
+
+    <div>
+        <h2>Lanka Tech Components</h2>
+        <p>Computer Spare Parts Management System</p>
+    </div>
+
+    <div class="module-name">
+        Stock Transfer Management
+    </div>
+
+</header>
+
+<main class="container">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+            <h1>Stock Transfer Management</h1>
+            <p>
+                Manage spare-part transfers between the central warehouse
+                and sales branches.
+            </p>
+        </div>
+
+        <button
+                class="btn btn-primary"
+                onclick="showCreateForm()">
+            + New Transfer Request
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         MESSAGE BOX
+    ========================== -->
+
+    <div id="messageBox"></div>
+
+
+    <!-- =========================
+         DASHBOARD CARDS
+    ========================== -->
+
+    <section class="cards">
+
+        <div class="card card-total">
+            <h3>Total Transfers</h3>
+            <div class="number" id="totalCount">0</div>
+            <div class="small-text">All transfer requests</div>
+        </div>
+
+        <div class="card card-pending">
+            <h3>Pending</h3>
+            <div class="number" id="pendingCount">0</div>
+            <div class="small-text">Waiting for approval</div>
+        </div>
+
+        <div class="card card-approved">
+            <h3>Approved</h3>
+            <div class="number" id="approvedCount">0</div>
+            <div class="small-text">Approved and ready to dispatch</div>
+        </div>
+
+        <div class="card card-rejected">
+            <h3>Rejected</h3>
+            <div class="number" id="rejectedCount">0</div>
+            <div class="small-text">Rejected transfer requests</div>
+        </div>
+
+        <div class="card card-dispatched">
+            <h3>Dispatched</h3>
+            <div class="number" id="dispatchedCount">0</div>
+            <div class="small-text">Dispatched from source</div>
+        </div>
+
+        <div class="card card-transit">
+            <h3>In Transit</h3>
+            <div class="number" id="transitCount">0</div>
+            <div class="small-text">Currently moving</div>
+        </div>
+
+        <div class="card card-received">
+            <h3>Received</h3>
+            <div class="number" id="receivedCount">0</div>
+            <div class="small-text">Successfully completed</div>
+        </div>
+
+        <div class="card card-discrepancy">
+            <h3>Discrepancy</h3>
+            <div class="number" id="discrepancyCount">0</div>
+            <div class="small-text">Transfers with receiving differences</div>
+        </div>
+
+        <div class="card card-cancelled">
+            <h3>Cancelled</h3>
+            <div class="number" id="cancelledCount">0</div>
+            <div class="small-text">Cancelled transfer requests</div>
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CREATE TRANSFER FORM
+    ========================== -->
+
+    <section class="form-box" id="createTransferForm">
+
+        <h2>Create Stock Transfer Request</h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Source Location
+                </label>
+
+                <select id="sourceLocationId" onchange="updateAvailableStock()">
+
+                    <option value="">
+                        Loading locations...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Destination Location
+                </label>
+
+                <select id="destinationLocationId">
+
+                    <option value="">
+                        Loading locations...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Requested By
+                </label>
+
+                <select id="requestedById">
+                    <option value="">
+                        Loading users...
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Inventory Supervisor
+                </label>
+
+                <select id="approvedById">
+                    <option value="">
+                        Loading inventory supervisors...
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div class="item-builder">
+
+                <h3>Transfer Items</h3>
+
+                <div class="item-grid">
+
+                    <div class="form-group">
+                        <label>Spare Part</label>
+                        <select id="sparePartId" onchange="updateAvailableStock()">
+                            <option value="">Loading spare parts...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input
+                                type="number"
+                                id="itemQuantity"
+                                min="1"
+                                value="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Available Stock</label>
+                        <div class="stock-info" id="availableStock">-</div>
+                    </div>
+
+                    <div>
+                        <button
+                                type="button"
+                                class="btn btn-info"
+                                onclick="addTransferItem()">
+                            + Add Item
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="selected-items-box">
+                    <h4>Selected Items</h4>
+
+                    <div id="emptyItemsMessage" class="empty-items">
+                        No items added yet.
+                    </div>
+
+                    <table
+                            id="selectedItemsTable"
+                            class="selected-items-table"
+                            style="display:none;">
+                        <thead>
+                        <tr>
+                            <th>Spare Part</th>
+                            <th>Part Code</th>
+                            <th>Quantity</th>
+                            <th>Available at Source</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="selectedItemsBody"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+
+            <div class="form-group full-width">
+
+                <label>
+                    Notes <span style="color:red;">*</span>
+                </label>
+
+                <textarea
+                        id="notes"
+                        required
+                        maxlength="500"
+                        placeholder="Enter transfer request notes..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                    class="btn btn-success"
+                    onclick="createTransfer()">
+                Create Request
+            </button>
+
+            <button
+                    class="btn btn-secondary"
+                    onclick="hideCreateForm()">
+                Cancel
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         TRANSFER TABLE
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Transfer Requests
+            </h2>
+
+            <div class="controls">
+
+                <input
+                        type="text"
+                        id="searchInput"
+                        class="search-box"
+                        placeholder="Search..."
+                        onkeyup="renderTransfers()">
+
+                <select
+                        id="statusFilter"
+                        class="filter-box"
+                        onchange="renderTransfers()">
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="PENDING">
+                        Pending
+                    </option>
+
+                    <option value="APPROVED">
+                        Approved
+                    </option>
+
+                    <option value="REJECTED">
+                        Rejected
+                    </option>
+
+                    <option value="DISPATCHED">
+                        Dispatched
+                    </option>
+
+                    <option value="IN_TRANSIT">
+                        In Transit
+                    </option>
+
+                    <option value="RECEIVED">
+                        Received
+                    </option>
+
+                    <option value="CANCELLED">
+                        Cancelled
+                    </option>
+
+                </select>
+
+                <button
+                        class="btn btn-dark"
+                        onclick="loadTransfers()">
+                    Refresh
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div id="loadingMessage" class="loading">
+            Loading transfer records...
+        </div>
+
+
+        <table id="transferTable" style="display:none;">
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Source</th>
+
+                <th>Destination</th>
+
+                <th>Requested By</th>
+
+                <th>Request Date</th>
+
+                <th>Status</th>
+
+                <th>Items</th>
+
+                <th>Discrepancy</th>
+
+                <th>Notes</th>
+
+                <th>Decision Reason</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody id="transferTableBody">
+
+            </tbody>
+
+        </table>
+
+    </section>
+    <!-- =========================
+         REJECT TRANSFER MODAL
+    ========================== -->
+
+    <div id="rejectModal" class="receive-modal">
+
+        <div class="receive-modal-content">
+
+            <div class="receive-modal-header">
+
+                <div>
+                    <h2>Reject Stock Transfer</h2>
+                    <p>
+                        Review the request and enter the reason for rejection.
+                    </p>
+                </div>
+
+                <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeRejectModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <div id="rejectDetailsContainer"></div>
+
+            <div class="receive-item-card">
+
+                <label for="rejectReasonInput">
+                    Rejection Reason <span style="color:#dc2626;">*</span>
+                </label>
+
+                <textarea
+                        id="rejectReasonInput"
+                        maxlength="255"
+                        required
+                        placeholder="Enter rejection reason..."
+                        style="
+                            width:100%;
+                            min-height:95px;
+                            margin-top:7px;
+                            border:1px solid #cbd5e1;
+                            border-radius:6px;
+                            padding:10px;
+                            resize:vertical;
+                        "></textarea>
+
+                <div
+                        style="
+                            margin-top:6px;
+                            color:#64748b;
+                            font-size:12px;
+                        ">
+                    Maximum 255 characters.
+                </div>
+
+            </div>
+
+            <div class="receive-modal-actions">
+
+                <button
+                        type="button"
+                        class="btn btn-danger"
+                        onclick="confirmRejectTransfer()">
+                    Confirm Rejection
+                </button>
+
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeRejectModal()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CANCEL TRANSFER MODAL
+    ========================== -->
+
+    <div id="cancelTransferModal" class="receive-modal">
+
+        <div class="receive-modal-content">
+
+            <div class="receive-modal-header">
+
+                <div>
+                    <h2>Cancel Stock Transfer</h2>
+                    <p>
+                        Review the transfer and enter the cancellation reason.
+                    </p>
+                </div>
+
+                <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeCancelTransferModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <div id="cancelDetailsContainer"></div>
+
+            <div class="receive-item-card">
+
+                <label for="cancelReasonInput">
+                    Cancellation Reason <span style="color:#dc2626;">*</span>
+                </label>
+
+                <textarea
+                        id="cancelReasonInput"
+                        maxlength="255"
+                        required
+                        placeholder="Enter cancellation reason..."
+                        style="
+                            width:100%;
+                            min-height:95px;
+                            margin-top:7px;
+                            border:1px solid #cbd5e1;
+                            border-radius:6px;
+                            padding:10px;
+                            resize:vertical;
+                        "></textarea>
+
+                <div
+                        style="
+                            margin-top:6px;
+                            color:#64748b;
+                            font-size:12px;
+                        ">
+                    Maximum 255 characters.
+                </div>
+
+            </div>
+
+            <div class="receive-modal-actions">
+
+                <button
+                        type="button"
+                        class="btn btn-danger"
+                        onclick="confirmCancelTransfer()">
+                    Confirm Cancellation
+                </button>
+
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeCancelTransferModal()">
+                    Keep Transfer
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         APPROVE TRANSFER MODAL
+    ========================== -->
+
+    <div id="approveModal" class="receive-modal">
+
+        <div class="receive-modal-content">
+
+            <div class="receive-modal-header">
+
+                <div>
+                    <h2>Approve Stock Transfer</h2>
+                    <p>
+                        Review the transfer details before approving this request.
+                    </p>
+                </div>
+
+                <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeApproveModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <div id="approveDetailsContainer"></div>
+
+            <div class="receive-modal-actions">
+
+                <button
+                        type="button"
+                        class="btn btn-success"
+                        onclick="confirmApproveTransfer()">
+                    Confirm Approval
+                </button>
+
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeApproveModal()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         IN TRANSIT MODAL
+    ========================== -->
+
+    <div id="inTransitModal" class="receive-modal">
+
+        <div class="receive-modal-content">
+
+            <div class="receive-modal-header">
+
+                <div>
+                    <h2>Mark Transfer as In Transit</h2>
+                    <p>
+                        Confirm that the dispatched transfer is now moving to the destination.
+                    </p>
+                </div>
+
+                <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeInTransitModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <div id="inTransitDetailsContainer"></div>
+
+            <div class="receive-modal-actions">
+
+                <button
+                        type="button"
+                        class="btn btn-info"
+                        onclick="confirmInTransitTransfer()">
+                    Confirm In Transit
+                </button>
+
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeInTransitModal()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         DISPATCH TRANSFER MODAL
+    ========================== -->
+
+    <div id="dispatchModal" class="receive-modal">
+
+        <div class="receive-modal-content">
+
+            <div class="receive-modal-header">
+
+                <div>
+                    <h2>Dispatch Stock Transfer</h2>
+                    <p>
+                        Review the transfer details before dispatching the items.
+                    </p>
+                </div>
+
+                <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeDispatchModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <div id="dispatchDetailsContainer"></div>
+
+            <div class="receive-modal-actions">
+
+                <button
+                        type="button"
+                        class="btn btn-purple"
+                        onclick="confirmDispatchTransfer()">
+                    Confirm Dispatch
+                </button>
+
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeDispatchModal()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+         RECEIVE TRANSFER MODAL
+    ========================== -->
+
+    <div id="receiveModal" class="receive-modal">
+
+        <div class="receive-modal-content">
+
+            <div class="receive-modal-header">
+                <div>
+                    <h2>Receive Stock Transfer</h2>
+                    <p>
+                        Confirm the actual quantity received for each spare part.
+                    </p>
+                </div>
+
+                <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeReceiveModal()">
+                    ×
+                </button>
+            </div>
+
+            <div id="receiveItemsContainer"></div>
+
+            <div class="receive-modal-actions">
+
+                <button
+                        type="button"
+                        class="btn btn-success"
+                        onclick="submitReceiveTransfer()">
+                    Confirm Receive
+                </button>
+
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeReceiveModal()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+
+<footer>
+    Lanka Tech Components (Pvt) Ltd |
+    Computer Spare Parts Management System
+</footer>
+
+
+<script>
+
+    /*
+     =====================================================
+     API BASE URL
+     =====================================================
+     */
+
+    const API_URL =
+        "/api/stock-transfers";
+
+
+    /*
+     =====================================================
+     TEMPORARY LOCAL ARRAY
+     Data loaded from backend API is stored here.
+     =====================================================
+     */
+
+    let transfers = [];
+
+    const INVENTORY_PARTS_URL = "/api/inventory/parts";
+    const INVENTORY_STOCKS_URL = "/api/inventory/stocks";
+    const LOCATIONS_URL = "/api/stock-transfers/locations";
+    const USERS_URL = "/api/stock-transfers/users";
+
+    let inventoryParts = [];
+    let inventoryStocks = [];
+    let locations = [];
+    let users = [];
+    let selectedItems = [];
+    let receivingTransferId = null;
+    let dispatchingTransferId = null;
+    let approvingTransferId = null;
+    let approvingSupervisorId = null;
+    let inTransitTransferId = null;
+    let rejectingTransferId = null;
+    let cancellingTransferId = null;
+
+
+    /*
+     =====================================================
+     LOAD LOCATIONS FROM DATABASE
+     GET /api/stock-transfers/locations
+     =====================================================
+     */
+
+    async function loadLocations() {
+
+        try {
+
+            const response =
+                await fetch(LOCATIONS_URL);
+
+            if (!response.ok) {
+                throw new Error(
+                    "Unable to load locations."
+                );
+            }
+
+            locations =
+                await response.json();
+
+            populateLocationOptions();
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+
+            console.error(error);
+        }
+    }
+
+
+    function populateLocationOptions() {
+
+        const sourceSelect =
+            document.getElementById(
+                "sourceLocationId"
+            );
+
+        const destinationSelect =
+            document.getElementById(
+                "destinationLocationId"
+            );
+
+        if (!sourceSelect || !destinationSelect) {
+            return;
+        }
+
+        sourceSelect.innerHTML = `
+            <option value="">Select Source Location</option>
+        `;
+
+        destinationSelect.innerHTML = `
+            <option value="">Select Destination Location</option>
+        `;
+
+        locations
+            .filter(location =>
+                location.active !== false
+            )
+            .forEach(location => {
+
+                const locationName =
+                    location.locationName ||
+                    `Location ${location.locationId}`;
+
+                const locationType =
+                    location.locationType
+                        ? ` (${location.locationType})`
+                        : "";
+
+                const optionText =
+                    `${locationName}${locationType}`;
+
+                const sourceOption =
+                    document.createElement(
+                        "option"
+                    );
+
+                sourceOption.value =
+                    location.locationId;
+
+                sourceOption.textContent =
+                    optionText;
+
+                const destinationOption =
+                    document.createElement(
+                        "option"
+                    );
+
+                destinationOption.value =
+                    location.locationId;
+
+                destinationOption.textContent =
+                    optionText;
+
+                sourceSelect.appendChild(
+                    sourceOption
+                );
+
+                destinationSelect.appendChild(
+                    destinationOption
+                );
+            });
+    }
+
+
+    /*
+     =====================================================
+     LOAD USERS FROM DATABASE
+     GET /api/stock-transfers/users
+     =====================================================
+     */
+
+    async function loadUsers() {
+
+        try {
+
+            const response =
+                await fetch(USERS_URL);
+
+            if (!response.ok) {
+                throw new Error(
+                    "Unable to load users."
+                );
+            }
+
+            users =
+                await response.json();
+
+            populateUserOptions();
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+
+            console.error(error);
+        }
+    }
+
+
+    function populateUserOptions() {
+
+        const requestedBySelect =
+            document.getElementById(
+                "requestedById"
+            );
+
+        const approvedBySelect =
+            document.getElementById(
+                "approvedById"
+            );
+
+        if (!requestedBySelect ||
+            !approvedBySelect) {
+            return;
+        }
+
+        requestedBySelect.innerHTML = `
+            <option value="">Select Requesting User</option>
+        `;
+
+        approvedBySelect.innerHTML = `
+            <option value="">Select Inventory Supervisor</option>
+        `;
+
+        const activeUsers =
+            users.filter(user =>
+                user.active !== false
+            );
+
+        activeUsers.forEach(user => {
+
+            const roleName =
+                user.role?.roleName ||
+                "USER";
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                user.userId;
+
+            option.textContent =
+                `${user.fullName || `User ${user.userId}`} (${roleName})`;
+
+            requestedBySelect.appendChild(
+                option
+            );
+        });
+
+        const inventorySupervisors =
+            activeUsers.filter(user =>
+                (user.role?.roleName || "")
+                    .toUpperCase() ===
+                "INVENTORY_SUPERVISOR"
+            );
+
+        inventorySupervisors.forEach(user => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                user.userId;
+
+            option.textContent =
+                user.fullName ||
+                `User ${user.userId}`;
+
+            approvedBySelect.appendChild(
+                option
+            );
+        });
+
+        // Keep the current demo flow convenient:
+        // automatically select the first active user
+        // and the first Inventory Supervisor.
+        if (activeUsers.length > 0) {
+            requestedBySelect.value =
+                String(activeUsers[0].userId);
+        }
+
+        if (inventorySupervisors.length > 0) {
+            approvedBySelect.value =
+                String(inventorySupervisors[0].userId);
+        }
+    }
+
+
+    /*
+     =====================================================
+     LOAD INVENTORY DATA FOR TRANSFER ITEMS
+     =====================================================
+     */
+
+    async function loadInventoryData() {
+
+        try {
+
+            const [partsResponse, stocksResponse] = await Promise.all([
+                fetch(INVENTORY_PARTS_URL),
+                fetch(INVENTORY_STOCKS_URL)
+            ]);
+
+            if (!partsResponse.ok) {
+                throw new Error("Unable to load spare parts.");
+            }
+
+            if (!stocksResponse.ok) {
+                throw new Error("Unable to load stock information.");
+            }
+
+            inventoryParts = await partsResponse.json();
+            inventoryStocks = await stocksResponse.json();
+
+            populateSparePartOptions();
+            updateAvailableStock();
+        }
+        catch (error) {
+            showMessage(error.message, false);
+            console.error(error);
+        }
+    }
+
+
+    function populateSparePartOptions() {
+
+        const select = document.getElementById("sparePartId");
+
+        select.innerHTML = `
+            <option value="">Select Spare Part</option>
+        `;
+
+        inventoryParts
+            .filter(part => part.active !== false)
+            .forEach(part => {
+
+                const option = document.createElement("option");
+                option.value = part.sparePartId;
+                option.textContent = `${part.partCode || ""} - ${part.partName || "Spare Part"}`;
+                select.appendChild(option);
+            });
+    }
+
+
+    function getAvailableStock(sparePartId, locationId) {
+
+        const stock = inventoryStocks.find(s => {
+
+            const partId = s.sparePart?.sparePartId ?? s.sparePartId;
+            const stockLocationId = s.location?.locationId ?? s.locationId;
+
+            return Number(partId) === Number(sparePartId)
+                && Number(stockLocationId) === Number(locationId);
+        });
+
+        return stock ? Number(stock.quantity || 0) : 0;
+    }
+
+
+    function updateAvailableStock() {
+
+        const sparePartId = document.getElementById("sparePartId")?.value;
+        const sourceLocationId = document.getElementById("sourceLocationId")?.value;
+        const box = document.getElementById("availableStock");
+
+        if (!box) {
+            return;
+        }
+
+        if (!sparePartId || !sourceLocationId) {
+            box.innerText = "-";
+            return;
+        }
+
+        const quantity = getAvailableStock(sparePartId, sourceLocationId);
+        box.innerText = quantity;
+    }
+
+
+    function addTransferItem() {
+
+        const sparePartId = Number(document.getElementById("sparePartId").value);
+        const quantity = Number(document.getElementById("itemQuantity").value);
+        const sourceLocationId = Number(document.getElementById("sourceLocationId").value);
+
+        if (!sourceLocationId) {
+            showMessage("Please select the source location first.", false);
+            return;
+        }
+
+        if (!sparePartId) {
+            showMessage("Please select a spare part.", false);
+            return;
+        }
+
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            showMessage("Quantity must be at least 1.", false);
+            return;
+        }
+
+        if (selectedItems.some(item => item.sparePartId === sparePartId)) {
+            showMessage("The same spare part cannot be added more than once.", false);
+            return;
+        }
+
+        const available = getAvailableStock(sparePartId, sourceLocationId);
+
+        if (quantity > available) {
+            showMessage(
+                `Insufficient source stock. Available quantity is ${available}.`,
+                false
+            );
+            return;
+        }
+
+        const part = inventoryParts.find(
+            p => Number(p.sparePartId) === sparePartId
+        );
+
+        selectedItems.push({
+            sparePartId: sparePartId,
+            quantity: quantity,
+            partName: part?.partName || `Part ${sparePartId}`,
+            partCode: part?.partCode || "-",
+            availableStock: available
+        });
+
+        renderSelectedItems();
+
+        document.getElementById("sparePartId").value = "";
+        document.getElementById("itemQuantity").value = "1";
+        updateAvailableStock();
+    }
+
+
+    function removeTransferItem(index) {
+        selectedItems.splice(index, 1);
+        renderSelectedItems();
+    }
+
+
+    function renderSelectedItems() {
+
+        const table = document.getElementById("selectedItemsTable");
+        const tbody = document.getElementById("selectedItemsBody");
+        const empty = document.getElementById("emptyItemsMessage");
+
+        tbody.innerHTML = "";
+
+        if (selectedItems.length === 0) {
+            table.style.display = "none";
+            empty.style.display = "block";
+            return;
+        }
+
+        empty.style.display = "none";
+        table.style.display = "table";
+
+        selectedItems.forEach((item, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${escapeHtml(item.partName)}</td>
+                <td>${escapeHtml(item.partCode)}</td>
+                <td>${item.quantity}</td>
+                <td>${item.availableStock}</td>
+                <td>
+                    <button
+                        type="button"
+                        class="action-button cancel"
+                        onclick="removeTransferItem(${index})">
+                        Remove
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+
+    /*
+     =====================================================
+     SHOW CREATE FORM
+     =====================================================
+     */
+
+    async function showCreateForm() {
+
+        document
+            .getElementById("createTransferForm")
+            .style.display = "block";
+
+        await Promise.all([
+            loadInventoryData(),
+            loadLocations()
+        ]);
+
+        window.scrollTo({
+            top: 250,
+            behavior: "smooth"
+        });
+    }
+
+
+    /*
+     =====================================================
+     HIDE CREATE FORM
+     =====================================================
+     */
+
+    function hideCreateForm() {
+
+        document
+            .getElementById("createTransferForm")
+            .style.display = "none";
+    }
+
+
+    /*
+     =====================================================
+     SHOW SUCCESS / ERROR MESSAGE
+     =====================================================
+     */
+
+    function showMessage(message, success = true) {
+
+        const box =
+            document.getElementById("messageBox");
+
+        box.style.display = "block";
+
+        box.className =
+            success
+                ? "message-success"
+                : "message-error";
+
+        box.innerText = message;
+
+
+        setTimeout(() => {
+
+            box.style.display = "none";
+
+        }, 5000);
+    }
+
+
+    /*
+     =====================================================
+     LOAD ALL TRANSFERS
+     GET /api/stock-transfers
+     =====================================================
+     */
+
+    async function loadTransfers() {
+
+        const loading =
+            document.getElementById("loadingMessage");
+
+        const table =
+            document.getElementById("transferTable");
+
+
+        loading.style.display = "block";
+
+        table.style.display = "none";
+
+
+        try {
+
+            const response =
+                await fetch(API_URL);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load stock transfers."
+                );
+            }
+
+
+            transfers =
+                await response.json();
+
+
+            renderTransfers();
+
+            updateDashboard();
+
+
+            loading.style.display = "none";
+
+            table.style.display = "table";
+
+        }
+        catch (error) {
+
+            loading.style.display = "none";
+
+            showMessage(
+                error.message,
+                false
+            );
+
+            console.error(error);
+        }
+    }
+
+
+    /*
+     =====================================================
+     CREATE TRANSFER
+     POST /api/stock-transfers
+     =====================================================
+     */
+
+    async function createTransfer() {
+
+        const sourceLocationId =
+            document
+                .getElementById("sourceLocationId")
+                .value;
+
+        const destinationLocationId =
+            document
+                .getElementById("destinationLocationId")
+                .value;
+
+        const requestedById =
+            document
+                .getElementById("requestedById")
+                .value;
+
+        const notes =
+            document
+                .getElementById("notes")
+                .value;
+
+        if (
+            sourceLocationId === "" ||
+            destinationLocationId === "" ||
+            requestedById === ""
+        ) {
+
+            showMessage(
+                "Please complete all required fields.",
+                false
+            );
+
+            return;
+        }
+
+        if (notes.trim() === "") {
+
+            showMessage(
+                "Notes are required. Please enter transfer request notes.",
+                false
+            );
+
+            document
+                .getElementById("notes")
+                .focus();
+
+            return;
+        }
+
+
+        if (
+            sourceLocationId ===
+            destinationLocationId
+        ) {
+
+            showMessage(
+                "Source and destination cannot be the same.",
+                false
+            );
+
+            return;
+        }
+
+        if (selectedItems.length === 0) {
+
+            showMessage(
+                "Please add at least one spare part to the transfer.",
+                false
+            );
+
+            return;
+        }
+
+        const requestBody = {
+
+            sourceLocationId:
+                Number(sourceLocationId),
+
+            destinationLocationId:
+                Number(destinationLocationId),
+
+            requestedById:
+                Number(requestedById),
+
+            items: selectedItems.map(item => ({
+                sparePartId: item.sparePartId,
+                quantity: item.quantity
+            })),
+
+            notes:
+            notes
+        };
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                requestBody
+                            )
+                    }
+                );
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(response);
+
+                throw new Error(error);
+            }
+
+            showMessage(
+                "Stock transfer request created successfully."
+            );
+
+            clearCreateForm();
+
+            hideCreateForm();
+
+            await Promise.all([
+                loadTransfers(),
+                loadInventoryData(),
+                loadLocations(),
+                loadUsers()
+            ]);
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     APPROVE TRANSFER
+     PUT /{id}/approve
+     =====================================================
+     */
+
+    async function approveTransfer(id) {
+
+        const approvedById =
+            Number(
+                document
+                    .getElementById("approvedById")
+                    .value
+            );
+
+        if (!approvedById) {
+
+            showMessage(
+                "Please select an Inventory Supervisor.",
+                false
+            );
+
+            return;
+        }
+
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(id)
+            );
+
+        if (!transfer) {
+
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
+
+            return;
+        }
+
+        const supervisor =
+            users.find(
+                user => Number(user.userId) === Number(approvedById)
+            );
+
+        approvingTransferId = id;
+        approvingSupervisorId = approvedById;
+
+        const source =
+            getLocationName(
+                transfer.sourceLocation
+            );
+
+        const destination =
+            getLocationName(
+                transfer.destinationLocation
+            );
+
+        const requestedBy =
+            getUserName(
+                transfer.requestedBy
+            );
+
+        const supervisorName =
+            supervisor?.fullName ||
+            `User ${approvedById}`;
+
+        const items =
+            Array.isArray(transfer.items)
+                ? transfer.items
+                : [];
+
+        let itemHtml = "";
+
+        items.forEach(item => {
+
+            const partName =
+                item.sparePart?.partName ||
+                item.sparePart?.partCode ||
+                "Spare Part";
+
+            const quantity =
+                Number(item.quantity || 0);
+
+            itemHtml += `
+
+                <div class="receive-item-card">
+
+                    <h4>
+                        ${escapeHtml(partName)}
+                    </h4>
+
+                    <div class="receive-item-grid">
+
+                        <div>
+                            <label>
+                                Requested Quantity
+                            </label>
+
+                            <div class="expected-quantity">
+                                ${quantity}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+        });
+
+        document
+            .getElementById("approveDetailsContainer")
+            .innerHTML = `
+
+                <div
+                    class="receive-item-card"
+                    style="margin-bottom:18px;">
+
+                    <div class="receive-item-grid">
+
+                        <div>
+                            <label>Source Location</label>
+                            <div class="expected-quantity">
+                                ${escapeHtml(source)}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Destination Location</label>
+                            <div class="expected-quantity">
+                                ${escapeHtml(destination)}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Requested By</label>
+                            <div class="expected-quantity">
+                                ${escapeHtml(requestedBy)}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Approving Supervisor</label>
+                            <div class="expected-quantity">
+                                ${escapeHtml(supervisorName)}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <h3
+                    style="
+                        color:#172554;
+                        margin-bottom:12px;
+                    ">
+                    Transfer Items
+                </h3>
+
+                ${itemHtml}
+            `;
+
+        document
+            .getElementById("approveModal")
+            .style.display = "block";
+    }
+
+
+    function closeApproveModal() {
+
+        document
+            .getElementById("approveModal")
+            .style.display = "none";
+
+        approvingTransferId = null;
+        approvingSupervisorId = null;
+
+        document
+            .getElementById("approveDetailsContainer")
+            .innerHTML = "";
+    }
+
+
+    async function confirmApproveTransfer() {
+
+        if (!approvingTransferId ||
+            !approvingSupervisorId) {
+
+            showMessage(
+                "No transfer selected for approval.",
+                false
+            );
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/${approvingTransferId}/approve`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                approvedById:
+                                approvingSupervisorId
+                            })
+                    }
+                );
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(
+                        response
+                    );
+
+                throw new Error(error);
+            }
+
+            closeApproveModal();
+
+            showMessage(
+                "Transfer approved successfully."
+            );
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+
+    function buildDecisionTransferSummary(transfer) {
+
+        const source =
+            getLocationName(
+                transfer.sourceLocation
+            );
+
+        const destination =
+            getLocationName(
+                transfer.destinationLocation
+            );
+
+        const requestedBy =
+            getUserName(
+                transfer.requestedBy
+            );
+
+        const items =
+            Array.isArray(transfer.items)
+                ? transfer.items
+                : [];
+
+        let itemHtml = "";
+
+        items.forEach(item => {
+
+            const partName =
+                item.sparePart?.partName ||
+                item.sparePart?.partCode ||
+                "Spare Part";
+
+            const quantity =
+                Number(item.quantity || 0);
+
+            itemHtml += `
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        gap:12px;
+                        padding:8px 0;
+                        border-bottom:1px solid #e2e8f0;
+                    ">
+                    <span>
+                        ${escapeHtml(partName)}
+                    </span>
+
+                    <strong>
+                        × ${quantity}
+                    </strong>
+                </div>
+            `;
+        });
+
+        return `
+            <div
+                class="receive-item-card"
+                style="margin-bottom:16px;">
+
+                <div class="receive-item-grid">
+
+                    <div>
+                        <label>Source Location</label>
+                        <div class="expected-quantity">
+                            ${escapeHtml(source)}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Destination Location</label>
+                        <div class="expected-quantity">
+                            ${escapeHtml(destination)}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Requested By</label>
+                        <div class="expected-quantity">
+                            ${escapeHtml(requestedBy)}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Current Status</label>
+                        <div class="expected-quantity">
+                            ${escapeHtml(transfer.status || "-")}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:15px;">
+
+                    <label>
+                        Transfer Items
+                    </label>
+
+                    <div
+                        style="
+                            margin-top:5px;
+                            color:#334155;
+                        ">
+                        ${itemHtml || "-"}
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    }
+
+
+    /*
+     =====================================================
+     REJECT TRANSFER
+     PUT /{id}/reject
+     =====================================================
+     */
+
+    async function rejectTransfer(id) {
+
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(id)
+            );
+
+        if (!transfer) {
+
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
+
+            return;
+        }
+
+        rejectingTransferId = id;
+
+        document
+            .getElementById("rejectDetailsContainer")
+            .innerHTML =
+            buildDecisionTransferSummary(
+                transfer
+            );
+
+        const reasonInput =
+            document.getElementById(
+                "rejectReasonInput"
+            );
+
+        reasonInput.value = "";
+
+        document
+            .getElementById("rejectModal")
+            .style.display = "block";
+
+        setTimeout(
+            () => reasonInput.focus(),
+            50
+        );
+    }
+
+
+    function closeRejectModal() {
+
+        document
+            .getElementById("rejectModal")
+            .style.display = "none";
+
+        rejectingTransferId = null;
+
+        document
+            .getElementById("rejectDetailsContainer")
+            .innerHTML = "";
+
+        document
+            .getElementById("rejectReasonInput")
+            .value = "";
+    }
+
+
+    async function confirmRejectTransfer() {
+
+        if (!rejectingTransferId) {
+
+            showMessage(
+                "No transfer selected for rejection.",
+                false
+            );
+
+            return;
+        }
+
+        const reasonInput =
+            document.getElementById(
+                "rejectReasonInput"
+            );
+
+        const reason =
+            reasonInput.value.trim();
+
+        if (reason === "") {
+
+            showMessage(
+                "Reject reason is required.",
+                false
+            );
+
+            reasonInput.focus();
+
+            return;
+        }
+
+        if (reason.length > 255) {
+
+            showMessage(
+                "Reject reason cannot exceed 255 characters.",
+                false
+            );
+
+            reasonInput.focus();
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/${rejectingTransferId}/reject`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                reason: reason
+                            })
+                    }
+                );
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(
+                        response
+                    );
+
+                throw new Error(error);
+            }
+
+            closeRejectModal();
+
+            showMessage(
+                "Transfer rejected successfully."
+            );
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     DISPATCH TRANSFER
+     PUT /{id}/dispatch
+     =====================================================
+     */
+
+    async function dispatchTransfer(id) {
+
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(id)
+            );
+
+        if (!transfer) {
+
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
+
+            return;
+        }
+
+        if (!Array.isArray(transfer.items) ||
+            transfer.items.length === 0) {
+
+            showMessage(
+                "This transfer does not contain any items.",
+                false
+            );
+
+            return;
+        }
+
+        dispatchingTransferId = id;
+
+        const source =
+            getLocationName(
+                transfer.sourceLocation
+            );
+
+        const destination =
+            getLocationName(
+                transfer.destinationLocation
+            );
+
+        const container =
+            document.getElementById(
+                "dispatchDetailsContainer"
+            );
+
+        let itemHtml = "";
+
+        transfer.items.forEach(item => {
+
+            const partName =
+                item.sparePart?.partName ||
+                item.sparePart?.partCode ||
+                "Spare Part";
+
+            const quantity =
+                Number(item.quantity || 0);
+
+            itemHtml += `
+
+                <div class="receive-item-card">
+
+                    <h4>
+                        ${escapeHtml(partName)}
+                    </h4>
+
+                    <div class="receive-item-grid">
+
+                        <div>
+                            <label>
+                                Quantity to Dispatch
+                            </label>
+
+                            <div class="expected-quantity">
+                                ${quantity}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+        });
+
+        container.innerHTML = `
+
+            <div
+                class="receive-item-card"
+                style="margin-bottom:18px;">
+
+                <div class="receive-item-grid">
+
+                    <div>
+                        <label>Source Location</label>
+
+                        <div class="expected-quantity">
+                            ${escapeHtml(source)}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Destination Location</label>
+
+                        <div class="expected-quantity">
+                            ${escapeHtml(destination)}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <h3
+                style="
+                    color:#172554;
+                    margin-bottom:12px;
+                ">
+                Transfer Items
+            </h3>
+
+            ${itemHtml}
+        `;
+
+        document
+            .getElementById("dispatchModal")
+            .style.display = "block";
+    }
+
+
+    function closeDispatchModal() {
+
+        document
+            .getElementById("dispatchModal")
+            .style.display = "none";
+
+        dispatchingTransferId = null;
+
+        document
+            .getElementById(
+                "dispatchDetailsContainer"
+            )
+            .innerHTML = "";
+    }
+
+
+    async function confirmDispatchTransfer() {
+
+        if (!dispatchingTransferId) {
+
+            showMessage(
+                "No transfer selected.",
+                false
+            );
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/${dispatchingTransferId}/dispatch`,
+                    {
+                        method: "PUT"
+                    }
+                );
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(
+                        response
+                    );
+
+                throw new Error(error);
+            }
+
+            closeDispatchModal();
+
+            showMessage(
+                "Transfer dispatched successfully."
+            );
+
+            await Promise.all([
+                loadTransfers(),
+                loadInventoryData()
+            ]);
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     MARK AS IN TRANSIT
+     PUT /{id}/in-transit
+     =====================================================
+     */
+
+    async function markInTransit(id) {
+
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(id)
+            );
+
+        if (!transfer) {
+
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
+
+            return;
+        }
+
+        inTransitTransferId = id;
+
+        const source =
+            getLocationName(
+                transfer.sourceLocation
+            );
+
+        const destination =
+            getLocationName(
+                transfer.destinationLocation
+            );
+
+        const items =
+            Array.isArray(transfer.items)
+                ? transfer.items
+                : [];
+
+        let itemHtml = "";
+
+        items.forEach(item => {
+
+            const partName =
+                item.sparePart?.partName ||
+                item.sparePart?.partCode ||
+                "Spare Part";
+
+            const quantity =
+                Number(item.quantity || 0);
+
+            itemHtml += `
+
+                <div class="receive-item-card">
+
+                    <h4>
+                        ${escapeHtml(partName)}
+                    </h4>
+
+                    <div class="receive-item-grid">
+
+                        <div>
+                            <label>
+                                Dispatched Quantity
+                            </label>
+
+                            <div class="expected-quantity">
+                                ${quantity}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+        });
+
+        document
+            .getElementById("inTransitDetailsContainer")
+            .innerHTML = `
+
+                <div
+                    class="receive-item-card"
+                    style="margin-bottom:18px;">
+
+                    <div class="receive-item-grid">
+
+                        <div>
+                            <label>Source Location</label>
+                            <div class="expected-quantity">
+                                ${escapeHtml(source)}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Destination Location</label>
+                            <div class="expected-quantity">
+                                ${escapeHtml(destination)}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:14px;
+                            color:#475569;
+                            line-height:1.5;
+                        ">
+                        This transfer has already been dispatched.
+                        Confirm that it is now in transit to the destination.
+                    </div>
+
+                </div>
+
+                <h3
+                    style="
+                        color:#172554;
+                        margin-bottom:12px;
+                    ">
+                    Transfer Items
+                </h3>
+
+                ${itemHtml}
+            `;
+
+        document
+            .getElementById("inTransitModal")
+            .style.display = "block";
+    }
+
+
+    function closeInTransitModal() {
+
+        document
+            .getElementById("inTransitModal")
+            .style.display = "none";
+
+        inTransitTransferId = null;
+
+        document
+            .getElementById("inTransitDetailsContainer")
+            .innerHTML = "";
+    }
+
+
+    async function confirmInTransitTransfer() {
+
+        if (!inTransitTransferId) {
+
+            showMessage(
+                "No transfer selected.",
+                false
+            );
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/${inTransitTransferId}/in-transit`,
+                    {
+                        method: "PUT"
+                    }
+                );
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(
+                        response
+                    );
+
+                throw new Error(error);
+            }
+
+            closeInTransitModal();
+
+            showMessage(
+                "Transfer marked as In Transit."
+            );
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     RECEIVE TRANSFER
+     PUT /{id}/receive
+     =====================================================
+     */
+
+    async function receiveTransfer(id) {
+
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(id)
+            );
+
+        if (!transfer) {
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
+            return;
+        }
+
+        if (!Array.isArray(transfer.items) ||
+            transfer.items.length === 0) {
+
+            showMessage(
+                "This transfer does not contain any items.",
+                false
+            );
+            return;
+        }
+
+        receivingTransferId = id;
+
+        const container =
+            document.getElementById(
+                "receiveItemsContainer"
+            );
+
+        container.innerHTML = "";
+
+        transfer.items.forEach(
+            (item, index) => {
+
+                const partName =
+                    item.sparePart?.partName ||
+                    item.sparePart?.partCode ||
+                    "Spare Part";
+
+                const transferredQuantity =
+                    Number(item.quantity || 0);
+
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "receive-item-card";
+
+                card.innerHTML = `
+
+                    <h4>
+                        ${escapeHtml(partName)}
+                    </h4>
+
+                    <div class="receive-item-grid">
+
+                        <div>
+                            <label>
+                                Transferred Quantity
+                            </label>
+
+                            <div class="expected-quantity">
+                                ${transferredQuantity}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>
+                                Actual Received Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                min="0"
+                                max="${transferredQuantity}"
+                                value="${transferredQuantity}"
+                                required
+                                class="received-quantity-input"
+                                data-index="${index}">
+                        </div>
+
+                    </div>
+
+                    <div style="margin-top:12px;">
+
+                        <label>
+                            Discrepancy Note
+                        </label>
+
+                        <textarea
+                            class="discrepancy-note-input"
+                            data-index="${index}"
+                            placeholder="Required only if received quantity is different..."></textarea>
+
+                    </div>
+                `;
+
+                container.appendChild(card);
+            }
+        );
+
+        document
+            .getElementById("receiveModal")
+            .style.display = "block";
+    }
+
+
+    function closeReceiveModal() {
+
+        document
+            .getElementById("receiveModal")
+            .style.display = "none";
+
+        receivingTransferId = null;
+
+        document
+            .getElementById("receiveItemsContainer")
+            .innerHTML = "";
+    }
+
+
+    async function submitReceiveTransfer() {
+
+        if (!receivingTransferId) {
+
+            showMessage(
+                "No transfer selected.",
+                false
+            );
+
+            return;
+        }
+
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(receivingTransferId)
+            );
+
+        if (!transfer) {
+
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
+
+            return;
+        }
+
+        const quantityInputs =
+            document.querySelectorAll(
+                ".received-quantity-input"
+            );
+
+        const noteInputs =
+            document.querySelectorAll(
+                ".discrepancy-note-input"
+            );
+
+        const items = [];
+
+        for (let index = 0;
+             index < transfer.items.length;
+             index++) {
+
+            const transferItem =
+                transfer.items[index];
+
+            const transferredQuantity =
+                Number(transferItem.quantity);
+
+            const receivedQuantityValue =
+                quantityInputs[index]
+                    .value
+                    .trim();
+
+            if (receivedQuantityValue === "") {
+
+                showMessage(
+                    "Actual received quantity is required.",
+                    false
+                );
+
+                quantityInputs[index].focus();
+
+                return;
+            }
+
+            const receivedQuantity =
+                Number(receivedQuantityValue);
+
+            const discrepancyNote =
+                noteInputs[index]
+                    .value
+                    .trim();
+
+            if (!Number.isInteger(receivedQuantity) ||
+                receivedQuantity < 0) {
+
+                showMessage(
+                    "Received quantity must be 0 or greater.",
+                    false
+                );
+
+                return;
+            }
+
+            if (receivedQuantity > transferredQuantity) {
+
+                showMessage(
+                    "Received quantity cannot be greater than transferred quantity.",
+                    false
+                );
+
+                return;
+            }
+
+            if (receivedQuantity !== transferredQuantity &&
+                discrepancyNote === "") {
+
+                showMessage(
+                    "Please enter a discrepancy note when received quantity is different.",
+                    false
+                );
+
+                return;
+            }
+
+            items.push({
+                transferItemId:
+                transferItem.transferItemId,
+
+                receivedQuantity:
+                receivedQuantity,
+
+                discrepancyNote:
+                    receivedQuantity === transferredQuantity
+                        ? null
+                        : discrepancyNote
+            });
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/${receivingTransferId}/receive`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                items: items
+                            })
+                    }
+                );
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(response);
+
+                throw new Error(error);
+            }
+
+            closeReceiveModal();
+
+            showMessage(
+                "Transfer received successfully."
+            );
+
+            await Promise.all([
+                loadTransfers(),
+                loadInventoryData()
+            ]);
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     CANCEL TRANSFER
+     PUT /{id}/cancel
+     =====================================================
+     */
+
+    async function cancelTransfer(id) {
+
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(id)
+            );
+
+        if (!transfer) {
+
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
+
+            return;
+        }
+
+        cancellingTransferId = id;
+
+        document
+            .getElementById("cancelDetailsContainer")
+            .innerHTML =
+            buildDecisionTransferSummary(
+                transfer
+            );
+
+        const reasonInput =
+            document.getElementById(
+                "cancelReasonInput"
+            );
+
+        reasonInput.value = "";
+
+        document
+            .getElementById("cancelTransferModal")
+            .style.display = "block";
+
+        setTimeout(
+            () => reasonInput.focus(),
+            50
+        );
+    }
+
+
+    function closeCancelTransferModal() {
+
+        document
+            .getElementById("cancelTransferModal")
+            .style.display = "none";
+
+        cancellingTransferId = null;
+
+        document
+            .getElementById("cancelDetailsContainer")
+            .innerHTML = "";
+
+        document
+            .getElementById("cancelReasonInput")
+            .value = "";
+    }
+
+
+    async function confirmCancelTransfer() {
+
+        if (!cancellingTransferId) {
+
+            showMessage(
+                "No transfer selected for cancellation.",
+                false
+            );
+
+            return;
+        }
+
+        const reasonInput =
+            document.getElementById(
+                "cancelReasonInput"
+            );
+
+        const reason =
+            reasonInput.value.trim();
+
+        if (reason === "") {
+
+            showMessage(
+                "Cancellation reason is required.",
+                false
+            );
+
+            reasonInput.focus();
+
+            return;
+        }
+
+        if (reason.length > 255) {
+
+            showMessage(
+                "Cancellation reason cannot exceed 255 characters.",
+                false
+            );
+
+            reasonInput.focus();
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/${cancellingTransferId}/cancel`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                reason: reason
+                            })
+                    }
+                );
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(
+                        response
+                    );
+
+                throw new Error(error);
+            }
+
+            closeCancelTransferModal();
+
+            showMessage(
+                "Transfer cancelled successfully."
+            );
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     ACTION WITH JSON BODY
+     =====================================================
+     */
+
+    async function performAction(
+        url,
+        body,
+        successMessage
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(body)
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(response);
+
+                throw new Error(error);
+            }
+
+
+            showMessage(
+                successMessage
+            );
+
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     ACTION WITHOUT JSON BODY
+     =====================================================
+     */
+
+    async function performSimpleAction(
+        url,
+        successMessage
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "PUT"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(response);
+
+                throw new Error(error);
+            }
+
+
+            showMessage(
+                successMessage
+            );
+
+
+            await loadTransfers();
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
+    }
+
+
+    /*
+     =====================================================
+     READ BACKEND ERROR RESPONSE
+     =====================================================
+     */
+
+    async function readErrorResponse(response) {
+
+        try {
+
+            const data =
+                await response.json();
+
+
+            if (data.message) {
+                return data.message;
+            }
+
+
+            if (data.fieldErrors) {
+
+                return Object
+                    .values(data.fieldErrors)
+                    .join(", ");
+            }
+
+
+            if (data.error) {
+                return data.error;
+            }
+
+        }
+        catch (e) {
+
+            return "Request failed.";
+        }
+
+
+        return "Request failed.";
+    }
+
+
+    /*
+     =====================================================
+     RENDER TABLE
+     =====================================================
+     */
+
+    function renderTransfers() {
+
+        const tbody =
+            document
+                .getElementById("transferTableBody");
+
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const statusFilter =
+            document
+                .getElementById("statusFilter")
+                .value;
+
+
+        tbody.innerHTML = "";
+
+
+        let filtered =
+            transfers.filter(transfer => {
+
+
+                const status =
+                    transfer.status || "";
+
+
+                const text =
+                    JSON.stringify(transfer)
+                        .toLowerCase();
+
+
+                const searchMatch =
+                    text.includes(search);
+
+
+                const statusMatch =
+                    statusFilter === "" ||
+                    status === statusFilter;
+
+
+                return (
+                    searchMatch &&
+                    statusMatch
+                );
+            });
+
+
+        if (filtered.length === 0) {
+
+            tbody.innerHTML = `
+
+                <tr>
+                    <td colspan="11"
+                        style="
+                            text-align:center;
+                            color:#64748b;
+                            padding:25px;
+                        ">
+                        No stock transfer records found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        filtered.forEach(transfer => {
+
+            const row =
+                document.createElement("tr");
+
+
+            const id =
+                transfer.transferId ?? "-";
+
+
+            const status =
+                transfer.status ?? "UNKNOWN";
+
+
+            const source =
+                getLocationName(
+                    transfer.sourceLocation
+                );
+
+
+            const destination =
+                getLocationName(
+                    transfer.destinationLocation
+                );
+
+
+            const requestedBy =
+                getUserName(
+                    transfer.requestedBy
+                );
+
+
+            const requestDate =
+                formatDate(
+                    transfer.requestDate
+                );
+
+
+            const items =
+                formatTransferItems(
+                    transfer.items
+                );
+
+
+            const discrepancy =
+                formatDiscrepancy(
+                    transfer.items
+                );
+
+
+            const notes =
+                transfer.notes || "-";
+
+
+            const decisionReason =
+                formatDecisionReason(transfer);
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${id}
+                </td>
+
+                <td>
+                    ${escapeHtml(source)}
+                </td>
+
+                <td>
+                    ${escapeHtml(destination)}
+                </td>
+
+                <td>
+                    ${escapeHtml(requestedBy)}
+                </td>
+
+                <td>
+                    ${requestDate}
+                </td>
+
+                <td>
+
+                    <span class="badge ${status}">
+                        ${status.replace("_", " ")}
+                    </span>
+
+                </td>
+
+                <td>
+                    <div class="item-summary">
+                        ${items}
+                    </div>
+                </td>
+
+                <td>
+                    <div class="item-summary">
+                        ${discrepancy}
+                    </div>
+                </td>
+
+                <td>
+                    ${escapeHtml(notes)}
+                </td>
+
+                <td>
+                    ${decisionReason}
+                </td>
+
+                <td>
+
+                    <div class="actions">
+
+                        ${buildActionButtons(
+                id,
+                status
+            )}
+
+                    </div>
+
+                </td>
+            `;
+
+
+            tbody.appendChild(row);
+        });
+    }
+
+
+    function formatTransferItems(items) {
+
+        if (!Array.isArray(items) || items.length === 0) {
+            return "-";
+        }
+
+        return items
+            .map(item => {
+
+                const partName =
+                    item.sparePart?.partName ||
+                    item.sparePart?.partCode ||
+                    (
+                        item.sparePart?.sparePartId
+                            ? `Part ${item.sparePart.sparePartId}`
+                            : "Spare Part"
+                    );
+
+                const quantity =
+                    Number(item.quantity || 0);
+
+                return `
+                    <div class="item-detail-block">
+
+                        <div class="item-detail-name">
+                            ${escapeHtml(partName)}
+                        </div>
+
+                        <div class="item-detail-qty">
+                            Quantity: ${quantity}
+                        </div>
+
+                    </div>
+                `;
+            })
+            .join("");
+    }
+
+
+    function formatDiscrepancy(items) {
+
+        if (!Array.isArray(items) || items.length === 0) {
+            return "-";
+        }
+
+        /*
+         * IMPORTANT:
+         * We map EVERY transfer item instead of filtering.
+         * Therefore item 1 in the Items column always lines up
+         * with item 1 in the Discrepancy column, item 2 with item 2, etc.
+         */
+        return items
+            .map(item => {
+
+                const partName =
+                    item.sparePart?.partName ||
+                    item.sparePart?.partCode ||
+                    "Spare Part";
+
+                const expected =
+                    Number(item.quantity || 0);
+
+                const hasReceivedQuantity =
+                    item.receivedQuantity !== null &&
+                    item.receivedQuantity !== undefined;
+
+                /*
+                 * Transfer has not been received yet,
+                 * so discrepancy information is not available.
+                 */
+                if (!hasReceivedQuantity) {
+
+                    return `
+                        <div class="discrepancy-detail-block">
+
+                            <div class="discrepancy-part-name">
+                                ${escapeHtml(partName)}
+                            </div>
+
+                            <span style="color:#94a3b8;">
+                                Not recorded
+                            </span>
+
+                        </div>
+                    `;
+                }
+
+                const received =
+                    Number(item.receivedQuantity || 0);
+
+                const difference =
+                    expected - received;
+
+                /*
+                 * Exact quantity received.
+                 */
+                if (difference === 0) {
+
+                    return `
+                        <div class="discrepancy-detail-block">
+
+                            <div
+                                class="discrepancy-part-name"
+                                style="color:#166534;">
+                                ${escapeHtml(partName)}
+                            </div>
+
+                            <span
+                                style="
+                                    color:#166534;
+                                    font-weight:bold;
+                                ">
+                                No Discrepancy
+                            </span>
+
+                            <span
+                                style="
+                                    color:#64748b;
+                                    margin-top:3px;
+                                ">
+                                Received ${received} / ${expected}
+                            </span>
+
+                        </div>
+                    `;
+                }
+
+                /*
+                 * Quantity discrepancy exists.
+                 */
+                const note =
+                    item.discrepancyNote
+                        ? escapeHtml(item.discrepancyNote)
+                        : "No reason recorded";
+
+                const differenceText =
+                    difference > 0
+                        ? `Missing: ${difference}`
+                        : `Extra: ${Math.abs(difference)}`;
+
+                return `
+                    <div class="discrepancy-detail-block">
+
+                        <div
+                            class="discrepancy-part-name"
+                            style="color:#b91c1c;">
+                            ${escapeHtml(partName)}
+                        </div>
+
+                        <span
+                            style="
+                                color:#b91c1c;
+                                font-weight:bold;
+                            ">
+                            ${differenceText}
+                        </span>
+
+                        <span
+                            style="
+                                color:#64748b;
+                                margin-top:3px;
+                            ">
+                            Received ${received} / ${expected}
+                        </span>
+
+                        <span
+                            style="
+                                color:#64748b;
+                                margin-top:3px;
+                            ">
+                            ${note}
+                        </span>
+
+                    </div>
+                `;
+            })
+            .join("");
+    }
+
+
+    function formatDecisionReason(transfer) {
+
+        if (!transfer) {
+            return "-";
+        }
+
+        if (transfer.status === "REJECTED") {
+
+            if (!transfer.rejectReason) {
+                return `
+                    <span style="color:#94a3b8;">
+                        Not recorded
+                    </span>
+                `;
+            }
+
+            return `
+                <span style="
+                    color:#991b1b;
+                    font-weight:bold;
+                ">
+                    Rejected
+                </span>
+                <br>
+                <span style="color:#64748b;">
+                    ${escapeHtml(transfer.rejectReason)}
+                </span>
+            `;
+        }
+
+        if (transfer.status === "CANCELLED") {
+
+            if (!transfer.cancelReason) {
+                return `
+                    <span style="color:#94a3b8;">
+                        Not recorded
+                    </span>
+                `;
+            }
+
+            return `
+                <span style="
+                    color:#475569;
+                    font-weight:bold;
+                ">
+                    Cancelled
+                </span>
+                <br>
+                <span style="color:#64748b;">
+                    ${escapeHtml(transfer.cancelReason)}
+                </span>
+            `;
+        }
+
+        return `
+            <span style="color:#94a3b8;">
+                -
+            </span>
+        `;
+    }
+
+
+    /*
+     =====================================================
+     DISPLAY CORRECT BUTTONS
+     BASED ON TRANSFER STATUS
+     =====================================================
+     */
+
+    function buildActionButtons(
+        id,
+        status
+    ) {
+
+        let buttons = "";
+
+
+        if (status === "PENDING") {
+
+            buttons += `
+
+                <button
+                    class="action-button approve"
+                    onclick="approveTransfer(${id})">
+                    Approve
+                </button>
+
+                <button
+                    class="action-button reject"
+                    onclick="rejectTransfer(${id})">
+                    Reject
+                </button>
+
+                <button
+                    class="action-button cancel"
+                    onclick="cancelTransfer(${id})">
+                    Cancel
+                </button>
+            `;
+        }
+
+
+        else if (status === "APPROVED") {
+
+            buttons += `
+
+                <button
+                    class="action-button dispatch"
+                    onclick="dispatchTransfer(${id})">
+                    Dispatch
+                </button>
+
+                <button
+                    class="action-button cancel"
+                    onclick="cancelTransfer(${id})">
+                    Cancel
+                </button>
+            `;
+        }
+
+
+        else if (status === "DISPATCHED") {
+
+            buttons += `
+
+                <button
+                    class="action-button transit"
+                    onclick="markInTransit(${id})">
+                    In Transit
+                </button>
+
+                <button
+                    class="action-button receive"
+                    onclick="receiveTransfer(${id})">
+                    Receive
+                </button>
+            `;
+        }
+
+
+        else if (status === "IN_TRANSIT") {
+
+            buttons += `
+
+                <button
+                    class="action-button receive"
+                    onclick="receiveTransfer(${id})">
+                    Receive
+                </button>
+            `;
+        }
+
+
+        else {
+
+            buttons = `
+                <span style="
+                    color:#64748b;
+                    font-size:12px;
+                ">
+                    Completed
+                </span>
+            `;
+        }
+
+
+        return buttons;
+    }
+
+
+    /*
+     =====================================================
+     UPDATE DASHBOARD COUNTERS
+     =====================================================
+     */
+
+    function updateDashboard() {
+
+        const total = transfers.length;
+        const pending = transfers.filter(t => t.status === "PENDING").length;
+        const approved = transfers.filter(t => t.status === "APPROVED").length;
+        const rejected = transfers.filter(t => t.status === "REJECTED").length;
+        const dispatched = transfers.filter(t => t.status === "DISPATCHED").length;
+        const inTransit = transfers.filter(t => t.status === "IN_TRANSIT").length;
+        const received = transfers.filter(t => t.status === "RECEIVED").length;
+        const cancelled = transfers.filter(t => t.status === "CANCELLED").length;
+        const discrepancyCount =
+            transfers.filter(transfer =>
+                Array.isArray(transfer.items) &&
+                transfer.items.some(item =>
+                    item.receivedQuantity !== null &&
+                    item.receivedQuantity !== undefined &&
+                    Number(item.receivedQuantity) !==
+                    Number(item.quantity)
+                )
+            ).length;
+
+        document.getElementById("totalCount").innerText = total;
+        document.getElementById("pendingCount").innerText = pending;
+        document.getElementById("approvedCount").innerText = approved;
+        document.getElementById("rejectedCount").innerText = rejected;
+        document.getElementById("dispatchedCount").innerText = dispatched;
+        document.getElementById("transitCount").innerText = inTransit;
+        document.getElementById("receivedCount").innerText = received;
+        document.getElementById("cancelledCount").innerText = cancelled;
+        const discrepancyElement =
+            document.getElementById("discrepancyCount");
+
+        if (discrepancyElement) {
+            discrepancyElement.textContent = discrepancyCount;
+        }
+    }
+
+
+    /*
+     =====================================================
+     CLEAR FORM AFTER CREATE
+     =====================================================
+     */
+
+    function clearCreateForm() {
+
+        document
+            .getElementById("sourceLocationId")
+            .value = "";
+
+
+        document
+            .getElementById("destinationLocationId")
+            .value = "";
+
+
+        document
+            .getElementById("notes")
+            .value = "";
+
+        document
+            .getElementById("sparePartId")
+            .value = "";
+
+        document
+            .getElementById("itemQuantity")
+            .value = "1";
+
+        selectedItems = [];
+        renderSelectedItems();
+        updateAvailableStock();
+    }
+
+
+    /*
+     =====================================================
+     LOCATION NAME HELPER
+     =====================================================
+     */
+
+    function getLocationName(location) {
+
+        if (!location) {
+            return "-";
+        }
+
+
+        return (
+            location.locationName ||
+            location.name ||
+            location.locationType ||
+            (
+                location.locationId
+                    ? "Location " +
+                    location.locationId
+                    : "-"
+            )
+        );
+    }
+
+
+    /*
+     =====================================================
+     USER NAME HELPER
+     =====================================================
+     */
+
+    function getUserName(user) {
+
+        if (!user) {
+            return "-";
+        }
+
+
+        return (
+            user.fullName ||
+            user.userName ||
+            user.username ||
+            user.name ||
+            user.email ||
+            (
+                user.userId
+                    ? "User " +
+                    user.userId
+                    : "-"
+            )
+        );
+    }
+
+
+    /*
+     =====================================================
+     FORMAT DATE
+     =====================================================
+     */
+
+    function formatDate(dateValue) {
+
+        if (!dateValue) {
+            return "-";
+        }
+
+
+        const date =
+            new Date(dateValue);
+
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return dateValue;
+        }
+
+
+        return date.toLocaleString();
+    }
+
+
+    /*
+     =====================================================
+     PREVENT HTML INJECTION
+     =====================================================
+     */
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
+    }
+
+
+    /*
+     =====================================================
+     AUTOMATICALLY LOAD DATA
+     WHEN PAGE OPENS
+     =====================================================
+     */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async () => {
+            await Promise.all([
+                loadTransfers(),
+                loadInventoryData(),
+                loadLocations(),
+                loadUsers()
+            ]);
+            renderSelectedItems();
+        }
+    );
+
+</script>
+
+</body>
+</html>
