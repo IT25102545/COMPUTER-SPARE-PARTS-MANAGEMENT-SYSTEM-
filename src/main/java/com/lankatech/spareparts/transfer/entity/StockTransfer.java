@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "stock_transfers")
@@ -58,6 +60,26 @@ public class StockTransfer {
 
     @Column(name = "cancel_reason", length = 255)
     private String cancelReason;
+
+    // One stock transfer can contain multiple spare parts
+    @OneToMany(
+            mappedBy = "stockTransfer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<StockTransferItem> items = new ArrayList<>();
+
+    // Helper method to add an item to this transfer
+    public void addItem(StockTransferItem item) {
+        items.add(item);
+        item.setStockTransfer(this);
+    }
+
+    // Helper method to remove an item from this transfer
+    public void removeItem(StockTransferItem item) {
+        items.remove(item);
+        item.setStockTransfer(null);
+    }
 
     @PrePersist
     public void onCreate() {
