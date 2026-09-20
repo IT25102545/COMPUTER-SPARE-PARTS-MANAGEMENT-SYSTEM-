@@ -221,6 +221,69 @@
         }
 
         /* =========================
+           TRANSFER ITEMS
+        ========================== */
+
+        .item-builder {
+            grid-column: 1 / -1;
+            border: 1px solid #dbeafe;
+            background: #f8fbff;
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .item-builder h3 {
+            color: #172554;
+            font-size: 15px;
+            margin-bottom: 14px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .stock-info {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            min-height: 38px;
+            font-weight: bold;
+            color: #0f766e;
+        }
+
+        .selected-items-box {
+            margin-top: 16px;
+            border-top: 1px solid #dbeafe;
+            padding-top: 14px;
+        }
+
+        .selected-items-box h4 {
+            color: #334155;
+            margin-bottom: 10px;
+        }
+
+        .selected-items-table th,
+        .selected-items-table td {
+            padding: 9px;
+            font-size: 12px;
+        }
+
+        .empty-items {
+            color: #64748b;
+            font-size: 12px;
+            padding: 10px 0;
+        }
+
+        .item-summary {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* =========================
            TABLE SECTION
         ========================== */
 
@@ -416,6 +479,10 @@
                 grid-template-columns: 1fr;
             }
 
+            .item-grid {
+                grid-template-columns: 1fr;
+            }
+
             .full-width {
                 grid-column: auto;
             }
@@ -527,7 +594,7 @@
                     Source Location ID
                 </label>
 
-                <select id="sourceLocationId">
+                <select id="sourceLocationId" onchange="updateAvailableStock()">
 
                     <option value="">
                         Select Source Location
@@ -597,6 +664,71 @@
                         id="approvedById"
                         value="2"
                         min="1">
+
+            </div>
+
+
+            <div class="item-builder">
+
+                <h3>Transfer Items</h3>
+
+                <div class="item-grid">
+
+                    <div class="form-group">
+                        <label>Spare Part</label>
+                        <select id="sparePartId" onchange="updateAvailableStock()">
+                            <option value="">Loading spare parts...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input
+                                type="number"
+                                id="itemQuantity"
+                                min="1"
+                                value="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Available Stock</label>
+                        <div class="stock-info" id="availableStock">-</div>
+                    </div>
+
+                    <div>
+                        <button
+                                type="button"
+                                class="btn btn-info"
+                                onclick="addTransferItem()">
+                            + Add Item
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="selected-items-box">
+                    <h4>Selected Items</h4>
+
+                    <div id="emptyItemsMessage" class="empty-items">
+                        No items added yet.
+                    </div>
+
+                    <table
+                            id="selectedItemsTable"
+                            class="selected-items-table"
+                            style="display:none;">
+                        <thead>
+                        <tr>
+                            <th>Spare Part</th>
+                            <th>Part Code</th>
+                            <th>Quantity</th>
+                            <th>Available at Source</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="selectedItemsBody"></tbody>
+                    </table>
+                </div>
 
             </div>
 
@@ -729,6 +861,8 @@
 
                 <th>Status</th>
 
+                <th>Items</th>
+
                 <th>Notes</th>
 
                 <th>Actions</th>
@@ -776,6 +910,204 @@
 
     let transfers = [];
 
+    const INVENTORY_PARTS_URL = "/api/inventory/parts";
+    const INVENTORY_STOCKS_URL = "/api/inventory/stocks";
+
+    let inventoryParts = [];
+    let inventoryStocks = [];
+    let selectedItems = [];
+
+
+    /*
+     =====================================================
+     LOAD INVENTORY DATA FOR TRANSFER ITEMS
+     =====================================================
+     */
+
+    async function loadInventoryData() {
+
+        try {
+
+            const [partsResponse, stocksResponse] = await Promise.all([
+                fetch(INVENTORY_PARTS_URL),
+                fetch(INVENTORY_STOCKS_URL)
+            ]);
+
+            if (!partsResponse.ok) {
+                throw new Error("Unable to load spare parts.");
+            }
+
+            if (!stocksResponse.ok) {
+                throw new Error("Unable to load stock information.");
+            }
+
+            inventoryParts = await partsResponse.json();
+            inventoryStocks = await stocksResponse.json();
+
+            populateSparePartOptions();
+            updateAvailableStock();
+        }
+        catch (error) {
+            showMessage(error.message, false);
+            console.error(error);
+        }
+    }
+
+
+    function populateSparePartOptions() {
+
+        const select = document.getElementById("sparePartId");
+
+        select.innerHTML = `
+            <option value="">Select Spare Part</option>
+        `;
+
+        inventoryParts
+            .filter(part => part.active !== false)
+            .forEach(part => {
+
+                const option = document.createElement("option");
+                option.value = part.sparePartId;
+                option.textContent = `${part.partCode || ""} - ${part.partName || "Spare Part"}`;
+                select.appendChild(option);
+            });
+    }
+
+
+    function getAvailableStock(sparePartId, locationId) {
+
+        const stock = inventoryStocks.find(s => {
+
+            const partId = s.sparePart?.sparePartId ?? s.sparePartId;
+            const stockLocationId = s.location?.locationId ?? s.locationId;
+
+            return Number(partId) === Number(sparePartId)
+                && Number(stockLocationId) === Number(locationId);
+        });
+
+        return stock ? Number(stock.quantity || 0) : 0;
+    }
+
+
+    function updateAvailableStock() {
+
+        const sparePartId = document.getElementById("sparePartId")?.value;
+        const sourceLocationId = document.getElementById("sourceLocationId")?.value;
+        const box = document.getElementById("availableStock");
+
+        if (!box) {
+            return;
+        }
+
+        if (!sparePartId || !sourceLocationId) {
+            box.innerText = "-";
+            return;
+        }
+
+        const quantity = getAvailableStock(sparePartId, sourceLocationId);
+        box.innerText = quantity;
+    }
+
+
+    function addTransferItem() {
+
+        const sparePartId = Number(document.getElementById("sparePartId").value);
+        const quantity = Number(document.getElementById("itemQuantity").value);
+        const sourceLocationId = Number(document.getElementById("sourceLocationId").value);
+
+        if (!sourceLocationId) {
+            showMessage("Please select the source location first.", false);
+            return;
+        }
+
+        if (!sparePartId) {
+            showMessage("Please select a spare part.", false);
+            return;
+        }
+
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            showMessage("Quantity must be at least 1.", false);
+            return;
+        }
+
+        if (selectedItems.some(item => item.sparePartId === sparePartId)) {
+            showMessage("The same spare part cannot be added more than once.", false);
+            return;
+        }
+
+        const available = getAvailableStock(sparePartId, sourceLocationId);
+
+        if (quantity > available) {
+            showMessage(
+                `Insufficient source stock. Available quantity is ${available}.`,
+                false
+            );
+            return;
+        }
+
+        const part = inventoryParts.find(
+            p => Number(p.sparePartId) === sparePartId
+        );
+
+        selectedItems.push({
+            sparePartId: sparePartId,
+            quantity: quantity,
+            partName: part?.partName || `Part ${sparePartId}`,
+            partCode: part?.partCode || "-",
+            availableStock: available
+        });
+
+        renderSelectedItems();
+
+        document.getElementById("sparePartId").value = "";
+        document.getElementById("itemQuantity").value = "1";
+        updateAvailableStock();
+    }
+
+
+    function removeTransferItem(index) {
+        selectedItems.splice(index, 1);
+        renderSelectedItems();
+    }
+
+
+    function renderSelectedItems() {
+
+        const table = document.getElementById("selectedItemsTable");
+        const tbody = document.getElementById("selectedItemsBody");
+        const empty = document.getElementById("emptyItemsMessage");
+
+        tbody.innerHTML = "";
+
+        if (selectedItems.length === 0) {
+            table.style.display = "none";
+            empty.style.display = "block";
+            return;
+        }
+
+        empty.style.display = "none";
+        table.style.display = "table";
+
+        selectedItems.forEach((item, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${escapeHtml(item.partName)}</td>
+                <td>${escapeHtml(item.partCode)}</td>
+                <td>${item.quantity}</td>
+                <td>${item.availableStock}</td>
+                <td>
+                    <button
+                        type="button"
+                        class="action-button cancel"
+                        onclick="removeTransferItem(${index})">
+                        Remove
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
 
     /*
      =====================================================
@@ -783,11 +1115,13 @@
      =====================================================
      */
 
-    function showCreateForm() {
+    async function showCreateForm() {
 
         document
             .getElementById("createTransferForm")
             .style.display = "block";
+
+        await loadInventoryData();
 
         window.scrollTo({
             top: 250,
@@ -916,24 +1250,20 @@
                 .getElementById("sourceLocationId")
                 .value;
 
-
         const destinationLocationId =
             document
                 .getElementById("destinationLocationId")
                 .value;
-
 
         const requestedById =
             document
                 .getElementById("requestedById")
                 .value;
 
-
         const notes =
             document
                 .getElementById("notes")
                 .value;
-
 
         if (
             sourceLocationId === "" ||
@@ -949,7 +1279,6 @@
             return;
         }
 
-
         if (
             sourceLocationId ===
             destinationLocationId
@@ -963,6 +1292,15 @@
             return;
         }
 
+        if (selectedItems.length === 0) {
+
+            showMessage(
+                "Please add at least one spare part to the transfer.",
+                false
+            );
+
+            return;
+        }
 
         const requestBody = {
 
@@ -975,10 +1313,14 @@
             requestedById:
                 Number(requestedById),
 
+            items: selectedItems.map(item => ({
+                sparePartId: item.sparePartId,
+                quantity: item.quantity
+            })),
+
             notes:
             notes
         };
-
 
         try {
 
@@ -1000,7 +1342,6 @@
                     }
                 );
 
-
             if (!response.ok) {
 
                 const error =
@@ -1009,18 +1350,18 @@
                 throw new Error(error);
             }
 
-
             showMessage(
                 "Stock transfer request created successfully."
             );
-
 
             clearCreateForm();
 
             hideCreateForm();
 
-            await loadTransfers();
-
+            await Promise.all([
+                loadTransfers(),
+                loadInventoryData()
+            ]);
         }
         catch (error) {
 
@@ -1436,7 +1777,7 @@
             tbody.innerHTML = `
 
                 <tr>
-                    <td colspan="8"
+                    <td colspan="9"
                         style="
                             text-align:center;
                             color:#64748b;
@@ -1489,6 +1830,12 @@
                 );
 
 
+            const items =
+                formatTransferItems(
+                    transfer.items
+                );
+
+
             const notes =
                 transfer.notes || "-";
 
@@ -1524,6 +1871,12 @@
                 </td>
 
                 <td>
+                    <div class="item-summary">
+                        ${items}
+                    </div>
+                </td>
+
+                <td>
                     ${escapeHtml(notes)}
                 </td>
 
@@ -1544,6 +1897,28 @@
 
             tbody.appendChild(row);
         });
+    }
+
+
+    function formatTransferItems(items) {
+
+        if (!Array.isArray(items) || items.length === 0) {
+            return "-";
+        }
+
+        return items
+            .map(item => {
+
+                const partName =
+                    item.sparePart?.partName ||
+                    item.sparePart?.partCode ||
+                    (item.sparePart?.sparePartId
+                        ? `Part ${item.sparePart.sparePartId}`
+                        : "Spare Part");
+
+                return `${escapeHtml(partName)} × ${Number(item.quantity || 0)}`;
+            })
+            .join("<br>");
     }
 
 
@@ -1730,6 +2105,18 @@
         document
             .getElementById("notes")
             .value = "";
+
+        document
+            .getElementById("sparePartId")
+            .value = "";
+
+        document
+            .getElementById("itemQuantity")
+            .value = "1";
+
+        selectedItems = [];
+        renderSelectedItems();
+        updateAvailableStock();
     }
 
 
@@ -1866,7 +2253,13 @@
 
     document.addEventListener(
         "DOMContentLoaded",
-        loadTransfers
+        async () => {
+            await Promise.all([
+                loadTransfers(),
+                loadInventoryData()
+            ]);
+            renderSelectedItems();
+        }
     );
 
 </script>
