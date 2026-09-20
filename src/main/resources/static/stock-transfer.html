@@ -145,9 +145,25 @@
         .card {
             background: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 5px solid #cbd5e1;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+        }
+
+        .card-total { border-left-color: #172554; }
+        .card-pending { border-left-color: #f59e0b; }
+        .card-approved { border-left-color: #2563eb; }
+        .card-rejected { border-left-color: #dc2626; }
+        .card-dispatched { border-left-color: #7c3aed; }
+        .card-transit { border-left-color: #0284c7; }
+        .card-received { border-left-color: #16a34a; }
+        .card-cancelled { border-left-color: #64748b; }
 
         .card h3 {
             font-size: 14px;
@@ -430,7 +446,113 @@
         .cancel {
             background: #64748b;
         }
+        /* =========================
+           RECEIVE TRANSFER MODAL
+        ========================== */
 
+        .receive-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.55);
+            overflow-y: auto;
+            padding: 40px 15px;
+        }
+
+        .receive-modal-content {
+            background: white;
+            width: 100%;
+            max-width: 760px;
+            margin: auto;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.20);
+            padding: 24px;
+        }
+
+        .receive-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .receive-modal-header h2 {
+            color: #172554;
+            margin-bottom: 5px;
+        }
+
+        .receive-modal-header p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            font-size: 28px;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .receive-item-card {
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .receive-item-card h4 {
+            color: #172554;
+            margin-bottom: 12px;
+        }
+
+        .receive-item-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .receive-item-card label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .receive-item-card input,
+        .receive-item-card textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 9px;
+        }
+
+        .receive-item-card textarea {
+            min-height: 65px;
+            resize: vertical;
+        }
+
+        .expected-quantity {
+            padding: 9px;
+            background: #e0e7ff;
+            color: #3730a3;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .receive-modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
         /* =========================
            MESSAGE BOX
         ========================== */
@@ -480,6 +602,10 @@
             }
 
             .item-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .receive-item-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -551,28 +677,52 @@
 
     <section class="cards">
 
-        <div class="card">
+        <div class="card card-total">
             <h3>Total Transfers</h3>
             <div class="number" id="totalCount">0</div>
             <div class="small-text">All transfer requests</div>
         </div>
 
-        <div class="card">
+        <div class="card card-pending">
             <h3>Pending</h3>
             <div class="number" id="pendingCount">0</div>
             <div class="small-text">Waiting for approval</div>
         </div>
 
-        <div class="card">
+        <div class="card card-approved">
+            <h3>Approved</h3>
+            <div class="number" id="approvedCount">0</div>
+            <div class="small-text">Approved and ready to dispatch</div>
+        </div>
+
+        <div class="card card-rejected">
+            <h3>Rejected</h3>
+            <div class="number" id="rejectedCount">0</div>
+            <div class="small-text">Rejected transfer requests</div>
+        </div>
+
+        <div class="card card-dispatched">
+            <h3>Dispatched</h3>
+            <div class="number" id="dispatchedCount">0</div>
+            <div class="small-text">Dispatched from source</div>
+        </div>
+
+        <div class="card card-transit">
             <h3>In Transit</h3>
             <div class="number" id="transitCount">0</div>
             <div class="small-text">Currently moving</div>
         </div>
 
-        <div class="card">
+        <div class="card card-received">
             <h3>Received</h3>
             <div class="number" id="receivedCount">0</div>
             <div class="small-text">Successfully completed</div>
+        </div>
+
+        <div class="card card-cancelled">
+            <h3>Cancelled</h3>
+            <div class="number" id="cancelledCount">0</div>
+            <div class="small-text">Cancelled transfer requests</div>
         </div>
 
     </section>
@@ -863,7 +1013,11 @@
 
                 <th>Items</th>
 
+                <th>Discrepancy</th>
+
                 <th>Notes</th>
+
+                <th>Decision Reason</th>
 
                 <th>Actions</th>
 
@@ -879,7 +1033,53 @@
         </table>
 
     </section>
+    <!-- =========================
+         RECEIVE TRANSFER MODAL
+    ========================== -->
 
+    <div id="receiveModal" class="receive-modal">
+
+        <div class="receive-modal-content">
+
+            <div class="receive-modal-header">
+                <div>
+                    <h2>Receive Stock Transfer</h2>
+                    <p>
+                        Confirm the actual quantity received for each spare part.
+                    </p>
+                </div>
+
+                <button
+                        type="button"
+                        class="modal-close"
+                        onclick="closeReceiveModal()">
+                    ×
+                </button>
+            </div>
+
+            <div id="receiveItemsContainer"></div>
+
+            <div class="receive-modal-actions">
+
+                <button
+                        type="button"
+                        class="btn btn-success"
+                        onclick="submitReceiveTransfer()">
+                    Confirm Receive
+                </button>
+
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeReceiveModal()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
 </main>
 
 
@@ -916,6 +1116,7 @@
     let inventoryParts = [];
     let inventoryStocks = [];
     let selectedItems = [];
+    let receivingTransferId = null;
 
 
     /*
@@ -1424,20 +1625,42 @@
 
     async function rejectTransfer(id) {
 
-        const confirmed =
-            confirm(
-                "Are you sure you want to reject this transfer?"
+        const reason =
+            prompt(
+                "Enter rejection reason:"
             );
 
-
-        if (!confirmed) {
+        if (reason === null) {
             return;
         }
 
+        if (reason.trim() === "") {
 
-        await performSimpleAction(
+            showMessage(
+                "Reject reason is required.",
+                false
+            );
+
+            return;
+        }
+
+        if (reason.trim().length > 255) {
+
+            showMessage(
+                "Reject reason cannot exceed 255 characters.",
+                false
+            );
+
+            return;
+        }
+
+        await performAction(
 
             `${API_URL}/${id}/reject`,
+
+            {
+                reason: reason.trim()
+            },
 
             "Transfer rejected successfully."
         );
@@ -1500,23 +1723,277 @@
 
     async function receiveTransfer(id) {
 
-        const confirmed =
-            confirm(
-                "Confirm that this transfer has been received?"
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(id)
             );
 
-
-        if (!confirmed) {
+        if (!transfer) {
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
             return;
         }
 
+        if (!Array.isArray(transfer.items) ||
+            transfer.items.length === 0) {
 
-        await performSimpleAction(
+            showMessage(
+                "This transfer does not contain any items.",
+                false
+            );
+            return;
+        }
 
-            `${API_URL}/${id}/receive`,
+        receivingTransferId = id;
 
-            "Transfer received successfully."
+        const container =
+            document.getElementById(
+                "receiveItemsContainer"
+            );
+
+        container.innerHTML = "";
+
+        transfer.items.forEach(
+            (item, index) => {
+
+                const partName =
+                    item.sparePart?.partName ||
+                    item.sparePart?.partCode ||
+                    "Spare Part";
+
+                const transferredQuantity =
+                    Number(item.quantity || 0);
+
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "receive-item-card";
+
+                card.innerHTML = `
+
+                    <h4>
+                        ${escapeHtml(partName)}
+                    </h4>
+
+                    <div class="receive-item-grid">
+
+                        <div>
+                            <label>
+                                Transferred Quantity
+                            </label>
+
+                            <div class="expected-quantity">
+                                ${transferredQuantity}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>
+                                Actual Received Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                min="0"
+                                max="${transferredQuantity}"
+                                value="${transferredQuantity}"
+                                class="received-quantity-input"
+                                data-index="${index}">
+                        </div>
+
+                    </div>
+
+                    <div style="margin-top:12px;">
+
+                        <label>
+                            Discrepancy Note
+                        </label>
+
+                        <textarea
+                            class="discrepancy-note-input"
+                            data-index="${index}"
+                            placeholder="Required only if received quantity is different..."></textarea>
+
+                    </div>
+                `;
+
+                container.appendChild(card);
+            }
         );
+
+        document
+            .getElementById("receiveModal")
+            .style.display = "block";
+    }
+
+
+    function closeReceiveModal() {
+
+        document
+            .getElementById("receiveModal")
+            .style.display = "none";
+
+        receivingTransferId = null;
+
+        document
+            .getElementById("receiveItemsContainer")
+            .innerHTML = "";
+    }
+
+
+    async function submitReceiveTransfer() {
+
+        if (!receivingTransferId) {
+
+            showMessage(
+                "No transfer selected.",
+                false
+            );
+
+            return;
+        }
+
+        const transfer =
+            transfers.find(
+                t => Number(t.transferId) === Number(receivingTransferId)
+            );
+
+        if (!transfer) {
+
+            showMessage(
+                "Transfer record not found.",
+                false
+            );
+
+            return;
+        }
+
+        const quantityInputs =
+            document.querySelectorAll(
+                ".received-quantity-input"
+            );
+
+        const noteInputs =
+            document.querySelectorAll(
+                ".discrepancy-note-input"
+            );
+
+        const items = [];
+
+        for (let index = 0;
+             index < transfer.items.length;
+             index++) {
+
+            const transferItem =
+                transfer.items[index];
+
+            const transferredQuantity =
+                Number(transferItem.quantity);
+
+            const receivedQuantity =
+                Number(quantityInputs[index].value);
+
+            const discrepancyNote =
+                noteInputs[index]
+                    .value
+                    .trim();
+
+            if (!Number.isInteger(receivedQuantity) ||
+                receivedQuantity < 0) {
+
+                showMessage(
+                    "Received quantity must be 0 or greater.",
+                    false
+                );
+
+                return;
+            }
+
+            if (receivedQuantity > transferredQuantity) {
+
+                showMessage(
+                    "Received quantity cannot be greater than transferred quantity.",
+                    false
+                );
+
+                return;
+            }
+
+            if (receivedQuantity !== transferredQuantity &&
+                discrepancyNote === "") {
+
+                showMessage(
+                    "Please enter a discrepancy note when received quantity is different.",
+                    false
+                );
+
+                return;
+            }
+
+            items.push({
+                transferItemId:
+                transferItem.transferItemId,
+
+                receivedQuantity:
+                receivedQuantity,
+
+                discrepancyNote:
+                    receivedQuantity === transferredQuantity
+                        ? null
+                        : discrepancyNote
+            });
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/${receivingTransferId}/receive`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                items: items
+                            })
+                    }
+                );
+
+            if (!response.ok) {
+
+                const error =
+                    await readErrorResponse(response);
+
+                throw new Error(error);
+            }
+
+            closeReceiveModal();
+
+            showMessage(
+                "Transfer received successfully."
+            );
+
+            await Promise.all([
+                loadTransfers(),
+                loadInventoryData()
+            ]);
+
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+        }
     }
 
 
@@ -1777,7 +2254,7 @@
             tbody.innerHTML = `
 
                 <tr>
-                    <td colspan="9"
+                    <td colspan="11"
                         style="
                             text-align:center;
                             color:#64748b;
@@ -1836,8 +2313,18 @@
                 );
 
 
+            const discrepancy =
+                formatDiscrepancy(
+                    transfer.items
+                );
+
+
             const notes =
                 transfer.notes || "-";
+
+
+            const decisionReason =
+                formatDecisionReason(transfer);
 
 
             row.innerHTML = `
@@ -1877,7 +2364,17 @@
                 </td>
 
                 <td>
+                    <div class="item-summary">
+                        ${discrepancy}
+                    </div>
+                </td>
+
+                <td>
                     ${escapeHtml(notes)}
+                </td>
+
+                <td>
+                    ${decisionReason}
                 </td>
 
                 <td>
@@ -1919,6 +2416,142 @@
                 return `${escapeHtml(partName)} × ${Number(item.quantity || 0)}`;
             })
             .join("<br>");
+    }
+
+
+    function formatDiscrepancy(items) {
+
+        if (!Array.isArray(items) || items.length === 0) {
+            return "-";
+        }
+
+        const results = items
+            .filter(item =>
+                item.receivedQuantity !== null &&
+                item.receivedQuantity !== undefined
+            )
+            .map(item => {
+
+                const expected =
+                    Number(item.quantity || 0);
+
+                const received =
+                    Number(item.receivedQuantity || 0);
+
+                const difference =
+                    expected - received;
+
+                const partName =
+                    item.sparePart?.partName ||
+                    item.sparePart?.partCode ||
+                    "Spare Part";
+
+                if (difference === 0) {
+
+                    return `
+                        <span style="
+                            color:#166534;
+                            font-weight:bold;
+                        ">
+                            No Discrepancy
+                        </span>
+                    `;
+                }
+
+                const note =
+                    item.discrepancyNote
+                        ? escapeHtml(item.discrepancyNote)
+                        : "No reason recorded";
+
+                return `
+                    <span style="
+                        color:#b91c1c;
+                        font-weight:bold;
+                    ">
+                        ${escapeHtml(partName)} - Missing: ${difference}
+                    </span>
+                    <br>
+                    <span style="color:#64748b;">
+                        Received ${received} / ${expected}
+                    </span>
+                    <br>
+                    <span style="color:#64748b;">
+                        ${note}
+                    </span>
+                `;
+            });
+
+        if (results.length === 0) {
+            return `
+                <span style="color:#94a3b8;">
+                    Not recorded
+                </span>
+            `;
+        }
+
+        return results.join("<br><br>");
+    }
+
+
+    function formatDecisionReason(transfer) {
+
+        if (!transfer) {
+            return "-";
+        }
+
+        if (transfer.status === "REJECTED") {
+
+            if (!transfer.rejectReason) {
+                return `
+                    <span style="color:#94a3b8;">
+                        Not recorded
+                    </span>
+                `;
+            }
+
+            return `
+                <span style="
+                    color:#991b1b;
+                    font-weight:bold;
+                ">
+                    Rejected
+                </span>
+                <br>
+                <span style="color:#64748b;">
+                    ${escapeHtml(transfer.rejectReason)}
+                </span>
+            `;
+        }
+
+        if (transfer.status === "CANCELLED") {
+
+            if (!transfer.cancelReason) {
+                return `
+                    <span style="color:#94a3b8;">
+                        Not recorded
+                    </span>
+                `;
+            }
+
+            return `
+                <span style="
+                    color:#475569;
+                    font-weight:bold;
+                ">
+                    Cancelled
+                </span>
+                <br>
+                <span style="color:#64748b;">
+                    ${escapeHtml(transfer.cancelReason)}
+                </span>
+            `;
+        }
+
+        return `
+            <span style="color:#94a3b8;">
+                -
+            </span>
+        `;
     }
 
 
@@ -2038,49 +2671,23 @@
 
     function updateDashboard() {
 
-        const total =
-            transfers.length;
+        const total = transfers.length;
+        const pending = transfers.filter(t => t.status === "PENDING").length;
+        const approved = transfers.filter(t => t.status === "APPROVED").length;
+        const rejected = transfers.filter(t => t.status === "REJECTED").length;
+        const dispatched = transfers.filter(t => t.status === "DISPATCHED").length;
+        const inTransit = transfers.filter(t => t.status === "IN_TRANSIT").length;
+        const received = transfers.filter(t => t.status === "RECEIVED").length;
+        const cancelled = transfers.filter(t => t.status === "CANCELLED").length;
 
-
-        const pending =
-            transfers.filter(
-                t =>
-                    t.status === "PENDING"
-            ).length;
-
-
-        const inTransit =
-            transfers.filter(
-                t =>
-                    t.status === "IN_TRANSIT"
-            ).length;
-
-
-        const received =
-            transfers.filter(
-                t =>
-                    t.status === "RECEIVED"
-            ).length;
-
-
-        document
-            .getElementById("totalCount")
-            .innerText = total;
-
-
-        document
-            .getElementById("pendingCount")
-            .innerText = pending;
-
-
-        document
-            .getElementById("transitCount")
-            .innerText = inTransit;
-
-
-        document
-            .getElementById("receivedCount")
-            .innerText = received;
+        document.getElementById("totalCount").innerText = total;
+        document.getElementById("pendingCount").innerText = pending;
+        document.getElementById("approvedCount").innerText = approved;
+        document.getElementById("rejectedCount").innerText = rejected;
+        document.getElementById("dispatchedCount").innerText = dispatched;
+        document.getElementById("transitCount").innerText = inTransit;
+        document.getElementById("receivedCount").innerText = received;
+        document.getElementById("cancelledCount").innerText = cancelled;
     }
 
 

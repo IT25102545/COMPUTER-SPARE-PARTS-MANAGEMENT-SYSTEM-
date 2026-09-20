@@ -24,9 +24,20 @@ public class StockTransferItem {
     @JoinColumn(name = "spare_part_id", nullable = false)
     private SparePart sparePart;
 
-    // Transfer karana quantity eka
+    // Transfer karanna request karapu quantity eka
     @Column(nullable = false)
     private Integer quantity;
+
+    // Destination ekata aththatama receive una quantity eka
+    // Transfer eka receive wenakan meka NULL wenna puluwan
+    @Column(name = "received_quantity")
+    private Integer receivedQuantity;
+
+    // Expected quantity saha received quantity athara difference ekak
+    // thiyenawanam reason / note eka meke save wenawa
+    @Column(name = "discrepancy_note", length = 500)
+    private String discrepancyNote;
+
 
     public Long getTransferItemId() {
         return transferItemId;
@@ -58,5 +69,21 @@ public class StockTransferItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Integer getReceivedQuantity() {
+        return receivedQuantity;
+    }
+
+    public void setReceivedQuantity(Integer receivedQuantity) {
+        this.receivedQuantity = receivedQuantity;
+    }
+
+    public String getDiscrepancyNote() {
+        return discrepancyNote;
+    }
+
+    public void setDiscrepancyNote(String discrepancyNote) {
+        this.discrepancyNote = discrepancyNote;
     }
 }

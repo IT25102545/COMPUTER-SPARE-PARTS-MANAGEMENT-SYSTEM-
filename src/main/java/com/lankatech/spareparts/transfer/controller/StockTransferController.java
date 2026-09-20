@@ -1,14 +1,16 @@
 package com.lankatech.spareparts.transfer.controller;
 
-import com.lankatech.spareparts.auth.entity.User;
+import com.lankatech.spareparts.transfer.dto.ApproveTransferRequestDTO;
+import com.lankatech.spareparts.transfer.dto.CancelTransferRequestDTO;
+import com.lankatech.spareparts.transfer.dto.ReceiveTransferRequestDTO;
+import com.lankatech.spareparts.transfer.dto.RejectTransferRequestDTO;
 import com.lankatech.spareparts.transfer.dto.StockTransferRequestDTO;
+
 import com.lankatech.spareparts.transfer.entity.StockTransfer;
 import com.lankatech.spareparts.transfer.enums.TransferStatus;
 import com.lankatech.spareparts.transfer.service.StockTransferService;
-import com.lankatech.spareparts.transfer.dto.ApproveTransferRequestDTO;
-import jakarta.validation.Valid;
-import com.lankatech.spareparts.transfer.dto.CancelTransferRequestDTO;
 
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,87 +24,189 @@ public class StockTransferController {
 
     private final StockTransferService stockTransferService;
 
-    public StockTransferController(StockTransferService stockTransferService) {
-        this.stockTransferService = stockTransferService;
+
+    public StockTransferController(
+            StockTransferService stockTransferService) {
+
+        this.stockTransferService =
+                stockTransferService;
     }
 
-    // Get all stock transfer requests
+
+    // =========================================================
+    // GET ALL STOCK TRANSFERS
+    // =========================================================
+
     @GetMapping
     public List<StockTransfer> getAllTransfers() {
-        return stockTransferService.getAllTransfers();
+
+        return stockTransferService
+                .getAllTransfers();
     }
 
-    // Get one stock transfer using transfer ID
+
+    // =========================================================
+    // GET ONE STOCK TRANSFER BY ID
+    // =========================================================
+
     @GetMapping("/{id}")
-    public StockTransfer getTransferById(@PathVariable Long id) {
-        return stockTransferService.getTransferById(id);
+    public StockTransfer getTransferById(
+            @PathVariable Long id) {
+
+        return stockTransferService
+                .getTransferById(id);
     }
 
-    // Get transfers according to status
+
+    // =========================================================
+    // GET TRANSFERS BY STATUS
+    // =========================================================
+
     @GetMapping("/status/{status}")
     public List<StockTransfer> getTransfersByStatus(
             @PathVariable TransferStatus status) {
 
-        return stockTransferService.getTransfersByStatus(status);
+        return stockTransferService
+                .getTransfersByStatus(status);
     }
 
-    // Create new stock transfer request
+
+    // =========================================================
+    // CREATE NEW STOCK TRANSFER
+    // =========================================================
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public StockTransfer createTransfer(
-            @Valid @RequestBody StockTransferRequestDTO request) {
-        return stockTransferService.createTransfer(request);
+            @Valid
+            @RequestBody
+            StockTransferRequestDTO request) {
+
+        return stockTransferService
+                .createTransfer(request);
     }
 
-    // Approve pending stock transfer
+
+    // =========================================================
+    // APPROVE PENDING TRANSFER
+    // =========================================================
+
     @PutMapping("/{id}/approve")
     public StockTransfer approveTransfer(
             @PathVariable Long id,
-            @Valid @RequestBody ApproveTransferRequestDTO request) {
+            @Valid
+            @RequestBody
+            ApproveTransferRequestDTO request) {
 
-        return stockTransferService.approveTransfer(
-                id,
-                request.getApprovedById()
-        );
+        return stockTransferService
+                .approveTransfer(
+                        id,
+                        request.getApprovedById()
+                );
     }
 
-    // Reject pending stock transfer
+
+    // =========================================================
+    // REJECT PENDING TRANSFER WITH REASON
+    // =========================================================
+
     @PutMapping("/{id}/reject")
-    public StockTransfer rejectTransfer(@PathVariable Long id) {
+    public StockTransfer rejectTransfer(
+            @PathVariable Long id,
+            @Valid
+            @RequestBody
+            RejectTransferRequestDTO request) {
 
-        return stockTransferService.rejectTransfer(id);
+        return stockTransferService
+                .rejectTransfer(
+                        id,
+                        request.getReason()
+                );
     }
 
-    // Dispatch approved stock transfer
+
+    // =========================================================
+    // DISPATCH APPROVED TRANSFER
+    // =========================================================
+
     @PutMapping("/{id}/dispatch")
-    public StockTransfer dispatchTransfer(@PathVariable Long id) {
+    public StockTransfer dispatchTransfer(
+            @PathVariable Long id) {
 
-        return stockTransferService.dispatchTransfer(id);
+        return stockTransferService
+                .dispatchTransfer(id);
     }
 
-    // Mark dispatched transfer as in transit
+
+    // =========================================================
+    // MARK DISPATCHED TRANSFER AS IN TRANSIT
+    // =========================================================
+
     @PutMapping("/{id}/in-transit")
-    public StockTransfer markInTransit(@PathVariable Long id) {
+    public StockTransfer markInTransit(
+            @PathVariable Long id) {
 
-        return stockTransferService.markInTransit(id);
+        return stockTransferService
+                .markInTransit(id);
     }
 
-    // Mark transfer as received
+
+    // =========================================================
+    // RECEIVE TRANSFER
+    //
+    // Supports:
+    //
+    // 1. Old normal receive without JSON body
+    // 2. New receive with actual quantities
+    //    and discrepancy information
+    // =========================================================
+
     @PutMapping("/{id}/receive")
-    public StockTransfer receiveTransfer(@PathVariable Long id) {
+    public StockTransfer receiveTransfer(
+            @PathVariable Long id,
+            @Valid
+            @RequestBody(required = false)
+            ReceiveTransferRequestDTO request) {
 
-        return stockTransferService.receiveTransfer(id);
+        /*
+         * No JSON body supplied:
+         * normal receive.
+         */
+        if (request == null) {
+
+            return stockTransferService
+                    .receiveTransfer(id);
+        }
+
+
+        /*
+         * JSON body supplied:
+         * receive with actual quantities
+         * and discrepancy information.
+         */
+        return stockTransferService
+                .receiveTransfer(
+                        id,
+                        request
+                );
     }
 
-    // Cancel stock transfer
+
+    // =========================================================
+    // CANCEL TRANSFER WITH REASON
+    // =========================================================
+
     @PutMapping("/{id}/cancel")
     public StockTransfer cancelTransfer(
             @PathVariable Long id,
-            @Valid @RequestBody CancelTransferRequestDTO request) {
+            @Valid
+            @RequestBody
+            CancelTransferRequestDTO request) {
 
-        return stockTransferService.cancelTransfer(
-                id,
-                request.getReason()
-        );
+        return stockTransferService
+                .cancelTransfer(
+                        id,
+                        request.getReason()
+                );
     }
 }

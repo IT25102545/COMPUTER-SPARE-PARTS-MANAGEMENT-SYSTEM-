@@ -58,6 +58,11 @@ public class StockTransfer {
     @Column(length = 500)
     private String notes;
 
+    // Transfer reject karapu reason eka
+    @Column(name = "reject_reason", length = 255)
+    private String rejectReason;
+
+    // Transfer cancel karapu reason eka
     @Column(name = "cancel_reason", length = 255)
     private String cancelReason;
 
