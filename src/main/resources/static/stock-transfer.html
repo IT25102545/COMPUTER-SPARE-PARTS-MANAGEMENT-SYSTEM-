@@ -137,7 +137,7 @@
 
         .cards {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 18px;
             margin-bottom: 25px;
         }
@@ -163,11 +163,12 @@
         .card-dispatched { border-left-color: #7c3aed; }
         .card-transit { border-left-color: #0284c7; }
         .card-received { border-left-color: #16a34a; }
+        .card-discrepancy { border-left-color: #db2777; }
         .card-cancelled { border-left-color: #64748b; }
 
         .card h3 {
             font-size: 14px;
-            color: #64748b;
+            color: #000000;
             margin-bottom: 12px;
         }
 
@@ -178,7 +179,7 @@
         }
 
         .card .small-text {
-            color: #94a3b8;
+            color: #000000;
             font-size: 12px;
             margin-top: 6px;
         }
@@ -628,6 +629,12 @@
             font-size: 13px;
         }
 
+        @media(max-width: 1400px) {
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         @media(max-width: 1000px) {
             .cards {
                 grid-template-columns: repeat(2, 1fr);
@@ -652,6 +659,65 @@
             .section {
                 overflow-x: auto;
             }
+        }
+        /* =========================================
+   CHANGE ALL GRAY TEXT TO BLACK
+========================================= */
+
+        /* Dashboard */
+        .card h3,
+        .card .small-text {
+            color: #000000 !important;
+        }
+
+        /* Page descriptions */
+        .page-header p {
+            color: #000000 !important;
+        }
+
+        /* Form / empty / loading text */
+        .empty-items,
+        .loading {
+            color: #000000 !important;
+        }
+
+        /* Item quantity/detail text */
+        .item-detail-qty {
+            color: #000000 !important;
+        }
+
+        /* Modal descriptions */
+        .receive-modal-header p,
+        .receive-modal-header .modal-close {
+            color: #000000 !important;
+        }
+
+        /* Table gray helper text */
+        .section [style*="color:#64748b"],
+        .section [style*="color: #64748b"],
+        .section [style*="color:#94a3b8"],
+        .section [style*="color: #94a3b8"] {
+            color: #000000 !important;
+        }
+
+        /* Modal gray helper text */
+        .receive-modal [style*="color:#64748b"],
+        .receive-modal [style*="color: #64748b"],
+        .receive-modal [style*="color:#94a3b8"],
+        .receive-modal [style*="color: #94a3b8"] {
+            color: #000000 !important;
+        }
+
+        /* Footer */
+        footer {
+            color: #000000 !important;
+        }
+
+        /* Input placeholder text */
+        input::placeholder,
+        textarea::placeholder {
+            color: #000000;
+            opacity: 1;
         }
     </style>
 </head>
@@ -753,6 +819,12 @@
             <h3>Received</h3>
             <div class="number" id="receivedCount">0</div>
             <div class="small-text">Successfully completed</div>
+        </div>
+
+        <div class="card card-discrepancy">
+            <h3>Discrepancy</h3>
+            <div class="number" id="discrepancyCount">0</div>
+            <div class="small-text">Transfers with receiving differences</div>
         </div>
 
         <div class="card card-cancelled">
@@ -4297,6 +4369,16 @@
         const inTransit = transfers.filter(t => t.status === "IN_TRANSIT").length;
         const received = transfers.filter(t => t.status === "RECEIVED").length;
         const cancelled = transfers.filter(t => t.status === "CANCELLED").length;
+        const discrepancyCount =
+            transfers.filter(transfer =>
+                Array.isArray(transfer.items) &&
+                transfer.items.some(item =>
+                    item.receivedQuantity !== null &&
+                    item.receivedQuantity !== undefined &&
+                    Number(item.receivedQuantity) !==
+                    Number(item.quantity)
+                )
+            ).length;
 
         document.getElementById("totalCount").innerText = total;
         document.getElementById("pendingCount").innerText = pending;
@@ -4306,6 +4388,12 @@
         document.getElementById("transitCount").innerText = inTransit;
         document.getElementById("receivedCount").innerText = received;
         document.getElementById("cancelledCount").innerText = cancelled;
+        const discrepancyElement =
+            document.getElementById("discrepancyCount");
+
+        if (discrepancyElement) {
+            discrepancyElement.textContent = discrepancyCount;
+        }
     }
 
 
