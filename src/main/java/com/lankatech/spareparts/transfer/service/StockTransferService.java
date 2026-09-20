@@ -28,6 +28,7 @@ import com.lankatech.spareparts.transfer.repository.StockTransferRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -60,8 +61,22 @@ public class StockTransferService {
         this.sparePartRepository = sparePartRepository;
         this.stockRepository = stockRepository;
     }
+// =========================================================
+// GET ALL LOCATIONS
+// =========================================================
 
+    public List<Location> getAllLocations() {
 
+        return locationRepository.findAll();
+    }
+// =========================================================
+// GET ALL USERS
+// =========================================================
+
+    public List<User> getAllUsers() {
+
+        return userRepository.findAll();
+    }
     // =========================================================
     // GET ALL TRANSFERS
     // =========================================================

@@ -741,21 +741,13 @@
             <div class="form-group">
 
                 <label>
-                    Source Location ID
+                    Source Location
                 </label>
 
                 <select id="sourceLocationId" onchange="updateAvailableStock()">
 
                     <option value="">
-                        Select Source Location
-                    </option>
-
-                    <option value="1">
-                        Central Warehouse - ID 1
-                    </option>
-
-                    <option value="2">
-                        Branch 01 - ID 2
+                        Loading locations...
                     </option>
 
                 </select>
@@ -766,21 +758,13 @@
             <div class="form-group">
 
                 <label>
-                    Destination Location ID
+                    Destination Location
                 </label>
 
                 <select id="destinationLocationId">
 
                     <option value="">
-                        Select Destination Location
-                    </option>
-
-                    <option value="1">
-                        Central Warehouse - ID 1
-                    </option>
-
-                    <option value="2">
-                        Branch 01 - ID 2
+                        Loading locations...
                     </option>
 
                 </select>
@@ -791,14 +775,14 @@
             <div class="form-group">
 
                 <label>
-                    Requested By User ID
+                    Requested By
                 </label>
 
-                <input
-                        type="number"
-                        id="requestedById"
-                        value="1"
-                        min="1">
+                <select id="requestedById">
+                    <option value="">
+                        Loading users...
+                    </option>
+                </select>
 
             </div>
 
@@ -806,14 +790,14 @@
             <div class="form-group">
 
                 <label>
-                    Inventory Supervisor ID
+                    Inventory Supervisor
                 </label>
 
-                <input
-                        type="number"
-                        id="approvedById"
-                        value="2"
-                        min="1">
+                <select id="approvedById">
+                    <option value="">
+                        Loading inventory supervisors...
+                    </option>
+                </select>
 
             </div>
 
@@ -1112,11 +1096,257 @@
 
     const INVENTORY_PARTS_URL = "/api/inventory/parts";
     const INVENTORY_STOCKS_URL = "/api/inventory/stocks";
+    const LOCATIONS_URL = "/api/stock-transfers/locations";
+    const USERS_URL = "/api/stock-transfers/users";
 
     let inventoryParts = [];
     let inventoryStocks = [];
+    let locations = [];
+    let users = [];
     let selectedItems = [];
     let receivingTransferId = null;
+
+
+    /*
+     =====================================================
+     LOAD LOCATIONS FROM DATABASE
+     GET /api/stock-transfers/locations
+     =====================================================
+     */
+
+    async function loadLocations() {
+
+        try {
+
+            const response =
+                await fetch(LOCATIONS_URL);
+
+            if (!response.ok) {
+                throw new Error(
+                    "Unable to load locations."
+                );
+            }
+
+            locations =
+                await response.json();
+
+            populateLocationOptions();
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+
+            console.error(error);
+        }
+    }
+
+
+    function populateLocationOptions() {
+
+        const sourceSelect =
+            document.getElementById(
+                "sourceLocationId"
+            );
+
+        const destinationSelect =
+            document.getElementById(
+                "destinationLocationId"
+            );
+
+        if (!sourceSelect || !destinationSelect) {
+            return;
+        }
+
+        sourceSelect.innerHTML = `
+            <option value="">Select Source Location</option>
+        `;
+
+        destinationSelect.innerHTML = `
+            <option value="">Select Destination Location</option>
+        `;
+
+        locations
+            .filter(location =>
+                location.active !== false
+            )
+            .forEach(location => {
+
+                const locationName =
+                    location.locationName ||
+                    `Location ${location.locationId}`;
+
+                const locationType =
+                    location.locationType
+                        ? ` (${location.locationType})`
+                        : "";
+
+                const optionText =
+                    `${locationName}${locationType}`;
+
+                const sourceOption =
+                    document.createElement(
+                        "option"
+                    );
+
+                sourceOption.value =
+                    location.locationId;
+
+                sourceOption.textContent =
+                    optionText;
+
+                const destinationOption =
+                    document.createElement(
+                        "option"
+                    );
+
+                destinationOption.value =
+                    location.locationId;
+
+                destinationOption.textContent =
+                    optionText;
+
+                sourceSelect.appendChild(
+                    sourceOption
+                );
+
+                destinationSelect.appendChild(
+                    destinationOption
+                );
+            });
+    }
+
+
+    /*
+     =====================================================
+     LOAD USERS FROM DATABASE
+     GET /api/stock-transfers/users
+     =====================================================
+     */
+
+    async function loadUsers() {
+
+        try {
+
+            const response =
+                await fetch(USERS_URL);
+
+            if (!response.ok) {
+                throw new Error(
+                    "Unable to load users."
+                );
+            }
+
+            users =
+                await response.json();
+
+            populateUserOptions();
+        }
+        catch (error) {
+
+            showMessage(
+                error.message,
+                false
+            );
+
+            console.error(error);
+        }
+    }
+
+
+    function populateUserOptions() {
+
+        const requestedBySelect =
+            document.getElementById(
+                "requestedById"
+            );
+
+        const approvedBySelect =
+            document.getElementById(
+                "approvedById"
+            );
+
+        if (!requestedBySelect ||
+            !approvedBySelect) {
+            return;
+        }
+
+        requestedBySelect.innerHTML = `
+            <option value="">Select Requesting User</option>
+        `;
+
+        approvedBySelect.innerHTML = `
+            <option value="">Select Inventory Supervisor</option>
+        `;
+
+        const activeUsers =
+            users.filter(user =>
+                user.active !== false
+            );
+
+        activeUsers.forEach(user => {
+
+            const roleName =
+                user.role?.roleName ||
+                "USER";
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                user.userId;
+
+            option.textContent =
+                `${user.fullName || `User ${user.userId}`} (${roleName})`;
+
+            requestedBySelect.appendChild(
+                option
+            );
+        });
+
+        const inventorySupervisors =
+            activeUsers.filter(user =>
+                (user.role?.roleName || "")
+                    .toUpperCase() ===
+                "INVENTORY_SUPERVISOR"
+            );
+
+        inventorySupervisors.forEach(user => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                user.userId;
+
+            option.textContent =
+                user.fullName ||
+                `User ${user.userId}`;
+
+            approvedBySelect.appendChild(
+                option
+            );
+        });
+
+        // Keep the current demo flow convenient:
+        // automatically select the first active user
+        // and the first Inventory Supervisor.
+        if (activeUsers.length > 0) {
+            requestedBySelect.value =
+                String(activeUsers[0].userId);
+        }
+
+        if (inventorySupervisors.length > 0) {
+            approvedBySelect.value =
+                String(inventorySupervisors[0].userId);
+        }
+    }
 
 
     /*
@@ -1322,7 +1552,10 @@
             .getElementById("createTransferForm")
             .style.display = "block";
 
-        await loadInventoryData();
+        await Promise.all([
+            loadInventoryData(),
+            loadLocations()
+        ]);
 
         window.scrollTo({
             top: 250,
@@ -1561,7 +1794,9 @@
 
             await Promise.all([
                 loadTransfers(),
-                loadInventoryData()
+                loadInventoryData(),
+                loadLocations(),
+                loadUsers()
             ]);
         }
         catch (error) {
@@ -1594,7 +1829,7 @@
         if (!approvedById) {
 
             showMessage(
-                "Inventory Supervisor ID is required.",
+                "Please select an Inventory Supervisor.",
                 false
             );
 
@@ -2863,7 +3098,9 @@
         async () => {
             await Promise.all([
                 loadTransfers(),
-                loadInventoryData()
+                loadInventoryData(),
+                loadLocations(),
+                loadUsers()
             ]);
             renderSelectedItems();
         }

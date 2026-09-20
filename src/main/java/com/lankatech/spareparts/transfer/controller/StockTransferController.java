@@ -5,6 +5,8 @@ import com.lankatech.spareparts.transfer.dto.CancelTransferRequestDTO;
 import com.lankatech.spareparts.transfer.dto.ReceiveTransferRequestDTO;
 import com.lankatech.spareparts.transfer.dto.RejectTransferRequestDTO;
 import com.lankatech.spareparts.transfer.dto.StockTransferRequestDTO;
+import com.lankatech.spareparts.common.entity.Location;
+import com.lankatech.spareparts.auth.entity.User;
 
 import com.lankatech.spareparts.transfer.entity.StockTransfer;
 import com.lankatech.spareparts.transfer.enums.TransferStatus;
@@ -32,7 +34,26 @@ public class StockTransferController {
                 stockTransferService;
     }
 
+// =========================================================
+// GET ALL LOCATIONS
+// =========================================================
 
+    @GetMapping("/locations")
+    public List<Location> getAllLocations() {
+
+        return stockTransferService
+                .getAllLocations();
+    }
+    // =========================================================
+// GET ALL USERS
+// =========================================================
+
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+
+        return stockTransferService
+                .getAllUsers();
+    }
     // =========================================================
     // GET ALL STOCK TRANSFERS
     // =========================================================
