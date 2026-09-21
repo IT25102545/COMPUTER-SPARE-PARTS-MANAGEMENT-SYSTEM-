@@ -664,6 +664,104 @@
             .footer-grid{grid-template-columns:1fr}
             .footer-bottom{flex-direction:column}
         }
+        /* ===== FINAL ABOUT US IMAGE + QUOTE FIX ===== */
+
+        .about-visual{
+            display:flex;
+            flex-direction:column;
+            align-items:flex-end;
+            gap:16px;
+            width:100%;
+        }
+
+        .about-photo{
+            position:relative;
+            width:100%;
+            height:auto !important;
+            min-height:0 !important;
+            border-radius:18px;
+            overflow:hidden;
+            box-shadow:0 22px 45px rgba(0,0,0,.22);
+            border:1px solid rgba(255,255,255,.10);
+            background:#0b315e;
+        }
+
+        .about-photo img{
+            display:block;
+            width:100% !important;
+            height:auto !important;
+            min-height:0 !important;
+            max-height:none !important;
+            object-fit:contain !important;
+            object-position:center !important;
+        }
+
+        /* Quote box now stays OUTSIDE the image */
+        .about-quote-popup{
+            position:relative !important;
+            right:auto !important;
+            bottom:auto !important;
+
+            width:300px;
+            max-width:100%;
+
+            display:flex;
+            align-items:flex-start;
+            gap:11px;
+
+            padding:16px 20px 18px;
+
+            background:#082d52;
+            color:#ffffff;
+
+            border-radius:14px;
+            border:1px solid rgba(255,255,255,.14);
+            border-left:4px solid #0d6efd;
+
+            box-shadow:0 14px 32px rgba(0,0,0,.25);
+        }
+
+        .about-quote-popup .quote-mark{
+            color:#54a3ff;
+            font-size:34px;
+            font-weight:800;
+            line-height:.8;
+        }
+
+        .about-quote-popup strong{
+            display:block;
+            color:#ffffff;
+            font-size:18px;
+            line-height:1.35;
+        }
+
+        .about-quote-popup::after{
+            content:"";
+            position:absolute;
+            right:18px;
+            bottom:9px;
+
+            width:55px;
+            height:3px;
+
+            border-radius:50px;
+            background:#0d6efd;
+        }
+
+        @media (max-width:680px){
+
+            .about-visual{
+                align-items:stretch;
+            }
+
+            .about-quote-popup{
+                width:100%;
+            }
+
+            .about-quote-popup strong{
+                font-size:15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -834,15 +932,22 @@
                 </button>
             </div>
 
-            <div class="about-photo">
-                <img src="assets/company-building-clean.jpg" alt="Lanka Tech Components company building">
-                <div class="about-quote-popup" aria-label="Company slogan">
+            <div class="about-visual">
+
+                <div class="about-photo">
+                    <img src="assets/company-building-clean.jpg"
+                         alt="Lanka Tech Components company building">
+                </div>
+
+                <div class="about-quote-popup">
                     <span class="quote-mark">“</span>
+
                     <div>
                         <strong>Reliable Parts.</strong>
                         <strong>Stronger Tomorrow.</strong>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
