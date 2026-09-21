@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lanka Tech Components Computer Spare Parts Management System">
+    <title>Lanka Tech Components | Home</title>
+
+    <style>
+        :root{
+            --navy:#082447;
+            --navy-2:#0b315e;
+            --blue:#0d6efd;
+            --blue-2:#1b79e8;
+            --sky:#eaf4ff;
+            --text:#102a4c;
+            --muted:#64748b;
+            --line:#e5edf6;
+            --white:#ffffff;
+            --page:#f7fafe;
+            --shadow:0 14px 40px rgba(15, 51, 91, .10);
+            --radius:18px;
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{
+            font-family:Inter,Segoe UI,Arial,sans-serif;
+            color:var(--text);
+            background:var(--white);
+            line-height:1.55;
+        }
+        button,a,input,select{font:inherit}
+        a{text-decoration:none;color:inherit}
+        button{cursor:pointer}
+        img{display:block;max-width:100%}
+
+        .container{
+            width:min(1180px, calc(100% - 40px));
+            margin:0 auto;
+        }
+
+        /* ===== Navbar ===== */
+        .navbar{
+            position:sticky;
+            top:0;
+            z-index:1000;
+            background:rgba(255,255,255,.96);
+            border-bottom:1px solid rgba(15,51,91,.08);
+            backdrop-filter:blur(14px);
+        }
+        .nav-wrap{
+            min-height:76px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:22px;
+        }
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            min-width:290px;
+        }
+        .brand-mark{
+            width:46px;
+            height:46px;
+            display:grid;
+            place-items:center;
+            border-radius:12px;
+            background:linear-gradient(135deg,#e9f4ff,#fff);
+            border:1px solid #dceafa;
+            box-shadow:0 6px 18px rgba(13,110,253,.10);
+        }
+        .brand-mark svg{width:32px;height:32px}
+        .brand-name{
+            font-weight:800;
+            color:#082447;
+            font-size:17px;
+            line-height:1.18;
+        }
+        .brand-sub{
+            margin-top:3px;
+            font-size:12px;
+            color:#496683;
+        }
+
+        .nav-links{
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        .nav-links a{
+            padding:10px 14px;
+            border-radius:10px;
+            color:#173b65;
+            font-weight:600;
+            font-size:14px;
+            transition:.2s ease;
+        }
+        .nav-links a:hover,
+        .nav-links a.active{
+            color:#075db8;
+            background:#edf6ff;
+        }
+        .login-btn{
+            border:0;
+            background:linear-gradient(135deg,#0a5fb7,#0d6efd);
+            color:#fff;
+            padding:11px 20px;
+            border-radius:11px;
+            font-weight:750;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            box-shadow:0 8px 20px rgba(13,110,253,.22);
+        }
+        .login-btn:hover{transform:translateY(-1px)}
+        .menu-btn{
+            display:none;
+            border:0;
+            background:#edf6ff;
+            color:#0b4d8d;
+            width:42px;
+            height:42px;
+            border-radius:10px;
+            font-size:22px;
+        }
+
+        /* ===== Hero ===== */
+        .hero{
+            background:
+                    linear-gradient(
+                            90deg,
+                            rgba(5,34,66,.95) 0%,
+                            rgba(5,34,66,.90) 30%,
+                            rgba(5,34,66,.68) 48%,
+                            rgba(5,34,66,.30) 65%,
+                            rgba(5,34,66,.05) 100%
+                    ),
+                    url("assets/hero-hardware.jpg") 68% center / cover no-repeat;
+
+            min-height:500px;
+            color:#fff;
+            position:relative;
+            overflow:hidden;
+        }
+        .hero::after{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:none;
+            pointer-events:none;
+        }
+        .hero-inner{
+            position:relative;
+            z-index:1;
+            min-height:500px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            padding:62px 0 34px;
+        }
+        .eyebrow{
+            text-transform:uppercase;
+            letter-spacing:.24em;
+            font-size:12px;
+            font-weight:800;
+            color:#b8d7f5;
+            margin-bottom:12px;
+        }
+        .hero h1{
+            font-size:clamp(40px,5vw,66px);
+            line-height:1.04;
+            letter-spacing:-.035em;
+            max-width:640px;
+            margin-bottom:12px;
+        }
+        .hero h2{
+            font-size:clamp(20px,2.3vw,28px);
+            font-weight:650;
+            color:#e7f2ff;
+            margin-bottom:18px;
+        }
+        .hero-copy{
+            max-width:610px;
+            font-size:17px;
+            color:#d5e5f6;
+        }
+        .hero-actions{
+            display:flex;
+            gap:13px;
+            margin-top:28px;
+            flex-wrap:wrap;
+        }
+        .primary-btn,.secondary-btn{
+            border-radius:11px;
+            padding:13px 22px;
+            font-weight:750;
+            border:1px solid transparent;
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            transition:.2s ease;
+        }
+        .primary-btn{
+            background:#0d6efd;
+            color:#fff;
+            border-color:#0d6efd;
+            box-shadow:0 10px 26px rgba(13,110,253,.25);
+        }
+        .secondary-btn{
+            background:rgba(255,255,255,.06);
+            color:#fff;
+            border-color:rgba(255,255,255,.55);
+        }
+        .primary-btn:hover,.secondary-btn:hover{transform:translateY(-2px)}
+
+        .hero-benefits{
+            display:flex;
+            gap:44px;
+            margin-top:46px;
+            flex-wrap:wrap;
+        }
+        .benefit{
+            display:flex;
+            align-items:center;
+            gap:11px;
+            min-width:170px;
+        }
+        .benefit-icon{
+            width:38px;height:38px;
+            display:grid;place-items:center;
+            border:1px solid rgba(255,255,255,.40);
+            border-radius:10px;
+            background:rgba(255,255,255,.08);
+            font-size:18px;
+        }
+        .benefit strong{display:block;font-size:13px}
+        .benefit small{color:#c6d8e9;font-size:11px}
+
+        /* ===== Sections ===== */
+        section{scroll-margin-top:88px}
+        .modules{
+            background:linear-gradient(180deg,#fff 0%,#f7fbff 100%);
+            padding:74px 0 80px;
+        }
+        .section-head{
+            text-align:center;
+            max-width:760px;
+            margin:0 auto 34px;
+        }
+        .section-label{
+            color:#6d8fb4;
+            text-transform:uppercase;
+            letter-spacing:.18em;
+            font-size:12px;
+            font-weight:800;
+            margin-bottom:8px;
+        }
+        .section-head h2{
+            color:#0a2850;
+            font-size:clamp(29px,4vw,44px);
+            line-height:1.12;
+            letter-spacing:-.025em;
+        }
+        .section-head p{
+            margin-top:10px;
+            color:#5f7690;
+            font-size:16px;
+        }
+
+        .module-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:24px;
+        }
+        .module-card{
+            background:#fff;
+            border:1px solid #e4edf7;
+            border-radius:15px;
+            overflow:hidden;
+            box-shadow:0 10px 28px rgba(16,42,76,.06);
+            transition:.25s ease;
+        }
+        .module-card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 18px 38px rgba(16,42,76,.12);
+        }
+        .module-img{
+            height:126px;
+            width:100%;
+            object-fit:cover;
+        }
+        .module-body{
+            position:relative;
+            padding:24px 56px 22px 22px;
+            min-height:172px;
+        }
+        .module-icon{
+            width:48px;
+            height:48px;
+            display:grid;
+            place-items:center;
+            position:absolute;
+            top:-25px;
+            left:20px;
+            border-radius:12px;
+            color:#fff;
+            font-size:22px;
+            border:4px solid #fff;
+            box-shadow:0 7px 18px rgba(15,51,91,.12);
+        }
+        .module-card h3{
+            margin-top:9px;
+            font-size:17px;
+            line-height:1.25;
+            color:#0a2d58;
+        }
+        .module-card p{
+            margin-top:8px;
+            color:#59708a;
+            font-size:13px;
+        }
+        .card-arrow{
+            position:absolute;
+            right:18px;
+            bottom:22px;
+            width:35px;height:35px;
+            border-radius:50%;
+            border:1.5px solid #0d6efd;
+            background:#fff;
+            color:#0d6efd;
+            font-size:18px;
+            display:grid;
+            place-items:center;
+            transition:.2s;
+        }
+        .card-arrow:hover{
+            background:#0d6efd;color:#fff;
+            transform:translateX(2px);
+        }
+        .blue{background:#0d6efd}
+        .green{background:#14a56e}
+        .orange{background:#f59e0b}
+        .purple{background:#8756e8}
+        .red{background:#e3485f}
+        .slate{background:#64748b}
+
+        /* ===== About ===== */
+        .about{
+            background:linear-gradient(135deg,#082447 0%,#0b315e 68%,#0f4278 100%);
+            color:#fff;
+            padding:72px 0;
+        }
+        .about-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:48px;
+            align-items:center;
+        }
+        .about h2{
+            font-size:clamp(30px,4vw,44px);
+            line-height:1.1;
+            margin:8px 0 16px;
+        }
+        .about p{
+            color:#d3e2f2;
+            max-width:580px;
+            font-size:15px;
+        }
+        .about-more{
+            display:none;
+            margin-top:10px;
+        }
+        .about-more.show{display:block}
+        .about-btn{
+            margin-top:23px;
+            background:#fff;
+            color:#12385f;
+            border:0;
+            border-radius:11px;
+            padding:12px 19px;
+            font-weight:750;
+        }
+        .about-photo{
+            position:relative;
+            border-radius:16px;
+            overflow:hidden;
+            box-shadow:0 22px 45px rgba(0,0,0,.20);
+            min-height:290px;
+        }
+        .about-photo img{
+            width:100%;height:100%;object-fit:cover;
+            min-height:290px;
+        }
+        .quote-badge{
+            position:absolute;
+            right:18px;
+            bottom:16px;
+            background:rgba(4,29,54,.88);
+            border-left:3px solid #0d6efd;
+            padding:14px 18px;
+            border-radius:9px;
+            font-weight:700;
+        }
+
+        /* ===== Contact / Footer ===== */
+        .contact-strip{
+            padding:44px 0;
+            background:#f8fbff;
+            border-bottom:1px solid #e2ebf5;
+        }
+        .contact-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:18px;
+        }
+        .contact-item{
+            background:#fff;
+            border:1px solid #e1ebf6;
+            padding:20px;
+            border-radius:13px;
+            display:flex;
+            gap:13px;
+            align-items:flex-start;
+        }
+        .contact-item span{
+            width:38px;height:38px;
+            border-radius:10px;
+            background:#eaf4ff;
+            color:#0d6efd;
+            display:grid;place-items:center;
+            flex:none;
+        }
+        .contact-item strong{display:block;color:#12385f}
+        .contact-item small{color:#667b90}
+
+        footer{
+            background:#061e3a;
+            color:#d8e5f2;
+            padding:44px 0 18px;
+        }
+        .footer-grid{
+            display:grid;
+            grid-template-columns:1.6fr .8fr 1fr .8fr;
+            gap:34px;
+        }
+        .footer-brand .brand-name{color:#fff}
+        footer h4{color:#fff;margin-bottom:13px}
+        footer ul{list-style:none;display:grid;gap:8px}
+        footer a{color:#d8e5f2;font-size:13px}
+        footer a:hover{color:#fff}
+        .socials{display:flex;gap:9px}
+        .social{
+            width:38px;height:38px;
+            display:grid;place-items:center;
+            border-radius:8px;
+            background:#17466f;
+            color:#fff;
+            font-weight:800;
+        }
+        .footer-bottom{
+            margin-top:34px;
+            border-top:1px solid rgba(255,255,255,.16);
+            padding-top:17px;
+            display:flex;
+            justify-content:space-between;
+            gap:20px;
+            font-size:12px;
+            color:#9cb2c8;
+        }
+
+        /* ===== Modal ===== */
+        .modal-backdrop{
+            position:fixed;
+            inset:0;
+            z-index:2000;
+            background:rgba(2,16,32,.68);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+        }
+        .modal-backdrop.open{display:flex}
+        .modal{
+            width:min(460px,100%);
+            background:#fff;
+            border-radius:18px;
+            box-shadow:0 30px 80px rgba(0,0,0,.25);
+            overflow:hidden;
+            animation:pop .18s ease;
+        }
+        @keyframes pop{
+            from{transform:scale(.97);opacity:.4}
+            to{transform:scale(1);opacity:1}
+        }
+        .modal-head{
+            padding:21px 24px;
+            border-bottom:1px solid #e5edf6;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .modal-head h3{color:#0a2d58}
+        .close-modal{
+            border:0;background:#edf4fb;
+            width:34px;height:34px;border-radius:9px;
+            color:#34516e;font-size:20px;
+        }
+        .modal-body{padding:24px}
+        .field{margin-bottom:15px}
+        .field label{
+            display:block;
+            font-size:13px;
+            font-weight:700;
+            margin-bottom:6px;
+            color:#294b6d;
+        }
+        .field input,.field select{
+            width:100%;
+            padding:12px 13px;
+            border:1px solid #cedbea;
+            border-radius:10px;
+            outline:none;
+        }
+        .field input:focus,.field select:focus{
+            border-color:#0d6efd;
+            box-shadow:0 0 0 3px rgba(13,110,253,.10);
+        }
+        .submit-login{
+            width:100%;
+            border:0;
+            background:#0d6efd;
+            color:#fff;
+            border-radius:10px;
+            padding:12px;
+            font-weight:750;
+        }
+        .login-note{
+            margin-top:11px;
+            font-size:12px;
+            color:#6d8298;
+            background:#f4f8fc;
+            padding:10px;
+            border-radius:8px;
+        }
+
+        /* ===== Toast ===== */
+        .toast{
+            position:fixed;
+            right:24px;
+            bottom:24px;
+            z-index:3000;
+            max-width:360px;
+            background:#082447;
+            color:#fff;
+            padding:13px 16px;
+            border-radius:11px;
+            box-shadow:0 15px 40px rgba(0,0,0,.22);
+            opacity:0;
+            transform:translateY(12px);
+            pointer-events:none;
+            transition:.22s ease;
+            font-size:13px;
+        }
+        .toast.show{opacity:1;transform:translateY(0)}
+
+        /* ===== Responsive ===== */
+        @media (max-width:960px){
+            .module-grid{grid-template-columns:repeat(2,1fr)}
+            .about-grid{grid-template-columns:1fr}
+            .footer-grid{grid-template-columns:repeat(2,1fr)}
+            .contact-grid{grid-template-columns:1fr}
+            .nav-links{
+                display:none;
+                position:absolute;
+                top:76px;
+                left:20px;
+                right:20px;
+                padding:12px;
+                background:#fff;
+                border:1px solid #e2ebf5;
+                border-radius:14px;
+                box-shadow:var(--shadow);
+                flex-direction:column;
+                align-items:stretch;
+            }
+            .nav-links.open{display:flex}
+            .menu-btn{display:block}
+            .brand{min-width:auto}
+        }
+        @media (max-width:680px){
+            .container{width:min(100% - 28px,1180px)}
+            .brand-sub{display:none}
+            .brand-name{font-size:15px}
+            .login-btn .login-text{display:none}
+            .hero{
+                background:
+                    linear-gradient(90deg,rgba(5,34,66,.96),rgba(5,34,66,.86)),
+                    url("assets/hero-hardware.jpg") center/cover no-repeat;
+            }
+            .hero-inner{min-height:540px}
+            .hero-benefits{gap:18px}
+            .module-grid{grid-template-columns:1fr}
+            .footer-grid{grid-template-columns:1fr}
+            .footer-bottom{flex-direction:column}
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="container nav-wrap">
+        <a class="brand" href="#home" aria-label="Lanka Tech Components home">
+            <div class="brand-mark">
+                <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <path d="M32 5 54 17v30L32 59 10 47V17L32 5Z" stroke="#0D6EFD" stroke-width="4"/>
+                    <path d="M11 18 32 31l21-13M32 31v27" stroke="#0D6EFD" stroke-width="4"/>
+                    <path d="m20 13 22 13" stroke="#65A9F7" stroke-width="4"/>
+                </svg>
+            </div>
+            <div>
+                <div class="brand-name">Lanka Tech Components (Pvt) Ltd</div>
+                <div class="brand-sub">Computer Spare Parts Management System</div>
+            </div>
+        </a>
+
+        <nav class="nav-links" id="navLinks">
+            <a class="active" href="#home">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#modules">Modules</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div style="display:flex;gap:10px;align-items:center">
+            <button class="login-btn" type="button" onclick="openLoginModal()">
+                <span>👤</span><span class="login-text">Login</span>
+            </button>
+            <button class="menu-btn" type="button" aria-label="Open menu" onclick="toggleMenu()">☰</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="hero" id="home">
+        <div class="container hero-inner">
+            <div class="eyebrow">Your Trusted Technology Partner</div>
+            <h1>Lanka Tech<br>Components (Pvt) Ltd</h1>
+            <h2>Computer Spare Parts Management System</h2>
+            <p class="hero-copy">
+                Manage inventory, purchases, sales, stock transfers and customer service
+                through one integrated and easy-to-use platform.
+            </p>
+
+            <div class="hero-actions">
+                <button class="primary-btn" type="button" onclick="openLoginModal()">
+                    Login to System <span>→</span>
+                </button>
+                <a class="secondary-btn" href="#modules">Learn More</a>
+            </div>
+
+            <div class="hero-benefits">
+                <div class="benefit">
+                    <div class="benefit-icon">✓</div>
+                    <div><strong>Genuine Products</strong><small>Trusted quality brands</small></div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">▣</div>
+                    <div><strong>Reliable Supply</strong><small>Islandwide support</small></div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">◉</div>
+                    <div><strong>Excellent Service</strong><small>Always here to help</small></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="modules" id="modules">
+        <div class="container">
+            <div class="section-head">
+                <div class="section-label">Our Modules</div>
+                <h2>Complete Management for Your Spare Parts Business</h2>
+                <p>Access all key operations through a single, clear and organized system.</p>
+            </div>
+
+            <div class="module-grid">
+                <article class="module-card">
+                    <img class="module-img" src="assets/inventory.jpg" alt="Inventory shelves">
+                    <div class="module-body">
+                        <div class="module-icon blue">▣</div>
+                        <h3>Inventory &amp; Stock Management</h3>
+                        <p>Maintain spare part records, categories, brands and stock levels.</p>
+                        <button class="card-arrow" type="button" aria-label="Open Inventory module"
+                                onclick="openModule('inventory')">→</button>
+                    </div>
+                </article>
+
+                <article class="module-card">
+                    <img class="module-img" src="assets/stock-transfer.jpg" alt="Warehouse stock transfer">
+                    <div class="module-body">
+                        <div class="module-icon green">↔</div>
+                        <h3>Stock Transfer Management</h3>
+                        <p>Handle stock transfer requests between warehouses and branches.</p>
+                        <button class="card-arrow" type="button" aria-label="Open Stock Transfer module"
+                                onclick="openModule('stockTransfer')">→</button>
+                    </div>
+                </article>
+
+                <article class="module-card">
+                    <img class="module-img" src="assets/supplier-purchase.jpg" alt="Supplier and purchase order">
+                    <div class="module-body">
+                        <div class="module-icon orange">🛒</div>
+                        <h3>Supplier &amp; Purchase Management</h3>
+                        <p>Manage suppliers, purchase orders and received goods.</p>
+                        <button class="card-arrow" type="button" aria-label="Open Supplier and Purchase module"
+                                onclick="openModule('supplierPurchase')">→</button>
+                    </div>
+                </article>
+
+                <article class="module-card">
+                    <img class="module-img" src="assets/sales.jpg" alt="Sales and invoice processing">
+                    <div class="module-body">
+                        <div class="module-icon purple">▥</div>
+                        <h3>Sales, Payments &amp; Invoicing</h3>
+                        <p>Process customer sales, payments and generate invoices.</p>
+                        <button class="card-arrow" type="button" aria-label="Open Sales module"
+                                onclick="openModule('sales')">→</button>
+                    </div>
+                </article>
+
+                <article class="module-card">
+                    <img class="module-img" src="assets/customer-service.jpg" alt="Customer service">
+                    <div class="module-body">
+                        <div class="module-icon red">◉</div>
+                        <h3>Customer Service, Reservations &amp; Complaints</h3>
+                        <p>Manage customer reservations, complaints and warranty enquiries.</p>
+                        <button class="card-arrow" type="button" aria-label="Open Customer Service module"
+                                onclick="openModule('customerService')">→</button>
+                    </div>
+                </article>
+
+                <article class="module-card">
+                    <img class="module-img" src="assets/reports.jpg" alt="Reports and dashboard">
+                    <div class="module-body">
+                        <div class="module-icon slate">◔</div>
+                        <h3>Dashboards, Reports, Audit &amp; Notifications</h3>
+                        <p>View reports, monitor activities and stay updated.</p>
+                        <button class="card-arrow" type="button" aria-label="Open Reports module"
+                                onclick="openModule('reports')">→</button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="container about-grid">
+            <div>
+                <div class="eyebrow">About Us</div>
+                <h2>Lanka Tech Components (Pvt) Ltd</h2>
+                <p>
+                    A provider of quality computer spare parts in Sri Lanka, serving customers
+                    with reliable products and organized after-sales support. This management
+                    system helps coordinate day-to-day operations across inventory, purchasing,
+                    stock transfers, sales and customer service.
+                </p>
+                <p class="about-more" id="aboutMore">
+                    By keeping key operations in one connected system, staff can work with clearer
+                    records, consistent workflows and better visibility across warehouse and branch
+                    activities.
+                </p>
+                <button class="about-btn" type="button" id="aboutBtn" onclick="toggleAbout()">
+                    Learn More About Us →
+                </button>
+            </div>
+
+            <div class="about-photo">
+                <img src="assets/company-building.jpg" alt="Lanka Tech Components company building">
+                <div class="quote-badge">“Reliable Parts.<br>Stronger Tomorrow.”</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-strip" id="contact">
+        <div class="container contact-grid">
+            <div class="contact-item">
+                <span>⌖</span>
+                <div><strong>Location</strong><small>Colombo, Sri Lanka</small></div>
+            </div>
+            <div class="contact-item">
+                <span>☎</span>
+                <div><strong>Phone</strong><small>+94 11 234 5678</small></div>
+            </div>
+            <div class="contact-item">
+                <span>✉</span>
+                <div><strong>Email</strong><small>info@lankatech.lk</small></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="brand" style="min-width:0">
+                    <div class="brand-mark">
+                        <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                            <path d="M32 5 54 17v30L32 59 10 47V17L32 5Z" stroke="#0D6EFD" stroke-width="4"/>
+                            <path d="M11 18 32 31l21-13M32 31v27" stroke="#0D6EFD" stroke-width="4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="brand-name">Lanka Tech Components (Pvt) Ltd</div>
+                        <div class="brand-sub" style="color:#aec4d8">Computer Spare Parts Management System</div>
+                    </div>
+                </div>
+                <p style="margin-top:15px;font-size:13px;color:#afc2d5">Reliable Parts. Stronger Tomorrow.</p>
+            </div>
+
+            <div>
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#modules">Modules</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>No. 123, Galle Road, Colombo 03</li>
+                    <li>+94 11 234 5678</li>
+                    <li>info@lankatech.lk</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>Follow Us</h4>
+                <div class="socials">
+                    <a class="social" href="https://www.facebook.com/" target="_blank" rel="noopener">f</a>
+                    <a class="social" href="https://www.linkedin.com/" target="_blank" rel="noopener">in</a>
+                    <a class="social" href="https://www.youtube.com/" target="_blank" rel="noopener">▶</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 Lanka Tech Components (Pvt) Ltd. All rights reserved.</span>
+            <span>
+                <a href="#" onclick="showPolicy('privacy');return false;">Privacy Policy</a>
+                &nbsp; | &nbsp;
+                <a href="#" onclick="showPolicy('terms');return false;">Terms of Use</a>
+            </span>
+        </div>
+    </div>
+</footer>
+
+<!-- Login Modal -->
+<div class="modal-backdrop" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal">
+        <div class="modal-head">
+            <h3 id="loginTitle">Login to System</h3>
+            <button class="close-modal" type="button" onclick="closeLoginModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="loginForm">
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" placeholder="Enter your email" required>
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" placeholder="Enter your password" required>
+                </div>
+                <div class="field">
+                    <label for="role">Role</label>
+                    <select id="role" required>
+                        <option value="">Select role</option>
+                        <option>Branch Supervisor</option>
+                        <option>Inventory Supervisor</option>
+                        <option>Supplier Relations Officer</option>
+                        <option>Sales Officer</option>
+                        <option>Customer Service Officer</option>
+                        <option>Manager</option>
+                        <option>System Administrator</option>
+                    </select>
+                </div>
+                <button class="submit-login" type="submit">Login</button>
+                <div class="login-note">
+                    This homepage already validates the form. Connect this submit action to your
+                    final Spring Security / authentication backend when the team login module is added.
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Generic Info Modal -->
+<div class="modal-backdrop" id="infoModal" role="dialog" aria-modal="true">
+    <div class="modal">
+        <div class="modal-head">
+            <h3 id="infoTitle">Information</h3>
+            <button class="close-modal" type="button" onclick="closeInfoModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <p id="infoText" style="color:#566f88"></p>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    /*
+      IMPORTANT:
+      Stock Transfer page is already known in your current project.
+      Add the real filenames for the other team modules after they are merged to dev.
+    */
+    const MODULE_ROUTES = {
+        inventory: null,                   // Example later: "inventory.html"
+        stockTransfer: "stock-transfer.html",
+        supplierPurchase: null,            // Example later: "supplier-purchase.html"
+        sales: null,                       // Example later: "sales.html"
+        customerService: null,             // Example later: "customer-service.html"
+        reports: null                      // Example later: "reports.html"
+    };
+
+    const MODULE_NAMES = {
+        inventory: "Inventory & Stock Management",
+        stockTransfer: "Stock Transfer Management",
+        supplierPurchase: "Supplier & Purchase Management",
+        sales: "Sales, Payments & Invoicing",
+        customerService: "Customer Service, Reservations & Complaints",
+        reports: "Dashboards, Reports, Audit & Notifications"
+    };
+
+    function openModule(key) {
+        const route = MODULE_ROUTES[key];
+        if (route) {
+            window.location.href = route;
+            return;
+        }
+        showToast(MODULE_NAMES[key] + " page can be connected here after that member's page is merged.");
+    }
+
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("open");
+    }
+
+    document.querySelectorAll("#navLinks a").forEach(link => {
+        link.addEventListener("click", () => {
+            document.getElementById("navLinks").classList.remove("open");
+        });
+    });
+
+    function openLoginModal() {
+        document.getElementById("loginModal").classList.add("open");
+        setTimeout(() => document.getElementById("email").focus(), 50);
+    }
+
+    function closeLoginModal() {
+        document.getElementById("loginModal").classList.remove("open");
+    }
+
+    function closeInfoModal() {
+        document.getElementById("infoModal").classList.remove("open");
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const role = document.getElementById("role").value;
+
+        if (!email || !password || !role) {
+            showToast("Please complete all login fields.");
+            return;
+        }
+
+        closeLoginModal();
+        showToast("Login form is ready. Connect it to the team authentication backend for real login.");
+    });
+
+    function toggleAbout() {
+        const more = document.getElementById("aboutMore");
+        const btn = document.getElementById("aboutBtn");
+        more.classList.toggle("show");
+        btn.textContent = more.classList.contains("show")
+            ? "Show Less ↑"
+            : "Learn More About Us →";
+    }
+
+    function showPolicy(type) {
+        const title = type === "privacy" ? "Privacy Policy" : "Terms of Use";
+        const text = type === "privacy"
+            ? "Lanka Tech Components should protect customer, supplier, employee and business information and only allow authorized access according to system roles."
+            : "Authorized staff should use this system only for legitimate business operations and follow assigned roles, data accuracy requirements and security procedures.";
+
+        document.getElementById("infoTitle").textContent = title;
+        document.getElementById("infoText").textContent = text;
+        document.getElementById("infoModal").classList.add("open");
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    // Close modals by clicking outside.
+    ["loginModal", "infoModal"].forEach(id => {
+        document.getElementById(id).addEventListener("click", function (event) {
+            if (event.target === this) this.classList.remove("open");
+        });
+    });
+
+    // Escape key closes modals.
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeLoginModal();
+            closeInfoModal();
+        }
+    });
+
+    // Highlight active navbar section while scrolling.
+    const sections = [...document.querySelectorAll("main section[id]")];
+    const navAnchors = [...document.querySelectorAll("#navLinks a")];
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            navAnchors.forEach(a => a.classList.remove("active"));
+            const active = navAnchors.find(a => a.getAttribute("href") === "#" + entry.target.id);
+            if (active) active.classList.add("active");
+        });
+    }, { threshold: .35 });
+
+    sections.forEach(section => observer.observe(section));
+</script>
+
+</body>
+</html>
