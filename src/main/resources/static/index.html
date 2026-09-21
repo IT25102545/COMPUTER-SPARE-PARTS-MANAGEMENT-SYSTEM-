@@ -130,16 +130,8 @@
         /* ===== Hero ===== */
         .hero{
             background:
-                    linear-gradient(
-                            90deg,
-                            rgba(5,34,66,.95) 0%,
-                            rgba(5,34,66,.90) 30%,
-                            rgba(5,34,66,.68) 48%,
-                            rgba(5,34,66,.30) 65%,
-                            rgba(5,34,66,.05) 100%
-                    ),
-                    url("assets/hero-hardware.jpg") 68% center / cover no-repeat;
-
+                linear-gradient(90deg, rgba(5,34,66,.98) 0%, rgba(5,34,66,.95) 44%, rgba(5,34,66,.70) 57%, rgba(5,34,66,.10) 100%),
+                url("assets/hero-hardware.jpg") center right/cover no-repeat;
             min-height:500px;
             color:#fff;
             position:relative;
@@ -149,7 +141,7 @@
             content:"";
             position:absolute;
             inset:0;
-            background:none;
+            background:radial-gradient(circle at 20% 10%, rgba(28,122,224,.17), transparent 38%);
             pointer-events:none;
         }
         .hero-inner{
@@ -365,9 +357,10 @@
             margin:8px 0 16px;
         }
         .about p{
-            color:#d3e2f2;
-            max-width:580px;
-            font-size:15px;
+            color:#d8e6f4;
+            max-width:610px;
+            font-size:16px;
+            line-height:1.75;
         }
         .about-more{
             display:none;
@@ -385,24 +378,89 @@
         }
         .about-photo{
             position:relative;
-            border-radius:16px;
+            border-radius:18px;
             overflow:hidden;
-            box-shadow:0 22px 45px rgba(0,0,0,.20);
-            min-height:290px;
+            box-shadow:0 22px 45px rgba(0,0,0,.22);
+            min-height:300px;
+            border:1px solid rgba(255,255,255,.10);
+            background:#0b315e;
         }
         .about-photo img{
-            width:100%;height:100%;object-fit:cover;
-            min-height:290px;
+            width:100%;
+            height:100%;
+            min-height:300px;
+            object-fit:cover;
+            object-position:center;
         }
-        .quote-badge{
+
+
+        /* ===== About Quote Popup ===== */
+        .about-quote-popup{
+            position:absolute;
+            right:22px;
+            bottom:20px;
+            display:flex;
+            align-items:flex-start;
+            gap:10px;
+            min-width:245px;
+            padding:16px 20px;
+            border-radius:14px;
+            background:rgba(4, 29, 54, .92);
+            border:1px solid rgba(255,255,255,.12);
+            border-left:4px solid #0d6efd;
+            color:#fff;
+            box-shadow:0 16px 38px rgba(0,0,0,.30);
+            backdrop-filter:blur(8px);
+            -webkit-backdrop-filter:blur(8px);
+            animation:aboutQuoteIn .75s ease .18s both;
+        }
+        .about-quote-popup .quote-mark{
+            color:#54a3ff;
+            font-size:34px;
+            line-height:.8;
+            font-weight:800;
+        }
+        .about-quote-popup strong{
+            display:block;
+            color:#fff;
+            font-size:18px;
+            line-height:1.35;
+            letter-spacing:-.01em;
+        }
+        .about-quote-popup::after{
+            content:"";
             position:absolute;
             right:18px;
-            bottom:16px;
-            background:rgba(4,29,54,.88);
-            border-left:3px solid #0d6efd;
-            padding:14px 18px;
-            border-radius:9px;
-            font-weight:700;
+            bottom:10px;
+            width:54px;
+            height:3px;
+            border-radius:999px;
+            background:#0d6efd;
+        }
+        @keyframes aboutQuoteIn{
+            from{
+                opacity:0;
+                transform:translateY(14px) scale(.98);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0) scale(1);
+            }
+        }
+        .about-photo:hover .about-quote-popup{
+            transform:translateY(-3px);
+            transition:transform .2s ease;
+        }
+        @media (max-width:680px){
+            .about-quote-popup{
+                right:12px;
+                bottom:12px;
+                min-width:210px;
+                padding:13px 15px;
+            }
+            .about-quote-popup strong{
+                font-size:15px;
+            }
         }
 
         /* ===== Contact / Footer ===== */
@@ -777,8 +835,14 @@
             </div>
 
             <div class="about-photo">
-                <img src="assets/company-building.jpg" alt="Lanka Tech Components company building">
-                <div class="quote-badge">“Reliable Parts.<br>Stronger Tomorrow.”</div>
+                <img src="assets/company-building-clean.jpg" alt="Lanka Tech Components company building">
+                <div class="about-quote-popup" aria-label="Company slogan">
+                    <span class="quote-mark">“</span>
+                    <div>
+                        <strong>Reliable Parts.</strong>
+                        <strong>Stronger Tomorrow.</strong>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
