@@ -721,26 +721,532 @@
         }
     </style>
     <link rel="stylesheet" href="css/stock-transfer-theme.css">
+
+    <style id="shared-system-navigation-style">
+        /* =========================================================
+           SHARED LANKA TECH SYSTEM NAVIGATION
+           ========================================================= */
+
+        .site-nav{
+            position:sticky;
+            top:0;
+            z-index:2000;
+            background:rgba(255,255,255,.97);
+            border-bottom:1px solid rgba(15,51,91,.08);
+            box-shadow:0 5px 18px rgba(15,51,91,.05);
+            backdrop-filter:blur(14px);
+            -webkit-backdrop-filter:blur(14px);
+        }
+
+        .site-nav-inner{
+            width:min(1500px, calc(100% - 56px));
+            min-height:76px;
+            margin:0 auto;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:22px;
+        }
+
+        .site-brand{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            min-width:290px;
+            text-decoration:none;
+        }
+
+        .site-brand-mark{
+            width:46px;
+            height:46px;
+            display:grid;
+            place-items:center;
+            flex:0 0 46px;
+            border-radius:12px;
+            background:linear-gradient(135deg,#e9f4ff,#fff);
+            border:1px solid #dceafa;
+            box-shadow:0 6px 18px rgba(13,110,253,.10);
+        }
+
+        .site-brand-mark svg{
+            width:32px;
+            height:32px;
+        }
+
+        .site-brand-name{
+            font-weight:800;
+            color:#082447;
+            font-size:17px;
+            line-height:1.18;
+        }
+
+        .site-brand-sub{
+            margin-top:3px;
+            font-size:12px;
+            color:#496683;
+        }
+
+        .site-nav-links{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            flex:1;
+        }
+
+        .site-nav-links a{
+            padding:10px 14px;
+            border-radius:10px;
+            color:#173b65;
+            text-decoration:none;
+            font-weight:600;
+            font-size:14px;
+            transition:.2s ease;
+            white-space:nowrap;
+        }
+
+        .site-nav-links a:hover,
+        .site-nav-links a.active{
+            color:#075db8;
+            background:#edf6ff;
+        }
+
+        .site-nav-actions{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .site-login-btn{
+            border:0;
+            background:linear-gradient(135deg,#0a5fb7,#0d6efd);
+            color:#fff;
+            padding:11px 20px;
+            border-radius:11px;
+            font-weight:750;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            box-shadow:0 8px 20px rgba(13,110,253,.22);
+            cursor:pointer;
+            transition:.2s ease;
+            font-size:14px;
+        }
+
+        .site-login-btn:hover{
+            transform:translateY(-1px);
+        }
+
+        .site-menu-btn{
+            display:none;
+            border:0;
+            background:#edf6ff;
+            color:#0b4d8d;
+            width:42px;
+            height:42px;
+            border-radius:10px;
+            font-size:22px;
+            cursor:pointer;
+        }
+
+        /* Small current-module strip */
+        .site-module-strip{
+            background:#f8fbff;
+            border-bottom:1px solid #e5edf6;
+        }
+
+        .site-module-strip-inner{
+            width:min(1500px, calc(100% - 56px));
+            min-height:40px;
+            margin:0 auto;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:18px;
+            color:#57708a;
+            font-size:12px;
+        }
+
+        .site-breadcrumb{
+            display:flex;
+            align-items:center;
+            gap:7px;
+            flex-wrap:wrap;
+        }
+
+        .site-breadcrumb a{
+            color:#42617f;
+            text-decoration:none;
+            font-weight:700;
+        }
+
+        .site-breadcrumb a:hover{
+            color:#0d6efd;
+        }
+
+        .site-current-module{
+            display:inline-flex;
+            align-items:center;
+            gap:7px;
+            color:#075db8;
+            font-weight:800;
+            white-space:nowrap;
+        }
+
+        /* Login modal */
+        .site-login-overlay{
+            position:fixed;
+            inset:0;
+            z-index:5000;
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            background:rgba(2,16,32,.68);
+            backdrop-filter:blur(4px);
+            -webkit-backdrop-filter:blur(4px);
+        }
+
+        .site-login-overlay.open{
+            display:flex;
+        }
+
+        .site-login-card{
+            width:min(440px,100%);
+            border-radius:18px;
+            overflow:hidden;
+            background:#fff;
+            box-shadow:0 30px 80px rgba(0,0,0,.28);
+            animation:siteLoginIn .18s ease;
+        }
+
+        @keyframes siteLoginIn{
+            from{opacity:.4;transform:scale(.97)}
+            to{opacity:1;transform:scale(1)}
+        }
+
+        .site-login-head{
+            padding:20px 22px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            border-bottom:1px solid #e5edf6;
+        }
+
+        .site-login-head h3{
+            margin:0;
+            color:#082447;
+            font-size:20px;
+        }
+
+        .site-login-close{
+            width:34px;
+            height:34px;
+            border:0;
+            border-radius:9px;
+            background:#edf4fb;
+            color:#34516e;
+            font-size:20px;
+            cursor:pointer;
+        }
+
+        .site-login-body{
+            padding:22px;
+        }
+
+        .site-login-field{
+            margin-bottom:14px;
+        }
+
+        .site-login-field label{
+            display:block;
+            margin-bottom:6px;
+            color:#000;
+            font-size:13px;
+            font-weight:700;
+        }
+
+        .site-login-field input,
+        .site-login-field select{
+            width:100%;
+            padding:11px 12px;
+            border:1px solid #cedbea;
+            border-radius:9px;
+            outline:none;
+            color:#000;
+            background:#fff;
+        }
+
+        .site-login-field input:focus,
+        .site-login-field select:focus{
+            border-color:#0d6efd;
+            box-shadow:0 0 0 3px rgba(13,110,253,.10);
+        }
+
+        .site-login-submit{
+            width:100%;
+            border:0;
+            border-radius:10px;
+            padding:12px;
+            background:#0d6efd;
+            color:#fff;
+            font-weight:800;
+            cursor:pointer;
+        }
+
+        .site-login-note{
+            margin-top:10px;
+            padding:10px;
+            border-radius:8px;
+            background:#f4f8fc;
+            color:#52697f;
+            font-size:12px;
+            line-height:1.5;
+        }
+
+        .site-toast{
+            position:fixed;
+            right:24px;
+            bottom:24px;
+            z-index:5500;
+            max-width:360px;
+            padding:13px 16px;
+            border-radius:11px;
+            background:#082447;
+            color:#fff;
+            box-shadow:0 15px 40px rgba(0,0,0,.22);
+            opacity:0;
+            transform:translateY(12px);
+            pointer-events:none;
+            transition:.22s ease;
+            font-size:13px;
+        }
+
+        .site-toast.show{
+            opacity:1;
+            transform:translateY(0);
+        }
+
+        @media(max-width:1050px){
+            .site-brand{
+                min-width:auto;
+            }
+
+            .site-nav-links{
+                display:none;
+                position:absolute;
+                top:72px;
+                left:20px;
+                right:20px;
+                flex-direction:column;
+                align-items:stretch;
+                padding:12px;
+                border:1px solid #e2ebf5;
+                border-radius:14px;
+                background:#fff;
+                box-shadow:0 14px 36px rgba(15,51,91,.14);
+            }
+
+            .site-nav-links.open{
+                display:flex;
+            }
+
+            .site-nav-links a{
+                width:100%;
+            }
+
+            .site-menu-btn{
+                display:block;
+            }
+        }
+
+        @media(max-width:680px){
+            .site-nav-inner,
+            .site-module-strip-inner{
+                width:min(100% - 26px,1500px);
+            }
+
+            .site-brand-sub{
+                display:none;
+            }
+
+            .site-brand-name{
+                font-size:15px;
+            }
+
+            .site-login-btn .site-login-text{
+                display:none;
+            }
+
+            .site-current-module{
+                display:none;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
 
 <!-- =========================
-     NAVIGATION
+     SHARED SYSTEM NAVIGATION
 ========================== -->
 
-<header class="navbar">
+<header class="site-nav">
+    <div class="site-nav-inner">
 
-    <div>
-        <h2>Lanka Tech Components</h2>
-        <p>Computer Spare Parts Management System</p>
+        <a class="site-brand" href="/" aria-label="Lanka Tech Components Home">
+            <div class="site-brand-mark">
+                <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <path d="M32 5 54 17v30L32 59 10 47V17L32 5Z"
+                          stroke="#0D6EFD"
+                          stroke-width="4"/>
+                    <path d="M11 18 32 31l21-13M32 31v27"
+                          stroke="#0D6EFD"
+                          stroke-width="4"/>
+                    <path d="m20 13 22 13"
+                          stroke="#65A9F7"
+                          stroke-width="4"/>
+                </svg>
+            </div>
+
+            <div>
+                <div class="site-brand-name">
+                    Lanka Tech Components (Pvt) Ltd
+                </div>
+                <div class="site-brand-sub">
+                    Computer Spare Parts Management System
+                </div>
+            </div>
+        </a>
+
+        <nav class="site-nav-links" id="siteNavLinks">
+            <a href="/">Home</a>
+            <a href="/#about">About Us</a>
+            <a class="active" href="/#modules">Modules</a>
+            <a href="/#contact">Contact</a>
+        </nav>
+
+        <div class="site-nav-actions">
+            <button
+                    type="button"
+                    class="site-login-btn"
+                    onclick="openSiteLogin()">
+                <span aria-hidden="true">👤</span>
+                <span class="site-login-text">Login</span>
+            </button>
+
+            <button
+                    type="button"
+                    class="site-menu-btn"
+                    aria-label="Open navigation menu"
+                    onclick="toggleSiteMenu()">
+                ☰
+            </button>
+        </div>
+
     </div>
-
-    <div class="module-name">
-        Stock Transfer Management
-    </div>
-
 </header>
+
+<div class="site-module-strip">
+    <div class="site-module-strip-inner">
+
+        <div class="site-breadcrumb">
+            <a href="/">Home</a>
+            <span>›</span>
+            <a href="/#modules">Modules</a>
+            <span>›</span>
+            <span>Stock Transfer Management</span>
+        </div>
+
+        <div class="site-current-module">
+            <span>↔</span>
+            <span>Stock Transfer Management</span>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================
+     SHARED LOGIN MODAL
+     Temporary UI until Spring Security authentication is connected.
+========================== -->
+
+<div
+        class="site-login-overlay"
+        id="siteLoginOverlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="siteLoginTitle">
+
+    <div class="site-login-card">
+
+        <div class="site-login-head">
+            <h3 id="siteLoginTitle">Login to System</h3>
+
+            <button
+                    type="button"
+                    class="site-login-close"
+                    onclick="closeSiteLogin()">
+                ×
+            </button>
+        </div>
+
+        <div class="site-login-body">
+
+            <form onsubmit="return handleSiteLogin(event)">
+
+                <div class="site-login-field">
+                    <label for="siteLoginEmail">Email</label>
+                    <input
+                            id="siteLoginEmail"
+                            type="email"
+                            placeholder="Enter your email"
+                            required>
+                </div>
+
+                <div class="site-login-field">
+                    <label for="siteLoginPassword">Password</label>
+                    <input
+                            id="siteLoginPassword"
+                            type="password"
+                            placeholder="Enter your password"
+                            required>
+                </div>
+
+                <div class="site-login-field">
+                    <label for="siteLoginRole">Role</label>
+                    <select id="siteLoginRole" required>
+                        <option value="">Select role</option>
+                        <option>Branch Supervisor</option>
+                        <option>Inventory Supervisor</option>
+                        <option>Supplier Relations Officer</option>
+                        <option>Sales Officer</option>
+                        <option>Customer Service Officer</option>
+                        <option>Manager</option>
+                        <option>System Administrator</option>
+                    </select>
+                </div>
+
+                <button
+                        class="site-login-submit"
+                        type="submit">
+                    Login
+                </button>
+
+                <div class="site-login-note">
+                    Login interface is ready. The final authentication backend
+                    can be connected here when Spring Security is implemented.
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="site-toast" id="siteToast"></div>
 
 <main class="container">
 
@@ -4578,6 +5084,148 @@
         }
     );
 
+</script>
+
+
+<script id="shared-system-navigation-script">
+    function toggleSiteMenu() {
+        const nav = document.getElementById("siteNavLinks");
+
+        if (nav) {
+            nav.classList.toggle("open");
+        }
+    }
+
+    function openSiteLogin() {
+        const overlay = document.getElementById("siteLoginOverlay");
+
+        if (overlay) {
+            overlay.classList.add("open");
+
+            setTimeout(() => {
+                const email =
+                    document.getElementById("siteLoginEmail");
+
+                if (email) {
+                    email.focus();
+                }
+            }, 50);
+        }
+    }
+
+    function closeSiteLogin() {
+        const overlay = document.getElementById("siteLoginOverlay");
+
+        if (overlay) {
+            overlay.classList.remove("open");
+        }
+    }
+
+    function handleSiteLogin(event) {
+        event.preventDefault();
+
+        const email =
+            document.getElementById("siteLoginEmail")
+                .value
+                .trim();
+
+        const password =
+            document.getElementById("siteLoginPassword")
+                .value
+                .trim();
+
+        const role =
+            document.getElementById("siteLoginRole")
+                .value;
+
+        if (!email || !password || !role) {
+            showSiteToast(
+                "Please complete all login fields."
+            );
+
+            return false;
+        }
+
+        closeSiteLogin();
+
+        showSiteToast(
+            "Login UI is ready. Connect it to the authentication backend for real login."
+        );
+
+        return false;
+    }
+
+    function showSiteToast(message) {
+        const toast =
+            document.getElementById("siteToast");
+
+        if (!toast) {
+            return;
+        }
+
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        clearTimeout(window.__siteToastTimer);
+
+        window.__siteToastTimer =
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3200);
+    }
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            const nav =
+                document.getElementById("siteNavLinks");
+
+            const menuButton =
+                event.target.closest(".site-menu-btn");
+
+            if (
+                nav &&
+                nav.classList.contains("open") &&
+                !nav.contains(event.target) &&
+                !menuButton
+            ) {
+                nav.classList.remove("open");
+            }
+        }
+    );
+
+    const siteLoginOverlay =
+        document.getElementById("siteLoginOverlay");
+
+    if (siteLoginOverlay) {
+        siteLoginOverlay.addEventListener(
+            "click",
+            function (event) {
+
+                if (event.target === siteLoginOverlay) {
+                    closeSiteLogin();
+                }
+            }
+        );
+    }
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Escape") {
+                closeSiteLogin();
+
+                const nav =
+                    document.getElementById("siteNavLinks");
+
+                if (nav) {
+                    nav.classList.remove("open");
+                }
+            }
+        }
+    );
 </script>
 
 </body>
