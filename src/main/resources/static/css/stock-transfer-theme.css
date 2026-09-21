@@ -1,8 +1,11 @@
 
 /* =========================================================
-   LANKA TECH COMPONENTS - STOCK TRANSFER THEME
-   Add this file AFTER the existing inline <style> block.
-   It only changes appearance. Existing JavaScript/API logic stays unchanged.
+   LANKA TECH COMPONENTS - STOCK TRANSFER FINAL THEME
+   Final updated version:
+   - Matches homepage blue/white theme
+   - Keeps main content text black
+   - Preserves status/discrepancy colors
+   - Does not change existing JavaScript/API functionality
    ========================================================= */
 
 :root {
@@ -21,17 +24,19 @@
 }
 
 /* ===== PAGE ===== */
+
 html {
     scroll-behavior: smooth;
 }
 
 body {
     background: var(--lt-page) !important;
-    color: var(--lt-text) !important;
+    color: #000 !important;
     font-family: Inter, "Segoe UI", Arial, sans-serif !important;
 }
 
 /* ===== TOP BAR ===== */
+
 .navbar {
     position: sticky !important;
     top: 0;
@@ -72,6 +77,7 @@ body {
 }
 
 /* ===== MAIN LAYOUT ===== */
+
 .container {
     width: min(1500px, calc(100% - 56px)) !important;
     margin: 30px auto 40px !important;
@@ -90,12 +96,13 @@ body {
 }
 
 .page-header p {
-    color: #536f8c !important;
+    color: #000 !important;
     font-size: 15px;
     margin-top: 5px !important;
 }
 
 /* ===== BUTTONS ===== */
+
 .btn {
     border-radius: 10px !important;
     padding: 10px 16px !important;
@@ -111,14 +118,17 @@ body {
 
 .btn-primary {
     background: linear-gradient(135deg, #0a63c8, var(--lt-blue)) !important;
+    color: #fff !important;
     box-shadow: 0 8px 20px rgba(13, 110, 253, .18);
 }
 
 .btn-dark {
     background: var(--lt-navy-2) !important;
+    color: #fff !important;
 }
 
 /* ===== DASHBOARD ===== */
+
 .cards {
     grid-template-columns: repeat(5, 1fr) !important;
     gap: 18px !important;
@@ -156,7 +166,7 @@ body {
 }
 
 .card h3 {
-    color: #294b6d !important;
+    color: #000 !important;
     font-size: 13px !important;
     font-weight: 750 !important;
     margin-bottom: 12px !important;
@@ -172,12 +182,12 @@ body {
 
 .card .small-text,
 .card p {
-    color: #617a93 !important;
+    color: #000 !important;
     font-size: 12px !important;
     margin-top: 8px !important;
 }
 
-/* Preserve your current status identity */
+/* Status card identity */
 .card-total       { border-left-color: #082447 !important; }
 .card-pending     { border-left-color: #f59e0b !important; }
 .card-approved    { border-left-color: #0d6efd !important; }
@@ -189,6 +199,7 @@ body {
 .card-cancelled   { border-left-color: #64748b !important; }
 
 /* ===== CREATE FORM ===== */
+
 .form-box {
     background: #fff !important;
     border: 1px solid var(--lt-line);
@@ -204,7 +215,7 @@ body {
 }
 
 .form-group label {
-    color: #294b6d;
+    color: #000 !important;
     font-weight: 700 !important;
 }
 
@@ -213,8 +224,8 @@ body {
 .form-group textarea,
 .search-box,
 .filter-box {
-    background: #fff;
-    color: var(--lt-text);
+    background: #fff !important;
+    color: #000 !important;
     border: 1px solid #cedbea !important;
     border-radius: 10px !important;
     padding: 11px 12px !important;
@@ -231,6 +242,12 @@ body {
     box-shadow: 0 0 0 3px rgba(13, 110, 253, .09);
 }
 
+input::placeholder,
+textarea::placeholder {
+    color: #000 !important;
+    opacity: 1 !important;
+}
+
 .item-builder {
     background: linear-gradient(180deg, #f8fbff, #f5f9fe) !important;
     border: 1px solid #dceafb !important;
@@ -245,16 +262,18 @@ body {
 .stock-info {
     border-radius: 10px !important;
     border-color: #cedbea !important;
-    color: #0f766e !important;
+    color: #000 !important;
 }
 
 /* ===== MAIN TABLE PANEL ===== */
+
 .section {
     background: #fff !important;
     border: 1px solid var(--lt-line);
     border-radius: 16px !important;
     box-shadow: var(--lt-shadow) !important;
     padding: 26px !important;
+    color: #000 !important;
 }
 
 .section-header {
@@ -301,10 +320,10 @@ th:last-child {
 }
 
 td {
-    color: #233f5d !important;
+    color: #000 !important;
     padding: 13px 12px !important;
     border-bottom: 1px solid #edf2f7 !important;
-    background: #fff;
+    background: #fff !important;
 }
 
 tbody tr:hover td {
@@ -312,24 +331,93 @@ tbody tr:hover td {
 }
 
 /* ===== ITEM / DISCREPANCY ===== */
-.item-detail-name,
-.discrepancy-part-name {
-    color: #173b65 !important;
+
+.item-detail-name {
+    color: #000 !important;
 }
 
 .item-detail-qty {
-    color: #526d87 !important;
+    color: #000 !important;
+}
+
+.item-detail-block {
+    color: #000 !important;
+}
+
+.discrepancy-detail-block {
+    color: #000 !important;
+}
+
+/* Keep important discrepancy colors */
+.discrepancy-detail-block .text-danger,
+.text-danger {
+    color: #dc2626 !important;
+}
+
+.discrepancy-detail-block .text-success,
+.text-success {
+    color: #15803d !important;
+}
+
+/* If your HTML uses inline status names/classes */
+.discrepancy-detail-block strong[style*="red"],
+.discrepancy-detail-block span[style*="red"] {
+    color: #dc2626 !important;
+}
+
+.discrepancy-detail-block strong[style*="green"],
+.discrepancy-detail-block span[style*="green"] {
+    color: #15803d !important;
 }
 
 /* ===== STATUS BADGES ===== */
-.badge {
+
+.badge,
+.status-badge {
     padding: 5px 10px !important;
     border-radius: 999px !important;
     font-size: 10px !important;
     letter-spacing: .02em;
 }
 
+/* Preserve readable badge colors */
+.badge-pending,
+.status-pending {
+    color: #92400e !important;
+}
+
+.badge-approved,
+.status-approved {
+    color: #1d4ed8 !important;
+}
+
+.badge-rejected,
+.status-rejected {
+    color: #b91c1c !important;
+}
+
+.badge-dispatched,
+.status-dispatched {
+    color: #6d28d9 !important;
+}
+
+.badge-in-transit,
+.status-in-transit {
+    color: #0369a1 !important;
+}
+
+.badge-received,
+.status-received {
+    color: #166534 !important;
+}
+
+.badge-cancelled,
+.status-cancelled {
+    color: #475569 !important;
+}
+
 /* ===== ACTION BUTTONS ===== */
+
 .actions {
     gap: 6px !important;
 }
@@ -347,6 +435,7 @@ tbody tr:hover td {
 }
 
 /* ===== MODALS ===== */
+
 .receive-modal {
     background: rgba(4, 22, 43, .62) !important;
     backdrop-filter: blur(4px);
@@ -359,6 +448,8 @@ tbody tr:hover td {
     box-shadow: 0 28px 70px rgba(4, 22, 43, .25) !important;
     padding: 0 !important;
     overflow: hidden;
+    background: #fff !important;
+    color: #000 !important;
 }
 
 .receive-modal-header {
@@ -372,7 +463,11 @@ tbody tr:hover td {
 }
 
 .receive-modal-header p {
-    color: #607a94 !important;
+    color: #000 !important;
+}
+
+.modal-close {
+    color: #000 !important;
 }
 
 #rejectDetailsContainer,
@@ -382,12 +477,21 @@ tbody tr:hover td {
 #dispatchDetailsContainer,
 #receiveItemsContainer {
     padding: 20px 24px 0;
+    color: #000 !important;
 }
 
 .receive-item-card {
     border: 1px solid #e1ebf5 !important;
     background: #f8fbff !important;
     border-radius: 12px !important;
+    color: #000 !important;
+}
+
+.receive-item-card label,
+.receive-item-card p,
+.receive-item-card span,
+.receive-item-card div {
+    color: #000;
 }
 
 .receive-modal-actions {
@@ -397,30 +501,55 @@ tbody tr:hover td {
     background: #fff;
 }
 
-.modal-close {
-    color: #4f6a84 !important;
-}
-
 /* ===== MESSAGE / LOADING ===== */
+
 #messageBox {
     border-radius: 11px !important;
     box-shadow: 0 7px 20px rgba(15, 51, 91, .06);
 }
 
-.loading {
-    color: #5d7590 !important;
+.loading,
+.empty-items {
+    color: #000 !important;
 }
 
 /* ===== FOOTER ===== */
+
 footer {
     margin-top: 34px;
     background: var(--lt-navy) !important;
-    color: #c9dbec !important;
+    color: #fff !important;
     padding: 24px !important;
     border-top: 1px solid #153d66;
 }
 
+/* ===== EXTRA BLACK TEXT OVERRIDES ===== */
+/* These are intentionally placed near the end so they win over old gray styles. */
+
+.section p,
+.section td,
+.section span:not(.badge):not(.status-badge),
+.section div:not(.badge):not(.status-badge),
+.form-box p,
+.form-box span,
+.form-box small,
+.receive-modal-content p,
+.receive-modal-content label,
+.receive-modal-content small {
+    color: #000;
+}
+
+/* Keep links/buttons from being forced black */
+a,
+button,
+.btn,
+.action-button,
+.module-name {
+    color: inherit;
+}
+
 /* ===== RESPONSIVE ===== */
+
 @media (max-width: 1400px) {
     .cards {
         grid-template-columns: repeat(3, 1fr) !important;
