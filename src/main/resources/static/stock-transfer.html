@@ -1128,13 +1128,24 @@
         </nav>
 
         <div class="site-nav-actions">
-            <button
-                    type="button"
-                    class="site-login-btn"
-                    onclick="openSiteLogin()">
-                <span aria-hidden="true">👤</span>
-                <span class="site-login-text">Login</span>
-            </button>
+            <div class="site-user-area" id="siteUserArea">
+
+                <div class="site-user-info">
+                    <span aria-hidden="true">👤</span>
+
+                    <div>
+                        <div id="siteUserName">Loading...</div>
+                        <small id="siteUserRole"></small>
+                    </div>
+                </div>
+
+                <form action="/logout" method="post">
+                    <button class="site-login-btn" type="submit">
+                        Logout
+                    </button>
+                </form>
+
+            </div>
 
             <button
                     type="button"
@@ -5095,6 +5106,42 @@
             nav.classList.toggle("open");
         }
     }
+    async function loadCurrentUser() {
+        try {
+            const response = await fetch("/api/auth/me", {
+                method: "GET",
+                credentials: "same-origin"
+            });
+
+            if (!response.ok) {
+                window.location.href = "/";
+                return;
+            }
+
+            const user = await response.json();
+
+            const userNameElement =
+                document.getElementById("siteUserName");
+
+            const userRoleElement =
+                document.getElementById("siteUserRole");
+
+            if (userNameElement) {
+                userNameElement.textContent = user.fullName;
+            }
+
+            if (userRoleElement) {
+                userRoleElement.textContent =
+                    user.role
+                        .replaceAll("_", " ")
+                        .toLowerCase()
+                        .replace(/\b\w/g, letter => letter.toUpperCase());
+            }
+
+        } catch (error) {
+            console.error("Unable to load current user:", error);
+        }
+    }
 
     function openSiteLogin() {
         const overlay = document.getElementById("siteLoginOverlay");
@@ -5226,6 +5273,7 @@
             }
         }
     );
+    document.addEventListener("DOMContentLoaded", loadCurrentUser);
 </script>
 
 </body>
