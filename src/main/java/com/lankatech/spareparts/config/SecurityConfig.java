@@ -99,7 +99,17 @@ public class SecurityConfig {
                                 "/login",
                                 "/api/auth/me"
                         ).permitAll()
+                        .requestMatchers("/stock-transfer.html")
+                        .hasAnyRole(
+                                "BRANCH_SUPERVISOR",
+                                "INVENTORY_SUPERVISOR"
+                        )
 
+                        .requestMatchers("/api/stock-transfers/**")
+                        .hasAnyRole(
+                                "BRANCH_SUPERVISOR",
+                                "INVENTORY_SUPERVISOR"
+                        )
                         /*
                          * Everything else requires login.
                          */
@@ -112,8 +122,13 @@ public class SecurityConfig {
                  * User enters EMAIL instead of username.
                  */
                 .exceptionHandling(exception -> exception
+
                         .authenticationEntryPoint((request, response, authException) ->
                                 response.sendRedirect("/?loginRequired=true")
+                        )
+
+                        .accessDeniedHandler((request, response, accessDeniedException) ->
+                                response.sendRedirect("/?accessDenied=true")
                         )
                 )
                 .formLogin(form -> form

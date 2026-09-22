@@ -1303,6 +1303,19 @@
                 "/"
             );
         }
+
+        if (params.get("accessDenied") === "true") {
+
+            showToast(
+                "Access Denied. You do not have permission to access this module."
+            );
+
+            window.history.replaceState(
+                {},
+                document.title,
+                "/"
+            );
+        }
     });
     async function loadHomepageUser() {
         try {
