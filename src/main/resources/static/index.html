@@ -762,6 +762,54 @@
                 font-size:15px;
             }
         }
+        /* ===== Logged-in Homepage User ===== */
+
+        .home-user-area{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .home-user-info{
+            display:flex;
+            align-items:center;
+            gap:9px;
+            padding:7px 11px;
+            background:#f5f9ff;
+            border:1px solid #e0eaf5;
+            border-radius:11px;
+        }
+
+        .home-user-info > span{
+            width:34px;
+            height:34px;
+            display:grid;
+            place-items:center;
+            border-radius:50%;
+            background:#e8f3ff;
+        }
+
+        #homeUserName{
+            display:block;
+            color:#082447;
+            font-size:14px;
+            font-weight:750;
+            line-height:1.2;
+            white-space:nowrap;
+        }
+
+        #homeUserRole{
+            display:block;
+            margin-top:2px;
+            color:#6b7f95;
+            font-size:11px;
+            line-height:1.2;
+            white-space:nowrap;
+        }
+
+        .home-user-area form{
+            margin:0;
+        }
     </style>
 </head>
 <body>
@@ -790,9 +838,34 @@
         </nav>
 
         <div style="display:flex;gap:10px;align-items:center">
-            <button class="login-btn" type="button" onclick="openLoginModal()">
-                <span>👤</span><span class="login-text">Login</span>
+            <button
+                    class="login-btn"
+                    id="homeLoginButton"
+                    type="button"
+                    onclick="openLoginModal()">
+
+                <span>👤</span>
+                <span class="login-text">Login</span>
             </button>
+
+            <div class="home-user-area" id="homeUserArea" style="display:none;">
+
+                <div class="home-user-info">
+                    <span>👤</span>
+
+                    <div>
+                        <strong id="homeUserName">User</strong>
+                        <small id="homeUserRole"></small>
+                    </div>
+                </div>
+
+                <form action="/logout" method="post">
+                    <button class="login-btn" type="submit">
+                        Logout
+                    </button>
+                </form>
+
+            </div>
             <button class="menu-btn" type="button" aria-label="Open menu" onclick="toggleMenu()">☰</button>
         </div>
     </div>
@@ -810,7 +883,7 @@
             </p>
 
             <div class="hero-actions">
-                <button class="primary-btn" type="button" onclick="openLoginModal()">
+                <button class="primary-btn" id="heroAuthButton" type="button">
                     Login to System <span>→</span>
                 </button>
                 <a class="secondary-btn" href="#modules">Learn More</a>
@@ -1037,33 +1110,18 @@
             <button class="close-modal" type="button" onclick="closeLoginModal()">×</button>
         </div>
         <div class="modal-body">
-            <form id="loginForm">
+            <form id="loginForm" action="/login" method="post">
                 <div class="field">
                     <label for="email">Email</label>
-                    <input id="email" type="email" placeholder="Enter your email" required>
+                    <input id="email" name="email" type="email" placeholder="Enter your email" required>
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
-                    <input id="password" type="password" placeholder="Enter your password" required>
+                    <input id="password" name="password" type="password" placeholder="Enter your password" required>
                 </div>
-                <div class="field">
-                    <label for="role">Role</label>
-                    <select id="role" required>
-                        <option value="">Select role</option>
-                        <option>Branch Supervisor</option>
-                        <option>Inventory Supervisor</option>
-                        <option>Supplier Relations Officer</option>
-                        <option>Sales Officer</option>
-                        <option>Customer Service Officer</option>
-                        <option>Manager</option>
-                        <option>System Administrator</option>
-                    </select>
-                </div>
+
                 <button class="submit-login" type="submit">Login</button>
-                <div class="login-note">
-                    This homepage already validates the form. Connect this submit action to your
-                    final Spring Security / authentication backend when the team login module is added.
-                </div>
+
             </form>
         </div>
     </div>
@@ -1140,21 +1198,7 @@
         document.getElementById("infoModal").classList.remove("open");
     }
 
-    document.getElementById("loginForm").addEventListener("submit", function (event) {
-        event.preventDefault();
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const role = document.getElementById("role").value;
-
-        if (!email || !password || !role) {
-            showToast("Please complete all login fields.");
-            return;
-        }
-
-        closeLoginModal();
-        showToast("Login form is ready. Connect it to the team authentication backend for real login.");
-    });
 
     function toggleAbout() {
         const more = document.getElementById("aboutMore");
@@ -1213,6 +1257,111 @@
     }, { threshold: .35 });
 
     sections.forEach(section => observer.observe(section));
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("loginRequired") === "true") {
+
+            openLoginModal();
+
+            showToast(
+                "Please log in to access the system."
+            );
+
+            window.history.replaceState(
+                {},
+                document.title,
+                "/"
+            );
+        }
+
+        if (params.get("loginError") === "true") {
+
+            openLoginModal();
+
+            showToast(
+                "Invalid email or password. Please try again."
+            );
+
+            window.history.replaceState(
+                {},
+                document.title,
+                "/"
+            );
+        }
+
+        if (params.get("logout") === "true") {
+
+            showToast(
+                "You have been logged out successfully."
+            );
+
+            window.history.replaceState(
+                {},
+                document.title,
+                "/"
+            );
+        }
+    });
+    async function loadHomepageUser() {
+        try {
+            const response = await fetch("/api/auth/me", {
+                method: "GET",
+                credentials: "same-origin"
+            });
+
+            const loginButton =
+                document.getElementById("homeLoginButton");
+
+            const userArea =
+                document.getElementById("homeUserArea");
+
+            const heroAuthButton =
+                document.getElementById("heroAuthButton");
+
+            if (!response.ok) {
+                loginButton.style.display = "flex";
+                userArea.style.display = "none";
+
+                heroAuthButton.innerHTML =
+                    'Login to System <span>→</span>';
+
+                heroAuthButton.onclick = openLoginModal;
+
+                return;
+            }
+
+            const user = await response.json();
+
+            document.getElementById("homeUserName").textContent =
+                user.fullName;
+
+            document.getElementById("homeUserRole").textContent =
+                user.role
+                    .replaceAll("_", " ")
+                    .toLowerCase()
+                    .replace(/\b\w/g, letter => letter.toUpperCase());
+
+            loginButton.style.display = "none";
+            userArea.style.display = "flex";
+            heroAuthButton.innerHTML =
+                'Go to Modules <span>→</span>';
+
+            heroAuthButton.onclick = function () {
+                document.getElementById("modules")
+                    .scrollIntoView({ behavior: "smooth" });
+            };
+
+        } catch (error) {
+            console.error("Unable to load logged-in user:", error);
+        }
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        loadHomepageUser
+    );
 </script>
 
 </body>
