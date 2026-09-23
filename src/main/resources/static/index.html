@@ -1280,9 +1280,15 @@
 
             openLoginModal();
 
-            showToast(
-                "Invalid email or password. Please try again."
-            );
+            document.getElementById("infoTitle").textContent =
+                "Login Failed";
+
+            document.getElementById("infoText").innerHTML =
+                "<strong>Invalid email or password.</strong><br><br>" +
+                "Please check your login details and try again.";
+
+            document.getElementById("infoModal")
+                .classList.add("open");
 
             window.history.replaceState(
                 {},
@@ -1306,9 +1312,15 @@
 
         if (params.get("accessDenied") === "true") {
 
-            showToast(
-                "Access Denied. You do not have permission to access this module."
-            );
+            document.getElementById("infoTitle").textContent =
+                "Access Denied";
+
+            document.getElementById("infoText").innerHTML =
+                "<strong>You do not have permission to access this module.</strong><br><br>" +
+                "Please use a module that is authorized for your assigned role.";
+
+            document.getElementById("infoModal")
+                .classList.add("open");
 
             window.history.replaceState(
                 {},
