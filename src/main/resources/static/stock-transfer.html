@@ -2536,26 +2536,30 @@
      =====================================================
      */
 
+    let messageTimer;
+
     function showMessage(message, success = true) {
 
-        const box =
-            document.getElementById("messageBox");
+        const box = document.getElementById("messageBox");
+
+        clearTimeout(messageTimer);
+
+        box.textContent = message;
+
+        box.classList.remove(
+            "message-success",
+            "message-error"
+        );
+
+        box.classList.add(
+            success ? "message-success" : "message-error"
+        );
 
         box.style.display = "block";
 
-        box.className =
-            success
-                ? "message-success"
-                : "message-error";
-
-        box.innerText = message;
-
-
-        setTimeout(() => {
-
+        messageTimer = setTimeout(() => {
             box.style.display = "none";
-
-        }, 5000);
+        }, 3500);
     }
 
 
