@@ -1,1691 +1,740 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Inventory Management | Lanka Tech Components</title>
-
+    <title>Inventory & Stock Management | Lanka Tech Components</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
+        :root{
+            --navy:#0b2a4a;
+            --navy-2:#113b66;
+            --blue:#0d6efd;
+            --blue-2:#0a63c8;
+            --cyan:#3aa0ff;
+            --bg:#f4f8fc;
+            --surface:#ffffff;
+            --line:#dce7f2;
+            --text:#102a43;
+            --muted:#5f7388;
+            --green:#168a4b;
+            --amber:#b7791f;
+            --red:#c83232;
+            --slate:#64748b;
+            --shadow:0 10px 28px rgba(12,43,75,.08);
+            --shadow-hover:0 16px 38px rgba(12,43,75,.13);
         }
 
-        body {
-            background: #f4f6f9;
-            color: #1e293b;
+        *{box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{
+            margin:0;
+            font-family:Inter,Segoe UI,Arial,sans-serif;
+            color:var(--text);
+            background:
+                radial-gradient(circle at 8% 0%, rgba(13,110,253,.06), transparent 26%),
+                linear-gradient(180deg,#f8fbff 0,#f4f8fc 240px,#f4f8fc 100%);
+        }
+        button,input,select,textarea{font:inherit}
+        button{cursor:pointer}
+        a{text-decoration:none;color:inherit}
+
+        /* ===== SHARED PROJECT HEADER ===== */
+        .site-header{
+            position:sticky;
+            top:0;
+            z-index:1000;
+            background:rgba(255,255,255,.97);
+            border-bottom:1px solid rgba(15,51,91,.08);
+            box-shadow:0 5px 18px rgba(15,51,91,.05);
+            backdrop-filter:blur(14px);
+        }
+        .site-header-inner{
+            width:min(1500px,calc(100% - 56px));
+            min-height:76px;
+            margin:auto;
+            display:grid;
+            grid-template-columns:minmax(290px,1fr) auto minmax(290px,1fr);
+            align-items:center;
+            gap:24px;
+        }
+        .site-brand{display:flex;align-items:center;gap:12px;min-width:0}
+        .brand-mark{
+            width:43px;height:43px;border-radius:12px;
+            display:grid;place-items:center;
+            background:linear-gradient(145deg,#eaf4ff,#fff);
+            border:1px solid #cfe1f4;
+            box-shadow:0 8px 20px rgba(13,110,253,.10);
+            flex:none;
+        }
+        .brand-mark svg{width:31px;height:31px}
+        .site-brand-name{font-size:15px;font-weight:800;color:var(--navy);letter-spacing:-.01em}
+        .site-brand-sub{font-size:11px;color:#607a95;margin-top:3px}
+        .site-nav-links{display:flex;align-items:center;gap:22px;font-size:13px;font-weight:700;color:#315473}
+        .site-nav-links a{padding:27px 0 24px;border-bottom:3px solid transparent}
+        .site-nav-links a:hover,.site-nav-links a.active{color:var(--blue);border-bottom-color:var(--blue)}
+        .site-nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px}
+        .site-user-area{display:flex;align-items:center;gap:12px}
+        .site-user-info{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:11px;background:#f6f9fc}
+        .site-user-info div div{font-size:12px;font-weight:800;color:var(--navy)}
+        .site-user-info small{font-size:10px;color:#67809a}
+        .site-login-btn,.site-ghost-btn{
+            border:0;border-radius:10px;padding:9px 14px;font-weight:750;font-size:12px;
+        }
+        .site-login-btn{background:var(--navy);color:#fff}
+        .site-ghost-btn{background:#eef5fc;color:var(--navy)}
+        .site-menu-btn{display:none;border:0;background:#eef5fc;border-radius:10px;padding:9px 11px;color:var(--navy)}
+
+        .site-module-strip{background:#fff;border-bottom:1px solid #e6eef7}
+        .site-module-strip-inner{
+            width:min(1500px,calc(100% - 56px));margin:auto;min-height:50px;
+            display:flex;align-items:center;justify-content:space-between;gap:20px;
+        }
+        .site-breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#6b8096}
+        .site-breadcrumb a:hover{color:var(--blue)}
+        .site-current-module{
+            display:inline-flex;align-items:center;gap:9px;padding:8px 13px;border-radius:10px;
+            color:#fff;background:linear-gradient(135deg,#0a5fb7,var(--blue));
+            box-shadow:0 7px 18px rgba(13,110,253,.16);font-size:12px;font-weight:800;
         }
 
-        /* ==============================
-           NAVIGATION
-        ============================== */
-
-        .navbar {
-            background: #172554;
-            color: white;
-            padding: 18px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* ===== PAGE ===== */
+        .container{width:min(1500px,calc(100% - 56px));margin:30px auto 42px}
+        .page-header{
+            display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:24px;
         }
+        .eyebrow{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--blue);margin-bottom:7px}
+        .page-header h1{margin:0;color:var(--navy);font-size:clamp(28px,3vw,38px);letter-spacing:-.025em}
+        .page-header p{margin:7px 0 0;color:#4f6b86;font-size:14px;max-width:760px;line-height:1.6}
+        .header-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
 
-        .navbar h2 {
-            font-size: 21px;
+        .btn{
+            border:0;border-radius:10px;padding:10px 15px;font-weight:750;font-size:12px;
+            transition:transform .17s ease,box-shadow .17s ease,opacity .17s ease;
         }
+        .btn:hover{transform:translateY(-1px)}
+        .btn-primary{background:linear-gradient(135deg,var(--blue-2),var(--blue));color:#fff;box-shadow:0 8px 20px rgba(13,110,253,.18)}
+        .btn-secondary{background:#eaf2fb;color:var(--navy)}
+        .btn-success{background:#168a4b;color:#fff}
+        .btn-danger{background:#c83232;color:#fff}
+        .btn-dark{background:var(--navy);color:#fff}
+        .btn-sm{padding:7px 10px;font-size:11px;border-radius:8px}
 
-        .navbar p {
-            color: #cbd5e1;
-            font-size: 13px;
-            margin-top: 4px;
+        /* ===== METRICS ===== */
+        .metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:15px;margin-bottom:25px}
+        .metric{
+            position:relative;overflow:hidden;background:rgba(255,255,255,.98);
+            border:1px solid #e6eef7;border-left:4px solid var(--blue);
+            border-radius:15px;padding:18px;box-shadow:var(--shadow);min-height:128px;
         }
+        .metric::after{content:"";position:absolute;width:70px;height:70px;right:-25px;top:-25px;border-radius:50%;background:rgba(13,110,253,.035)}
+        .metric-label{font-size:11px;font-weight:800;color:#617991;margin-bottom:12px}
+        .metric-value{font-size:29px;font-weight:850;color:var(--navy);line-height:1}
+        .metric-note{font-size:10.5px;color:#73879b;margin-top:8px}
+        .metric.stock{border-left-color:#168a4b}
+        .metric.low{border-left-color:#f59e0b}
+        .metric.out{border-left-color:#dc3545}
+        .metric.category{border-left-color:#7c3aed}
+        .metric.brand{border-left-color:#0284c7}
 
-        .module-name {
-            font-weight: bold;
-            font-size: 14px;
+        /* ===== TOOLBAR / TABS ===== */
+        .panel{
+            background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:24px;overflow:hidden;
         }
-
-        /* ==============================
-           MAIN
-        ============================== */
-
-        .container {
-            width: 94%;
-            margin: 25px auto;
+        .panel-head{
+            display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;border-bottom:1px solid #edf3f8;
         }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
+        .panel-title h2{margin:0;color:var(--navy);font-size:20px;letter-spacing:-.015em}
+        .panel-title p{margin:5px 0 0;color:#71859a;font-size:11px}
+        .panel-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+        .input,.select,.textarea{
+            width:100%;border:1px solid #cedbea;border-radius:10px;background:#fff;color:#102a43;
+            padding:10px 11px;outline:none;transition:border-color .18s ease,box-shadow .18s ease;
         }
-
-        .page-header h1 {
-            color: #172554;
-            font-size: 28px;
+        .input:focus,.select:focus,.textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(13,110,253,.09)}
+        .search{min-width:225px}
+        .filter{min-width:155px}
+        .tabs{display:flex;gap:7px;padding:14px 22px 0;background:#fbfdff}
+        .tab{
+            border:1px solid #dfe9f4;background:#f3f7fb;color:#486782;border-radius:10px 10px 0 0;
+            padding:9px 13px;font-size:11px;font-weight:800;
         }
+        .tab.active{background:#fff;color:var(--blue);border-bottom-color:#fff}
+        .tab-view{display:none}
+        .tab-view.active{display:block}
 
-        .page-header p {
-            color: #64748b;
-            margin-top: 6px;
+        /* ===== TABLE ===== */
+        .table-wrap{overflow:auto;padding:0 22px 20px}
+        table{width:100%;border-collapse:separate;border-spacing:0;min-width:900px}
+        th{background:#eef6ff;color:var(--navy);font-size:11px;font-weight:800;text-align:left;padding:12px;border-top:1px solid #e3edf8;border-bottom:1px solid #dce7f3;white-space:nowrap}
+        td{padding:12px;border-bottom:1px solid #edf2f7;font-size:12px;color:#20384f;background:#fff;vertical-align:middle}
+        tbody tr:hover td{background:#f8fbff}
+        .part-name{font-weight:800;color:var(--navy)}
+        .subtext{font-size:10px;color:#7a8ea2;margin-top:3px}
+        .money{font-weight:800;color:#173d63}
+        .pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:800}
+        .pill.ok{background:#e4f7ec;color:#157a42}
+        .pill.low{background:#fff2d9;color:#9a640e}
+        .pill.out{background:#fde7e7;color:#b42323}
+        .pill.active{background:#e5f0ff;color:#1b5fad}
+        .pill.inactive{background:#eef1f4;color:#66788b}
+        .qty-positive{color:#148044;font-weight:800}
+        .qty-zero{color:#b42323;font-weight:800}
+        .empty{padding:38px 18px;text-align:center;color:#73879a;font-size:12px}
+
+        /* ===== FORMS / MODALS ===== */
+        .modal{
+            position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;
+            padding:24px;background:rgba(4,22,43,.62);backdrop-filter:blur(4px);
         }
-
-        /* ==============================
-           BUTTONS
-        ============================== */
-
-        .btn {
-            border: none;
-            border-radius: 6px;
-            padding: 10px 16px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
+        .modal.open{display:flex}
+        .modal-card{
+            width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:17px;
+            box-shadow:0 28px 70px rgba(4,22,43,.25);border:1px solid rgba(255,255,255,.45);
         }
+        .modal-card.small{width:min(520px,100%)}
+        .modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:20px 22px;border-bottom:1px solid #edf2f7;background:linear-gradient(180deg,#f9fcff,#fff)}
+        .modal-head h3{margin:0;color:var(--navy);font-size:20px}
+        .modal-head p{margin:5px 0 0;color:#6b8095;font-size:11px}
+        .modal-close{border:0;background:#eef4fa;color:var(--navy);width:32px;height:32px;border-radius:9px;font-size:20px;line-height:1}
+        .modal-body{padding:22px}
+        .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+        .form-group.full{grid-column:1/-1}
+        .form-group label{display:block;margin-bottom:6px;color:#193955;font-size:11px;font-weight:800}
+        .field-note{font-size:10px;color:#7b8fa3;margin-top:5px;line-height:1.4}
+        .modal-actions{display:flex;justify-content:flex-end;gap:9px;padding:17px 22px;border-top:1px solid #edf2f7;background:#fbfdff}
+        .adjust-preview{margin-top:12px;padding:11px 12px;border-radius:10px;background:#f3f8fd;color:#46647f;font-size:11px}
 
-        .btn:hover {
-            opacity: 0.88;
+        /* ===== MESSAGES ===== */
+        #messageBox{
+            display:none;position:fixed;top:95px;right:25px;z-index:3000;min-width:300px;max-width:440px;
+            padding:14px 17px;border-radius:12px;box-shadow:0 18px 42px rgba(6,34,61,.18);font-size:12px;font-weight:700;
         }
+        #messageBox.success{display:block;background:#e7f7ee;color:#126b3c;border:1px solid #bce7cf}
+        #messageBox.error{display:block;background:#fdeaea;color:#a62626;border:1px solid #f3c4c4}
+        #messageBox.info{display:block;background:#eaf3ff;color:#155eaa;border:1px solid #c7ddfa}
+        .loading{opacity:.55;pointer-events:none}
 
-        .btn-primary {
-            background: #2563eb;
-            color: white;
+        footer{padding:22px;text-align:center;color:#6e8296;font-size:11px}
+
+        @media(max-width:1200px){
+            .metrics{grid-template-columns:repeat(3,1fr)}
+            .site-header-inner{grid-template-columns:1fr auto}.site-nav-links{display:none}
         }
-
-        .btn-success {
-            background: #16a34a;
-            color: white;
+        @media(max-width:760px){
+            .site-header-inner,.site-module-strip-inner,.container{width:min(100% - 28px,1500px)}
+            .site-user-info{display:none}.site-menu-btn{display:block}
+            .site-module-strip-inner{align-items:flex-start;flex-direction:column;padding:10px 0}.site-current-module{align-self:flex-start}
+            .page-header{align-items:flex-start;flex-direction:column}.header-actions{justify-content:flex-start}
+            .metrics{grid-template-columns:repeat(2,1fr)}
+            .panel-head{align-items:flex-start;flex-direction:column}.panel-tools{justify-content:flex-start;width:100%}.search,.filter{min-width:0;flex:1}
+            .form-grid{grid-template-columns:1fr}
+            .form-group.full{grid-column:auto}
         }
-
-        .btn-secondary {
-            background: #64748b;
-            color: white;
-        }
-
-        /* ==============================
-           DASHBOARD CARDS
-        ============================== */
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 25px;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .card h3 {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 12px;
-        }
-
-        .number {
-            font-size: 30px;
-            font-weight: bold;
-            color: #172554;
-        }
-
-        .small-text {
-            color: #94a3b8;
-            font-size: 12px;
-            margin-top: 6px;
-        }
-
-        /* ==============================
-           FORM
-        ============================== */
-
-        .form-box {
-            background: white;
-            padding: 24px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-            display: none;
-        }
-
-        .form-box h2 {
-            color: #172554;
-            margin-bottom: 20px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-        }
-
-        .form-actions {
-            margin-top: 18px;
-        }
-
-        /* ==============================
-           TABLE
-        ============================== */
-
-        .section {
-            background: white;
-            padding: 22px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-        }
-
-        .section-header h2 {
-            color: #172554;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-box,
-        .filter-box {
-            padding: 9px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: #eef2ff;
-            color: #172554;
-            padding: 12px;
-            text-align: left;
-            font-size: 13px;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 13px;
-        }
-
-        tr:hover {
-            background: #f8fafc;
-        }
-
-        /* ==============================
-           STATUS BADGES
-        ============================== */
-
-        .badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .available {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .medium {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .low {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .out {
-            background: #e2e8f0;
-            color: #475569;
-        }
-
-        /* ==============================
-           ACTION BUTTONS
-        ============================== */
-
-        .action-btn {
-            border: none;
-            padding: 6px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-right: 4px;
-        }
-
-        .edit-btn {
-            background: #dbeafe;
-            color: #1d4ed8;
-        }
-
-        .delete-btn {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        /* ==============================
-           MESSAGE
-        ============================== */
-
-        #messageBox {
-            display: none;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            border-radius: 7px;
-            font-size: 14px;
-        }
-
-        .success {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        footer {
-            text-align: center;
-            color: #64748b;
-            padding: 22px;
-            font-size: 13px;
-        }
-
-        @media(max-width: 900px) {
-
-            .cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section {
-                overflow-x: auto;
-            }
-        }
-
+        @media(max-width:480px){.metrics{grid-template-columns:1fr}.site-user-area form{display:none}}
     </style>
-
 </head>
-
 <body>
+<header class="site-header">
+    <div class="site-header-inner">
+        <a class="site-brand" href="/">
+            <div class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 64 64" fill="none">
+                    <path d="M32 5 54 17v30L32 59 10 47V17L32 5Z" stroke="#0D6EFD" stroke-width="4"/>
+                    <path d="M11 18 32 31l21-13M32 31v27" stroke="#0D6EFD" stroke-width="4"/>
+                    <path d="m20 13 22 13" stroke="#65A9F7" stroke-width="4"/>
+                </svg>
+            </div>
+            <div>
+                <div class="site-brand-name">Lanka Tech Components (Pvt) Ltd</div>
+                <div class="site-brand-sub">Computer Spare Parts Management System</div>
+            </div>
+        </a>
 
-<header class="navbar">
+        <nav class="site-nav-links">
+            <a href="/">Home</a>
+            <a href="/#about">About Us</a>
+            <a class="active" href="/#modules">Modules</a>
+            <a href="/#contact">Contact</a>
+        </nav>
 
-    <div>
-        <h2>Lanka Tech Components</h2>
-        <p>Computer Spare Parts Management System</p>
+        <div class="site-nav-actions">
+            <div class="site-user-area">
+                <div class="site-user-info">
+                    <span aria-hidden="true">👤</span>
+                    <div>
+                        <div id="siteUserName">Loading...</div>
+                        <small id="siteUserRole"></small>
+                    </div>
+                </div>
+                <form action="/logout" method="post">
+                    <button class="site-login-btn" type="submit">Logout</button>
+                </form>
+            </div>
+            <button class="site-menu-btn" type="button" onclick="window.location.href='/'">⌂</button>
+        </div>
     </div>
-
-    <div class="module-name">
-        Inventory & Stock Management
-    </div>
-
 </header>
 
-
-<main class="container">
-
-    <!-- PAGE HEADER -->
-
-    <div class="page-header">
-
-        <div>
-
-            <h1>Inventory Management</h1>
-
-            <p>
-                Manage computer spare parts and current stock levels.
-            </p>
-
+<div class="site-module-strip">
+    <div class="site-module-strip-inner">
+        <div class="site-breadcrumb">
+            <a href="/">Home</a><span>›</span><a href="/#modules">Modules</a><span>›</span><span>Inventory & Stock Management</span>
         </div>
-
-        <button
-                class="btn btn-primary"
-                onclick="showAddForm()">
-
-            + Add Spare Part
-
-        </button>
-
+        <div class="site-current-module"><span>▣</span><span>Inventory & Stock Management</span></div>
     </div>
+</div>
 
-
-    <!-- MESSAGE BOX -->
+<main class="container" id="mainContent">
+    <div class="page-header">
+        <div>
+            <div class="eyebrow">Inventory Operations</div>
+            <h1>Inventory & Stock Management</h1>
+            <p>Maintain spare-part master data, categories and brands, monitor stock levels by location, and record stock adjustments using the Inventory Management API.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="openModal('categoryModal')">+ Category</button>
+            <button class="btn btn-secondary" onclick="openModal('brandModal')">+ Brand</button>
+            <button class="btn btn-success" onclick="prepareAdjustModal()">± Adjust Stock</button>
+            <button class="btn btn-primary" onclick="preparePartModal()">+ Add Spare Part</button>
+        </div>
+    </div>
 
     <div id="messageBox"></div>
 
-
-    <!-- DASHBOARD CARDS -->
-
-    <section class="cards">
-
-        <div class="card">
-
-            <h3>Total Spare Parts</h3>
-
-            <div
-                    class="number"
-                    id="totalParts">
-                0
-            </div>
-
-            <div class="small-text">
-                Registered spare parts
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Total Stock</h3>
-
-            <div
-                    class="number"
-                    id="totalStock">
-                0
-            </div>
-
-            <div class="small-text">
-                Available units
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Low Stock Items</h3>
-
-            <div
-                    class="number"
-                    id="lowStockCount">
-                0
-            </div>
-
-            <div class="small-text">
-                Require attention
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Categories</h3>
-
-            <div
-                    class="number"
-                    id="categoryCount">
-                0
-            </div>
-
-            <div class="small-text">
-                Spare part categories
-            </div>
-
-        </div>
-
+    <section class="metrics">
+        <div class="metric"><div class="metric-label">TOTAL SPARE PARTS</div><div class="metric-value" id="totalParts">0</div><div class="metric-note">Registered inventory items</div></div>
+        <div class="metric stock"><div class="metric-label">TOTAL STOCK UNITS</div><div class="metric-value" id="totalStock">0</div><div class="metric-note">Across all locations</div></div>
+        <div class="metric low"><div class="metric-label">LOW STOCK ITEMS</div><div class="metric-value" id="lowStockCount">0</div><div class="metric-note">At or below reorder level</div></div>
+        <div class="metric out"><div class="metric-label">OUT OF STOCK</div><div class="metric-value" id="outStockCount">0</div><div class="metric-note">No available units</div></div>
+        <div class="metric category"><div class="metric-label">CATEGORIES</div><div class="metric-value" id="categoryCount">0</div><div class="metric-note">Active classification records</div></div>
+        <div class="metric brand"><div class="metric-label">BRANDS</div><div class="metric-value" id="brandCount">0</div><div class="metric-note">Registered manufacturers</div></div>
     </section>
 
-
-    <!-- ADD / EDIT FORM -->
-
-    <section
-            class="form-box"
-            id="partForm">
-
-        <h2 id="formTitle">
-            Add New Spare Part
-        </h2>
-
-
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label>
-                    Part Code
-                </label>
-
-                <input
-                        type="text"
-                        id="partCode"
-                        placeholder="Example: CPU001">
-
+    <section class="panel">
+        <div class="panel-head">
+            <div class="panel-title">
+                <h2>Inventory Register</h2>
+                <p>Search parts and review stock quantities by location.</p>
             </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Part Name
-                </label>
-
-                <input
-                        type="text"
-                        id="partName"
-                        placeholder="Example: Intel Core i5">
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Category
-                </label>
-
-                <select id="category">
-
-                    <option value="">
-                        Select Category
-                    </option>
-
-                    <option value="Processor">
-                        Processor
-                    </option>
-
-                    <option value="RAM">
-                        RAM
-                    </option>
-
-                    <option value="Storage">
-                        Storage
-                    </option>
-
-                    <option value="Motherboard">
-                        Motherboard
-                    </option>
-
-                    <option value="Graphics Card">
-                        Graphics Card
-                    </option>
-
-                    <option value="Power Supply">
-                        Power Supply
-                    </option>
-
-                    <option value="Cooling">
-                        Cooling
-                    </option>
-
+            <div class="panel-tools">
+                <input class="input search" id="searchInput" type="search" placeholder="Search code, name, brand..." oninput="renderActiveTab()">
+                <select class="select filter" id="categoryFilter" onchange="renderActiveTab()"><option value="">All categories</option></select>
+                <select class="select filter" id="stockFilter" onchange="renderActiveTab()">
+                    <option value="">All stock levels</option>
+                    <option value="OK">Available</option>
+                    <option value="LOW">Low stock</option>
+                    <option value="OUT">Out of stock</option>
                 </select>
-
+                <button class="btn btn-dark" onclick="loadAllData()">Refresh</button>
             </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Brand
-                </label>
-
-                <input
-                        type="text"
-                        id="brand"
-                        placeholder="Example: Intel">
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Location
-                </label>
-
-                <select id="location">
-
-                    <option value="">
-                        Select Location
-                    </option>
-
-                    <option value="Central Warehouse">
-                        Central Warehouse
-                    </option>
-
-                    <option value="Branch 01">
-                        Branch 01
-                    </option>
-
-                    <option value="Branch 02">
-                        Branch 02
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Quantity
-                </label>
-
-                <input
-                        type="number"
-                        id="quantity"
-                        min="0"
-                        placeholder="Example: 20">
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Unit Price (LKR)
-                </label>
-
-                <input
-                        type="number"
-                        id="price"
-                        min="0"
-                        placeholder="Example: 45000">
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Reorder Level
-                </label>
-
-                <input
-                        type="number"
-                        id="reorderLevel"
-                        min="0"
-                        value="5">
-
-            </div>
-
         </div>
 
-
-        <div class="form-actions">
-
-            <button
-                    class="btn btn-success"
-                    onclick="savePart()"
-                    id="saveButton">
-
-                Save Spare Part
-
-            </button>
-
-
-            <button
-                    class="btn btn-secondary"
-                    onclick="hideForm()">
-
-                Cancel
-
-            </button>
-
+        <div class="tabs">
+            <button class="tab active" id="partsTabBtn" onclick="switchTab('parts')">Spare Parts</button>
+            <button class="tab" id="stocksTabBtn" onclick="switchTab('stocks')">Stock by Location</button>
         </div>
 
+        <div class="tab-view active" id="partsView">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Part</th><th>Category</th><th>Brand</th><th>Unit Price</th><th>Reorder Level</th><th>Total Stock</th><th>Status</th><th>Active</th></tr></thead>
+                    <tbody id="partsTableBody"></tbody>
+                </table>
+                <div class="empty" id="partsEmpty" style="display:none">No spare parts match the current filters.</div>
+            </div>
+        </div>
+
+        <div class="tab-view" id="stocksView">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Stock ID</th><th>Part</th><th>Location</th><th>Location Type</th><th>Quantity</th><th>Reorder Level</th><th>Status</th><th>Last Updated</th></tr></thead>
+                    <tbody id="stocksTableBody"></tbody>
+                </table>
+                <div class="empty" id="stocksEmpty" style="display:none">No stock records match the current filters.</div>
+            </div>
+        </div>
     </section>
-
-
-    <!-- INVENTORY TABLE -->
-
-    <section class="section">
-
-        <div class="section-header">
-
-            <h2>
-                Spare Parts Inventory
-            </h2>
-
-
-            <div class="controls">
-
-                <input
-                        type="text"
-                        id="searchInput"
-                        class="search-box"
-                        placeholder="Search spare parts..."
-                        onkeyup="renderTable()">
-
-
-                <select
-                        id="statusFilter"
-                        class="filter-box"
-                        onchange="renderTable()">
-
-                    <option value="">
-                        All Statuses
-                    </option>
-
-                    <option value="Available">
-                        Available
-                    </option>
-
-                    <option value="Medium">
-                        Medium
-                    </option>
-
-                    <option value="Low Stock">
-                        Low Stock
-                    </option>
-
-                    <option value="Out of Stock">
-                        Out of Stock
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <table>
-
-            <thead>
-
-            <tr>
-
-                <th>Part Code</th>
-
-                <th>Part Name</th>
-
-                <th>Category</th>
-
-                <th>Brand</th>
-
-                <th>Location</th>
-
-                <th>Quantity</th>
-
-                <th>Unit Price</th>
-
-                <th>Status</th>
-
-                <th>Actions</th>
-
-            </tr>
-
-            </thead>
-
-
-            <tbody id="inventoryTableBody">
-
-            </tbody>
-
-        </table>
-
-    </section>
-
 </main>
 
+<!-- Add Spare Part -->
+<div class="modal" id="partModal">
+    <div class="modal-card">
+        <div class="modal-head">
+            <div><h3>Add Spare Part</h3><p>Create a new spare-part master record. Stock can be added afterward using Adjust Stock.</p></div>
+            <button class="modal-close" onclick="closeModal('partModal')">×</button>
+        </div>
+        <form id="partForm" onsubmit="submitPart(event)">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group"><label for="partCode">Part Code *</label><input class="input" id="partCode" maxlength="50" required placeholder="e.g. CPU-I5-12400"></div>
+                    <div class="form-group"><label for="partName">Part Name *</label><input class="input" id="partName" maxlength="150" required placeholder="e.g. Intel Core i5-12400"></div>
+                    <div class="form-group"><label for="partCategory">Category *</label><select class="select" id="partCategory" required></select></div>
+                    <div class="form-group"><label for="partBrand">Brand *</label><select class="select" id="partBrand" required></select></div>
+                    <div class="form-group"><label for="unitPrice">Unit Price (LKR) *</label><input class="input" id="unitPrice" type="number" min="0" step="0.01" required placeholder="0.00"></div>
+                    <div class="form-group"><label for="reorderLevel">Reorder Level *</label><input class="input" id="reorderLevel" type="number" min="0" step="1" required value="0"></div>
+                    <div class="form-group full"><label for="partDescription">Description</label><textarea class="textarea" id="partDescription" rows="3" maxlength="500" placeholder="Optional part description"></textarea></div>
+                </div>
+            </div>
+            <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeModal('partModal')">Cancel</button><button class="btn btn-primary" type="submit">Save Spare Part</button></div>
+        </form>
+    </div>
+</div>
 
-<footer>
+<!-- Adjust Stock -->
+<div class="modal" id="adjustModal">
+    <div class="modal-card small">
+        <div class="modal-head">
+            <div><h3>Adjust Stock</h3><p>Add or reduce stock for a selected spare part and location.</p></div>
+            <button class="modal-close" onclick="closeModal('adjustModal')">×</button>
+        </div>
+        <form id="adjustForm" onsubmit="submitAdjustment(event)">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group full"><label for="adjustPart">Spare Part *</label><select class="select" id="adjustPart" required onchange="updateAdjustmentPreview()"></select></div>
+                    <div class="form-group full"><label for="adjustLocation">Location *</label><select class="select" id="adjustLocation" required onchange="updateAdjustmentPreview()"></select></div>
+                    <div class="form-group full"><label for="quantityChange">Quantity Change *</label><input class="input" id="quantityChange" type="number" step="1" required placeholder="Use +10 to add or -5 to reduce" oninput="updateAdjustmentPreview()"><div class="field-note">Positive value adds stock. Negative value reduces stock. The backend prevents negative final stock.</div></div>
+                </div>
+                <div class="adjust-preview" id="adjustPreview">Select a part and location to view the current stock.</div>
+            </div>
+            <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeModal('adjustModal')">Cancel</button><button class="btn btn-success" type="submit">Save Adjustment</button></div>
+        </form>
+    </div>
+</div>
 
-    Lanka Tech Components (Pvt) Ltd |
-    Computer Spare Parts Management System
+<!-- Add Category -->
+<div class="modal" id="categoryModal">
+    <div class="modal-card small">
+        <div class="modal-head"><div><h3>Add Category</h3><p>Create a category used when registering spare parts.</p></div><button class="modal-close" onclick="closeModal('categoryModal')">×</button></div>
+        <form id="categoryForm" onsubmit="submitCategory(event)">
+            <div class="modal-body">
+                <div class="form-group"><label for="categoryName">Category Name *</label><input class="input" id="categoryName" required maxlength="100" placeholder="e.g. Processor"></div>
+                <div class="form-group" style="margin-top:14px"><label for="categoryDescription">Description</label><textarea class="textarea" id="categoryDescription" rows="3" maxlength="255" placeholder="Optional description"></textarea></div>
+            </div>
+            <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeModal('categoryModal')">Cancel</button><button class="btn btn-primary" type="submit">Save Category</button></div>
+        </form>
+    </div>
+</div>
 
-</footer>
+<!-- Add Brand -->
+<div class="modal" id="brandModal">
+    <div class="modal-card small">
+        <div class="modal-head"><div><h3>Add Brand</h3><p>Create a brand used when registering spare parts.</p></div><button class="modal-close" onclick="closeModal('brandModal')">×</button></div>
+        <form id="brandForm" onsubmit="submitBrand(event)">
+            <div class="modal-body">
+                <div class="form-group"><label for="brandName">Brand Name *</label><input class="input" id="brandName" required maxlength="100" placeholder="e.g. Intel"></div>
+                <div class="form-group" style="margin-top:14px"><label for="brandDescription">Description</label><textarea class="textarea" id="brandDescription" rows="3" maxlength="255" placeholder="Optional description"></textarea></div>
+            </div>
+            <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeModal('brandModal')">Cancel</button><button class="btn btn-primary" type="submit">Save Brand</button></div>
+        </form>
+    </div>
+</div>
 
+<footer>© Lanka Tech Components (Pvt) Ltd · Computer Spare Parts Management System</footer>
 
 <script>
+    const API = {
+        categories: '/api/inventory/categories',
+        brands: '/api/inventory/brands',
+        parts: '/api/inventory/parts',
+        stocks: '/api/inventory/stocks',
+        adjust: '/api/inventory/stocks/adjust',
+        locations: '/api/stock-transfers/locations',
+        currentUser: '/api/auth/me'
+    };
 
-    /*
-    ======================================
-    SAMPLE INVENTORY DATA
-    ======================================
-    */
+    let categories = [];
+    let brands = [];
+    let parts = [];
+    let stocks = [];
+    let locations = [];
+    let activeTab = 'parts';
+    let toastTimer;
 
-    let inventory = [
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadCurrentUser();
+        await loadAllData();
+    });
 
-        {
-            code: "CPU001",
-            name: "Intel Core i5 Processor",
-            category: "Processor",
-            brand: "Intel",
-            location: "Central Warehouse",
-            quantity: 25,
-            price: 45000,
-            reorderLevel: 5
-        },
-
-        {
-            code: "RAM002",
-            name: "16GB DDR4 RAM",
-            category: "RAM",
-            brand: "Kingston",
-            location: "Central Warehouse",
-            quantity: 8,
-            price: 12500,
-            reorderLevel: 5
-        },
-
-        {
-            code: "SSD003",
-            name: "1TB NVMe SSD",
-            category: "Storage",
-            brand: "Samsung",
-            location: "Branch 01",
-            quantity: 3,
-            price: 28000,
-            reorderLevel: 5
-        },
-
-        {
-            code: "GPU004",
-            name: "RTX 4060 Graphics Card",
-            category: "Graphics Card",
-            brand: "Gigabyte",
-            location: "Central Warehouse",
-            quantity: 15,
-            price: 145000,
-            reorderLevel: 5
-        }
-
-    ];
-
-
-    /*
-    ======================================
-    CURRENT EDIT INDEX
-    ======================================
-    */
-
-    let editingIndex = null;
-
-
-    /*
-    ======================================
-    SHOW ADD FORM
-    ======================================
-    */
-
-    function showAddForm() {
-
-        editingIndex = null;
-
-        document
-            .getElementById("formTitle")
-            .innerText =
-            "Add New Spare Part";
-
-
-        document
-            .getElementById("saveButton")
-            .innerText =
-            "Save Spare Part";
-
-
-        clearForm();
-
-
-        document
-            .getElementById("partForm")
-            .style.display =
-            "block";
-
-
-        window.scrollTo({
-            top: 250,
-            behavior: "smooth"
-        });
+    async function loadCurrentUser(){
+        try{
+            const response = await fetch(API.currentUser, {headers:{'Accept':'application/json'}});
+            if(!response.ok) return;
+            const user = await response.json();
+            document.getElementById('siteUserName').textContent = user.fullName || user.name || user.email || 'Signed in user';
+            const roleName = user.role?.roleName || user.roleName || user.role || '';
+            document.getElementById('siteUserRole').textContent = String(roleName).replace(/^ROLE_/, '').replaceAll('_',' ');
+        }catch(error){console.warn('Unable to load current user', error);}
     }
 
-
-    /*
-    ======================================
-    HIDE FORM
-    ======================================
-    */
-
-    function hideForm() {
-
-        document
-            .getElementById("partForm")
-            .style.display =
-            "none";
-
-
-        clearForm();
-
-
-        editingIndex = null;
-    }
-
-
-    /*
-    ======================================
-    SAVE / UPDATE PART
-    ======================================
-    */
-
-    function savePart() {
-
-        const code =
-            document
-                .getElementById("partCode")
-                .value
-                .trim();
-
-
-        const name =
-            document
-                .getElementById("partName")
-                .value
-                .trim();
-
-
-        const category =
-            document
-                .getElementById("category")
-                .value;
-
-
-        const brand =
-            document
-                .getElementById("brand")
-                .value
-                .trim();
-
-
-        const location =
-            document
-                .getElementById("location")
-                .value;
-
-
-        const quantity =
-            Number(
-                document
-                    .getElementById("quantity")
-                    .value
-            );
-
-
-        const price =
-            Number(
-                document
-                    .getElementById("price")
-                    .value
-            );
-
-
-        const reorderLevel =
-            Number(
-                document
-                    .getElementById("reorderLevel")
-                    .value
-            );
-
-
-        /*
-        VALIDATION
-        */
-
-        if (
-            code === "" ||
-            name === "" ||
-            category === "" ||
-            brand === "" ||
-            location === ""
-        ) {
-
-            showMessage(
-                "Please complete all required fields.",
-                false
-            );
-
-            return;
-        }
-
-
-        if (
-            quantity < 0 ||
-            price < 0 ||
-            reorderLevel < 0
-        ) {
-
-            showMessage(
-                "Quantity, price and reorder level cannot be negative.",
-                false
-            );
-
-            return;
-        }
-
-
-        /*
-        DUPLICATE PART CODE CHECK
-        */
-
-        const duplicate =
-            inventory.some(
-                (part, index) =>
-                    part.code.toLowerCase()
-                    ===
-                    code.toLowerCase()
-                    &&
-                    index !== editingIndex
-            );
-
-
-        if (duplicate) {
-
-            showMessage(
-                "Part code already exists.",
-                false
-            );
-
-            return;
-        }
-
-
-        const part = {
-
-            code: code,
-
-            name: name,
-
-            category: category,
-
-            brand: brand,
-
-            location: location,
-
-            quantity: quantity,
-
-            price: price,
-
-            reorderLevel: reorderLevel
-        };
-
-
-        /*
-        ADD MODE
-        */
-
-        if (editingIndex === null) {
-
-            inventory.push(part);
-
-
-            showMessage(
-                "Spare part added successfully."
-            );
-        }
-
-        /*
-        EDIT MODE
-        */
-
-        else {
-
-            inventory[editingIndex] =
-                part;
-
-
-            showMessage(
-                "Spare part updated successfully."
-            );
-        }
-
-
-        hideForm();
-
-        renderTable();
-
-        updateDashboard();
-    }
-
-
-    /*
-    ======================================
-    EDIT PART
-    ======================================
-    */
-
-    function editPart(index) {
-
-        const part =
-            inventory[index];
-
-
-        editingIndex =
-            index;
-
-
-        document
-            .getElementById("formTitle")
-            .innerText =
-            "Edit Spare Part";
-
-
-        document
-            .getElementById("saveButton")
-            .innerText =
-            "Update Spare Part";
-
-
-        document
-            .getElementById("partCode")
-            .value =
-            part.code;
-
-
-        document
-            .getElementById("partName")
-            .value =
-            part.name;
-
-
-        document
-            .getElementById("category")
-            .value =
-            part.category;
-
-
-        document
-            .getElementById("brand")
-            .value =
-            part.brand;
-
-
-        document
-            .getElementById("location")
-            .value =
-            part.location;
-
-
-        document
-            .getElementById("quantity")
-            .value =
-            part.quantity;
-
-
-        document
-            .getElementById("price")
-            .value =
-            part.price;
-
-
-        document
-            .getElementById("reorderLevel")
-            .value =
-            part.reorderLevel;
-
-
-        document
-            .getElementById("partForm")
-            .style.display =
-            "block";
-
-
-        window.scrollTo({
-            top: 250,
-            behavior: "smooth"
-        });
-    }
-
-
-    /*
-    ======================================
-    DELETE PART
-    ======================================
-    */
-
-    function deletePart(index) {
-
-        const part =
-            inventory[index];
-
-
-        const confirmed =
-            confirm(
-                "Delete " +
-                part.name +
-                "?"
-            );
-
-
-        if (!confirmed) {
-            return;
-        }
-
-
-        inventory.splice(
-            index,
-            1
-        );
-
-
-        renderTable();
-
-        updateDashboard();
-
-
-        showMessage(
-            "Spare part deleted successfully."
-        );
-    }
-
-
-    /*
-    ======================================
-    GET STOCK STATUS
-    ======================================
-    */
-
-    function getStatus(part) {
-
-        if (part.quantity === 0) {
-
-            return {
-                text: "Out of Stock",
-                css: "out"
-            };
-        }
-
-
-        if (
-            part.quantity <=
-            part.reorderLevel
-        ) {
-
-            return {
-                text: "Low Stock",
-                css: "low"
-            };
-        }
-
-
-        if (
-            part.quantity <=
-            part.reorderLevel * 2
-        ) {
-
-            return {
-                text: "Medium",
-                css: "medium"
-            };
-        }
-
-
-        return {
-            text: "Available",
-            css: "available"
-        };
-    }
-
-
-    /*
-    ======================================
-    RENDER TABLE
-    ======================================
-    */
-
-    function renderTable() {
-
-        const tbody =
-            document
-                .getElementById(
-                    "inventoryTableBody"
-                );
-
-
-        const search =
-            document
-                .getElementById(
-                    "searchInput"
-                )
-                .value
-                .toLowerCase();
-
-
-        const statusFilter =
-            document
-                .getElementById(
-                    "statusFilter"
-                )
-                .value;
-
-
-        tbody.innerHTML = "";
-
-
-        let found = false;
-
-
-        inventory.forEach(
-            (part, index) => {
-
-                const status =
-                    getStatus(part);
-
-
-                const text =
-                    (
-                        part.code +
-                        " " +
-                        part.name +
-                        " " +
-                        part.category +
-                        " " +
-                        part.brand +
-                        " " +
-                        part.location
-                    )
-                    .toLowerCase();
-
-
-                const matchesSearch =
-                    text.includes(search);
-
-
-                const matchesStatus =
-                    statusFilter === ""
-                    ||
-                    status.text === statusFilter;
-
-
-                if (
-                    !matchesSearch ||
-                    !matchesStatus
-                ) {
-
-                    return;
-                }
-
-
-                found = true;
-
-
-                const row =
-                    document.createElement(
-                        "tr"
-                    );
-
-
-                row.innerHTML = `
-
-                    <td>
-                        ${escapeHtml(part.code)}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(part.name)}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(part.category)}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(part.brand)}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(part.location)}
-                    </td>
-
-                    <td>
-                        ${part.quantity}
-                    </td>
-
-                    <td>
-                        LKR ${formatMoney(part.price)}
-                    </td>
-
-                    <td>
-
-                        <span class="badge ${status.css}">
-                            ${status.text}
-                        </span>
-
-                    </td>
-
-                    <td>
-
-                        <button
-                            class="action-btn edit-btn"
-                            onclick="editPart(${index})">
-
-                            Edit
-
-                        </button>
-
-
-                        <button
-                            class="action-btn delete-btn"
-                            onclick="deletePart(${index})">
-
-                            Delete
-
-                        </button>
-
-                    </td>
-                `;
-
-
-                tbody.appendChild(
-                    row
-                );
-            }
-        );
-
-
-        if (!found) {
-
-            tbody.innerHTML = `
-
-                <tr>
-
-                    <td
-                        colspan="9"
-                        style="
-                            text-align:center;
-                            color:#64748b;
-                            padding:25px;
-                        ">
-
-                        No inventory records found.
-
-                    </td>
-
-                </tr>
-            `;
-        }
-    }
-
-
-    /*
-    ======================================
-    DASHBOARD COUNTERS
-    ======================================
-    */
-
-    function updateDashboard() {
-
-        const totalParts =
-            inventory.length;
-
-
-        const totalStock =
-            inventory.reduce(
-                (total, part) =>
-                    total +
-                    Number(part.quantity),
-                0
-            );
-
-
-        const lowStock =
-            inventory.filter(
-                part =>
-                    part.quantity <=
-                    part.reorderLevel
-            ).length;
-
-
-        const categories =
-            new Set(
-                inventory.map(
-                    part =>
-                        part.category
-                )
-            );
-
-
-        document
-            .getElementById(
-                "totalParts"
-            )
-            .innerText =
-            totalParts;
-
-
-        document
-            .getElementById(
-                "totalStock"
-            )
-            .innerText =
-            totalStock;
-
-
-        document
-            .getElementById(
-                "lowStockCount"
-            )
-            .innerText =
-            lowStock;
-
-
-        document
-            .getElementById(
-                "categoryCount"
-            )
-            .innerText =
-            categories.size;
-    }
-
-
-    /*
-    ======================================
-    CLEAR FORM
-    ======================================
-    */
-
-    function clearForm() {
-
-        document
-            .getElementById(
-                "partCode"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "partName"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "category"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "brand"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "location"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "quantity"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "price"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "reorderLevel"
-            )
-            .value = "5";
-    }
-
-
-    /*
-    ======================================
-    MESSAGE
-    ======================================
-    */
-
-    function showMessage(
-        message,
-        success = true
-    ) {
-
-        const box =
-            document
-                .getElementById(
-                    "messageBox"
-                );
-
-
-        box.style.display =
-            "block";
-
-
-        box.className =
-            success
-                ? "success"
-                : "error";
-
-
-        box.innerText =
-            message;
-
-
-        setTimeout(
-            () => {
-
-                box.style.display =
-                    "none";
-
-            },
-            4000
-        );
-    }
-
-
-    /*
-    ======================================
-    FORMAT PRICE
-    ======================================
-    */
-
-    function formatMoney(value) {
-
-        return Number(value)
-            .toLocaleString();
-    }
-
-
-    /*
-    ======================================
-    HTML SAFETY
-    ======================================
-    */
-
-    function escapeHtml(value) {
-
-        return String(value)
-
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-
-            .replaceAll(
-                "'",
-                "&#039;"
-            );
-    }
-
-
-    /*
-    ======================================
-    PAGE LOAD
-    ======================================
-    */
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function() {
-
-            renderTable();
-
+    async function loadAllData(){
+        setLoading(true);
+        try{
+            const [categoryRes, brandRes, partRes, stockRes] = await Promise.all([
+                fetch(API.categories), fetch(API.brands), fetch(API.parts), fetch(API.stocks)
+            ]);
+            await ensureOk(categoryRes); await ensureOk(brandRes); await ensureOk(partRes); await ensureOk(stockRes);
+            categories = await categoryRes.json();
+            brands = await brandRes.json();
+            parts = await partRes.json();
+            stocks = await stockRes.json();
+
+            try{
+                const locationRes = await fetch(API.locations);
+                if(locationRes.ok) locations = await locationRes.json();
+                else locations = deriveLocationsFromStocks();
+            }catch(e){ locations = deriveLocationsFromStocks(); }
+
+            populateSelections();
             updateDashboard();
+            renderActiveTab();
+        }catch(error){
+            showMessage(readError(error), 'error');
+        }finally{setLoading(false);}
+    }
 
+    function deriveLocationsFromStocks(){
+        const map = new Map();
+        stocks.forEach(stock => {
+            const loc = stock.location;
+            if(loc?.locationId != null) map.set(String(loc.locationId), loc);
+        });
+        return [...map.values()];
+    }
+
+    function populateSelections(){
+        const categoryOptions = categories.filter(x => x.active !== false).map(c => `<option value="${escapeAttr(c.categoryId)}">${escapeHtml(c.categoryName)}</option>`).join('');
+        const brandOptions = brands.filter(x => x.active !== false).map(b => `<option value="${escapeAttr(b.brandId)}">${escapeHtml(b.brandName)}</option>`).join('');
+        const partOptions = parts.filter(x => x.active !== false).map(p => `<option value="${escapeAttr(p.sparePartId)}">${escapeHtml(p.partCode)} — ${escapeHtml(p.partName)}</option>`).join('');
+        const locationOptions = locations.filter(x => x.active !== false).map(l => `<option value="${escapeAttr(l.locationId)}">${escapeHtml(l.locationName)}${l.locationType ? ` (${escapeHtml(l.locationType)})` : ''}</option>`).join('');
+
+        document.getElementById('partCategory').innerHTML = `<option value="">Select category</option>${categoryOptions}`;
+        document.getElementById('partBrand').innerHTML = `<option value="">Select brand</option>${brandOptions}`;
+        document.getElementById('adjustPart').innerHTML = `<option value="">Select spare part</option>${partOptions}`;
+        document.getElementById('adjustLocation').innerHTML = `<option value="">Select location</option>${locationOptions}`;
+
+        const categoryFilter = document.getElementById('categoryFilter');
+        const selected = categoryFilter.value;
+        categoryFilter.innerHTML = `<option value="">All categories</option>${categories.map(c => `<option value="${escapeAttr(c.categoryId)}">${escapeHtml(c.categoryName)}</option>`).join('')}`;
+        if([...categoryFilter.options].some(o => o.value === selected)) categoryFilter.value = selected;
+    }
+
+    function updateDashboard(){
+        const totalStock = stocks.reduce((sum,s) => sum + Number(s.quantity || 0), 0);
+        let low = 0, out = 0;
+        parts.forEach(part => {
+            const total = getPartTotalStock(part.sparePartId);
+            if(total <= 0) out++;
+            else if(total <= Number(part.reorderLevel || 0)) low++;
+        });
+        document.getElementById('totalParts').textContent = parts.length;
+        document.getElementById('totalStock').textContent = totalStock.toLocaleString();
+        document.getElementById('lowStockCount').textContent = low;
+        document.getElementById('outStockCount').textContent = out;
+        document.getElementById('categoryCount').textContent = categories.length;
+        document.getElementById('brandCount').textContent = brands.length;
+    }
+
+    function getPartTotalStock(partId){
+        return stocks.filter(s => String(s.sparePart?.sparePartId) === String(partId)).reduce((sum,s) => sum + Number(s.quantity || 0), 0);
+    }
+
+    function stockStatus(quantity, reorderLevel){
+        const qty = Number(quantity || 0); const reorder = Number(reorderLevel || 0);
+        if(qty <= 0) return {key:'OUT', label:'Out of Stock', cls:'out'};
+        if(qty <= reorder) return {key:'LOW', label:'Low Stock', cls:'low'};
+        return {key:'OK', label:'Available', cls:'ok'};
+    }
+
+    function getFilters(){
+        return {
+            q: document.getElementById('searchInput').value.trim().toLowerCase(),
+            category: document.getElementById('categoryFilter').value,
+            stock: document.getElementById('stockFilter').value
+        };
+    }
+
+    function renderActiveTab(){ activeTab === 'parts' ? renderParts() : renderStocks(); }
+
+    function switchTab(tab){
+        activeTab = tab;
+        document.getElementById('partsView').classList.toggle('active', tab === 'parts');
+        document.getElementById('stocksView').classList.toggle('active', tab === 'stocks');
+        document.getElementById('partsTabBtn').classList.toggle('active', tab === 'parts');
+        document.getElementById('stocksTabBtn').classList.toggle('active', tab === 'stocks');
+        renderActiveTab();
+    }
+
+    function renderParts(){
+        const {q, category, stock} = getFilters();
+        const rows = parts.filter(part => {
+            const total = getPartTotalStock(part.sparePartId);
+            const status = stockStatus(total, part.reorderLevel);
+            const searchable = `${part.partCode||''} ${part.partName||''} ${part.category?.categoryName||''} ${part.brand?.brandName||''}`.toLowerCase();
+            return (!q || searchable.includes(q)) && (!category || String(part.category?.categoryId) === category) && (!stock || status.key === stock);
+        });
+        const body = document.getElementById('partsTableBody');
+        body.innerHTML = rows.map(part => {
+            const total = getPartTotalStock(part.sparePartId);
+            const status = stockStatus(total, part.reorderLevel);
+            return `<tr>
+                <td><div class="part-name">${escapeHtml(part.partCode)} · ${escapeHtml(part.partName)}</div><div class="subtext">${escapeHtml(part.description || 'No description')}</div></td>
+                <td>${escapeHtml(part.category?.categoryName || '—')}</td>
+                <td>${escapeHtml(part.brand?.brandName || '—')}</td>
+                <td class="money">LKR ${formatMoney(part.unitPrice)}</td>
+                <td>${Number(part.reorderLevel || 0)}</td>
+                <td class="${total > 0 ? 'qty-positive' : 'qty-zero'}">${total}</td>
+                <td><span class="pill ${status.cls}">${status.label}</span></td>
+                <td><span class="pill ${part.active !== false ? 'active' : 'inactive'}">${part.active !== false ? 'Active' : 'Inactive'}</span></td>
+            </tr>`;
+        }).join('');
+        document.getElementById('partsEmpty').style.display = rows.length ? 'none' : 'block';
+    }
+
+    function renderStocks(){
+        const {q, category, stock} = getFilters();
+        const rows = stocks.filter(item => {
+            const part = item.sparePart || {};
+            const status = stockStatus(item.quantity, part.reorderLevel);
+            const searchable = `${part.partCode||''} ${part.partName||''} ${part.category?.categoryName||''} ${part.brand?.brandName||''} ${item.location?.locationName||''}`.toLowerCase();
+            return (!q || searchable.includes(q)) && (!category || String(part.category?.categoryId) === category) && (!stock || status.key === stock);
+        });
+        const body = document.getElementById('stocksTableBody');
+        body.innerHTML = rows.map(item => {
+            const part = item.sparePart || {}; const loc = item.location || {};
+            const status = stockStatus(item.quantity, part.reorderLevel);
+            return `<tr>
+                <td>#${escapeHtml(item.stockId)}</td>
+                <td><div class="part-name">${escapeHtml(part.partCode || '—')} · ${escapeHtml(part.partName || '—')}</div><div class="subtext">${escapeHtml(part.brand?.brandName || '')}</div></td>
+                <td>${escapeHtml(loc.locationName || '—')}</td>
+                <td>${escapeHtml(loc.locationType || '—')}</td>
+                <td class="${Number(item.quantity||0) > 0 ? 'qty-positive' : 'qty-zero'}">${Number(item.quantity || 0)}</td>
+                <td>${Number(part.reorderLevel || 0)}</td>
+                <td><span class="pill ${status.cls}">${status.label}</span></td>
+                <td>${formatDateTime(item.lastUpdated)}</td>
+            </tr>`;
+        }).join('');
+        document.getElementById('stocksEmpty').style.display = rows.length ? 'none' : 'block';
+    }
+
+    function preparePartModal(){
+        document.getElementById('partForm').reset();
+        populateSelections();
+        openModal('partModal');
+    }
+
+    function prepareAdjustModal(){
+        document.getElementById('adjustForm').reset();
+        populateSelections();
+        updateAdjustmentPreview();
+        if(!locations.length) showMessage('No locations could be loaded. Make sure the Stock Transfer locations endpoint is available in dev.', 'info');
+        openModal('adjustModal');
+    }
+
+    function updateAdjustmentPreview(){
+        const partId = document.getElementById('adjustPart').value;
+        const locationId = document.getElementById('adjustLocation').value;
+        const change = Number(document.getElementById('quantityChange').value || 0);
+        const record = stocks.find(s => String(s.sparePart?.sparePartId) === partId && String(s.location?.locationId) === locationId);
+        const current = Number(record?.quantity || 0);
+        const next = current + change;
+        document.getElementById('adjustPreview').innerHTML = partId && locationId
+            ? `Current stock: <strong>${current}</strong> &nbsp;→&nbsp; After adjustment: <strong style="color:${next < 0 ? '#b42323' : '#126b3c'}">${next}</strong>`
+            : 'Select a part and location to view the current stock.';
+    }
+
+    async function submitPart(event){
+        event.preventDefault();
+        const payload = {
+            partCode: document.getElementById('partCode').value.trim(),
+            partName: document.getElementById('partName').value.trim(),
+            description: document.getElementById('partDescription').value.trim(),
+            categoryId: Number(document.getElementById('partCategory').value),
+            brandId: Number(document.getElementById('partBrand').value),
+            unitPrice: Number(document.getElementById('unitPrice').value),
+            reorderLevel: Number(document.getElementById('reorderLevel').value)
+        };
+        if(!payload.partCode || !payload.partName || !payload.categoryId || !payload.brandId || Number.isNaN(payload.unitPrice) || payload.unitPrice < 0 || Number.isNaN(payload.reorderLevel) || payload.reorderLevel < 0){
+            showMessage('Please complete all required spare-part fields correctly.', 'error'); return;
         }
-    );
+        try{
+            const response = await fetch(API.parts,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            await ensureOk(response);
+            closeModal('partModal'); showMessage('Spare part created successfully.', 'success'); await loadAllData();
+        }catch(error){showMessage(readError(error), 'error');}
+    }
 
+    async function submitAdjustment(event){
+        event.preventDefault();
+        const qty = Number(document.getElementById('quantityChange').value);
+        const payload = {
+            sparePartId: Number(document.getElementById('adjustPart').value),
+            locationId: Number(document.getElementById('adjustLocation').value),
+            quantityChange: qty
+        };
+        if(!payload.sparePartId || !payload.locationId || !Number.isInteger(qty) || qty === 0){
+            showMessage('Select a spare part and location, then enter a non-zero whole-number quantity change.', 'error'); return;
+        }
+        try{
+            const response = await fetch(API.adjust,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            await ensureOk(response);
+            closeModal('adjustModal'); showMessage('Stock adjusted successfully.', 'success'); await loadAllData();
+        }catch(error){showMessage(readError(error), 'error');}
+    }
+
+    async function submitCategory(event){
+        event.preventDefault();
+        const payload = {categoryName:document.getElementById('categoryName').value.trim(),description:document.getElementById('categoryDescription').value.trim(),active:true};
+        if(!payload.categoryName){showMessage('Category name is required.', 'error');return;}
+        try{
+            const response = await fetch(API.categories,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            await ensureOk(response);
+            document.getElementById('categoryForm').reset(); closeModal('categoryModal'); showMessage('Category created successfully.', 'success'); await loadAllData();
+        }catch(error){showMessage(readError(error), 'error');}
+    }
+
+    async function submitBrand(event){
+        event.preventDefault();
+        const payload = {brandName:document.getElementById('brandName').value.trim(),description:document.getElementById('brandDescription').value.trim(),active:true};
+        if(!payload.brandName){showMessage('Brand name is required.', 'error');return;}
+        try{
+            const response = await fetch(API.brands,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            await ensureOk(response);
+            document.getElementById('brandForm').reset(); closeModal('brandModal'); showMessage('Brand created successfully.', 'success'); await loadAllData();
+        }catch(error){showMessage(readError(error), 'error');}
+    }
+
+    async function ensureOk(response){
+        if(response.ok) return response;
+        let message = `${response.status} ${response.statusText}`;
+        try{
+            const body = await response.json();
+            if(body.message) message = body.message;
+            else if(body.fieldErrors) message = Object.entries(body.fieldErrors).map(([field,msg]) => `${field}: ${msg}`).join(' · ');
+            else if(body.error) message = body.error;
+        }catch(e){
+            try{ const text = await response.text(); if(text) message = text; }catch(_){}
+        }
+        throw new Error(message);
+    }
+
+    function readError(error){return error?.message || 'Something went wrong. Please try again.'}
+
+    function openModal(id){document.getElementById(id).classList.add('open')}
+    function closeModal(id){document.getElementById(id).classList.remove('open')}
+    document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', e => {if(e.target === modal) modal.classList.remove('open')}));
+    document.addEventListener('keydown', e => {if(e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'))});
+
+    function showMessage(message,type='info'){
+        const box = document.getElementById('messageBox');
+        box.className = type; box.textContent = message; box.style.display = 'block';
+        clearTimeout(toastTimer); toastTimer = setTimeout(() => {box.style.display='none';box.className='';}, 4200);
+    }
+
+    function setLoading(value){document.getElementById('mainContent').classList.toggle('loading', value)}
+    function formatMoney(value){return Number(value || 0).toLocaleString('en-LK',{minimumFractionDigits:2,maximumFractionDigits:2})}
+    function formatDateTime(value){if(!value) return '—'; const d = new Date(value); return Number.isNaN(d.getTime()) ? escapeHtml(value) : d.toLocaleString('en-LK')}
+    function escapeHtml(value){return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+    function escapeAttr(value){return escapeHtml(value)}
 </script>
-
 </body>
 </html>
