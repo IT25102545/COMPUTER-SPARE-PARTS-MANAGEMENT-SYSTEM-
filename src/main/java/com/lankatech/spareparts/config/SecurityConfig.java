@@ -113,6 +113,18 @@ public class SecurityConfig {
                         /*
                          * Everything else requires login.
                          */
+                        .requestMatchers("/customer/**")
+                        .hasRole("CUSTOMER_SERVICE_OFFICER")
+
+                        .requestMatchers("/api/customer/**")
+                        .hasRole("CUSTOMER_SERVICE_OFFICER")
+
+                        .requestMatchers("/inventory.html")
+                        .hasRole("INVENTORY_SUPERVISOR")
+
+                        .requestMatchers("/api/inventory/**")
+                        .hasRole("INVENTORY_SUPERVISOR")
+
                         .anyRequest().authenticated()
                 )
 
