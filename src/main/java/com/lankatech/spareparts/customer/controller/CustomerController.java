@@ -6,7 +6,7 @@ import jakarta.validation.Valid; import org.springframework.web.bind.annotation.
 public class CustomerController {
     private final CustomerService s; public CustomerController(CustomerService s){this.s=s;}
     @GetMapping("/customers") public List<Customer> customers(){return s.getCustomers();}
-    @PostMapping("/customers") public Customer add(@RequestBody Customer c){return s.addCustomer(c);}
+    @PostMapping("/customers") public Customer add(@Valid @RequestBody Customer c){return s.addCustomer(c);}
     @GetMapping("/complaints") public List<Complaint> complaints(){return s.getComplaints();}
     @PostMapping("/complaints") public Complaint complaint(@Valid @RequestBody ComplaintRequestDTO r){return
             s.addComplaint(r);}
