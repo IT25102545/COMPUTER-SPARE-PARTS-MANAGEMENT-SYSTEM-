@@ -1,6 +1,10 @@
 package com.lankatech.spareparts.customer.service;
 import com.lankatech.spareparts.common.entity.Location;
 import com.lankatech.spareparts.common.repository.LocationRepository;
+import com.lankatech.spareparts.inventory.repository.SparePartRepository;
+import com.lankatech.spareparts.inventory.repository.StockRepository;
+import com.lankatech.spareparts.inventory.entity.SparePart;
+import com.lankatech.spareparts.inventory.entity.Stock;
 import com.lankatech.spareparts.customer.dto.*;
 import com.lankatech.spareparts.customer.entity.*;
 import com.lankatech.spareparts.customer.repository.*;
