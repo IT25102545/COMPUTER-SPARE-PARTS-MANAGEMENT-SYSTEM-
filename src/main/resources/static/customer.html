@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Service | Lanka Tech Components</title>
+    <style>
+        :root {
+            --navy: #082b57;
+            --blue: #1769e0;
+            --blue-dark: #0e56bf;
+            --sky: #eff6ff;
+            --border: #d9e5f3;
+            --text: #102a4c;
+            --muted: #60738d;
+            --success: #138a55;
+            --danger: #c63b3b;
+            --warning: #b97300;
+            --surface: #ffffff;
+            --page: #f6f9fd;
+            --shadow: 0 14px 35px rgba(26, 63, 105, 0.10);
+            --radius: 18px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background: var(--page);
+        }
+        button, input, select, textarea { font: inherit; }
+        button { cursor: pointer; }
+        a { color: inherit; text-decoration: none; }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 14px 28px;
+            background: rgba(255,255,255,.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+        }
+        .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        .brand-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            display: grid; place-items: center;
+            background: var(--sky); color: var(--blue);
+            border: 1px solid #cfe1fb;
+            font-size: 24px; font-weight: 900;
+        }
+        .brand h1 { margin: 0; font-size: 20px; line-height: 1.15; }
+        .brand p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+        .top-actions { display: flex; align-items: center; gap: 10px; }
+        .user-chip {
+            padding: 9px 13px; border: 1px solid var(--border); border-radius: 13px;
+            background: #f8fbff; min-width: 190px;
+        }
+        .user-chip strong { display: block; font-size: 14px; }
+        .user-chip span { color: var(--muted); font-size: 12px; }
+
+        .btn {
+            border: 0; border-radius: 11px; padding: 10px 15px;
+            font-weight: 700; transition: .18s ease;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-primary { background: var(--blue); color: white; }
+        .btn-primary:hover { background: var(--blue-dark); }
+        .btn-light { background: white; color: var(--text); border: 1px solid var(--border); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-sm { padding: 7px 10px; border-radius: 8px; font-size: 12px; }
+        .btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+        .page { max-width: 1480px; margin: 0 auto; padding: 28px; }
+        .hero {
+            display: flex; justify-content: space-between; gap: 24px; align-items: center;
+            padding: 26px 28px; border-radius: 22px;
+            background: linear-gradient(125deg, #082b57 0%, #0c4487 60%, #1769e0 100%);
+            color: white; box-shadow: var(--shadow);
+        }
+        .hero h2 { margin: 0 0 8px; font-size: 31px; }
+        .hero p { margin: 0; opacity: .88; max-width: 760px; }
+        .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .hero .btn-light { background: rgba(255,255,255,.96); }
+
+        .stats {
+            display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px; margin-top: 20px;
+        }
+        .stat-card {
+            --card-accent: #0d6efd;
+            position: relative; isolation: isolate; overflow: hidden;
+            min-height: 158px; padding: 22px 23px;
+            background: #fff; border: 1px solid #e4edf7;
+            border-left: 5px solid var(--card-accent); border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(26, 63, 105, .07);
+        }
+        .stat-card:nth-child(2) { --card-accent: #159447; }
+        .stat-card:nth-child(3) { --card-accent: #f59e0b; }
+        .stat-card:nth-child(4) { --card-accent: #7c3aed; }
+        .stat-card::after {
+            content: ''; position: absolute; right: -2px; top: -2px;
+            width: 58px; height: 58px; border-radius: 0 0 0 58px;
+            background: #f5f9fe; z-index: -1; pointer-events: none;
+        }
+        .stat-card .label {
+            color: #607b98; font-size: 12px; line-height: 1.5;
+            font-weight: 800; text-transform: uppercase; padding-right: 18px;
+        }
+        .stat-card .value {
+            color: #082447; font-size: 34px; line-height: 1.2;
+            font-weight: 850; margin-top: 14px; font-variant-numeric: tabular-nums;
+        }
+        .stat-card .description { color: #6d86a2; font-size: 12px; line-height: 1.5; margin-top: 7px; }
+
+        .panel-controls { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+        .status-filter { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:13px; font-weight:600; }
+        .status-filter select { background:#fff; color:#102a4c; border:1px solid var(--border); border-radius:10px; padding:10px 12px; font:inherit; min-width:150px; }
+        .status-filter select:focus-visible { outline:3px solid #a8d0ff; outline-offset:2px; }
+        .tab-count { display:inline-block; min-width:24px; margin-left:6px; padding:2px 7px; border-radius:999px; background:#e7effa; color:#24578f; font-size:12px; line-height:1.4; font-variant-numeric:tabular-nums; }
+        .tab-btn.active .tab-count { background:#fff; color:#0b5fc2; }
+        .summary-view { display:inline-flex; align-items:center; gap:8px; margin-top:16px; padding:8px 12px; border:1px solid #d6e5f6; border-radius:9px; background:#f1f7ff; color:#164b83; font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+        .summary-view:hover { background:#e2efff; border-color:var(--card-accent); }
+        .summary-view:focus-visible { outline:3px solid #91c4ff; outline-offset:3px; }
+        .summary-topics { grid-template-columns:repeat(3,minmax(0,1fr)); }
+        .topic-button { text-align:left; font:inherit; color:var(--text); cursor:pointer; width:100%; }
+        .topic-button span { display:block; }
+        .topic-button[aria-pressed="true"] { outline:2px solid #0d6efd; outline-offset:2px; background:#edf5ff; }
+        .topic-button:focus-visible { outline:3px solid #0857b8; outline-offset:4px; }
+        .summary-counts { grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+        .summary-counts .stat-card { min-height:120px; }
+        @media(max-width:560px) { .stats.summary-topics { grid-template-columns:1fr; } }
+        .toolbar {
+            margin-top: 20px; display: flex; gap: 10px; justify-content: space-between;
+            align-items: center; flex-wrap: wrap;
+        }
+        .tabs {
+            display: inline-flex; padding: 5px; border: 1px solid var(--border);
+            background: white; border-radius: 13px; gap: 4px;
+        }
+        .tab-btn {
+            border: 0; background: transparent; color: var(--muted); padding: 9px 14px;
+            border-radius: 9px; font-weight: 750;
+        }
+        .tab-btn.active { background: var(--sky); color: var(--blue); }
+        .search {
+            min-width: 280px; padding: 11px 13px; border: 1px solid var(--border);
+            border-radius: 11px; outline: none; background: white;
+        }
+        .search:focus, input:focus, select:focus, textarea:focus {
+            border-color: #8ab9f7; box-shadow: 0 0 0 3px rgba(23,105,224,.10); outline: none;
+        }
+
+        .panel {
+            margin-top: 14px; background: white; border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: 0 10px 28px rgba(26,63,105,.06); overflow: hidden;
+        }
+        .panel-head {
+            display: flex; justify-content: space-between; gap: 16px; align-items: center;
+            padding: 18px 20px; border-bottom: 1px solid var(--border);
+        }
+        .panel-head h3 { margin: 0; font-size: 18px; }
+        .panel-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 880px; }
+        th, td { padding: 13px 14px; text-align: left; border-bottom: 1px solid #e8eef6; vertical-align: middle; }
+        th { background: #f8fbff; color: #49617f; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+        td { font-size: 14px; }
+        tr:last-child td { border-bottom: 0; }
+        .empty { padding: 34px !important; text-align: center; color: var(--muted); }
+        .badge {
+            display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px;
+            font-size: 11px; font-weight: 800;
+        }
+        .badge-active, .badge-open { background: #e8f7ef; color: #0a7a48; }
+        .badge-cancelled { background: #f6f0f0; color: #a03535; }
+        .badge-pending { background: #fff5d9; color: #875c00; }
+        .badge-rejected { background: #fce8e8; color: #a03535; }
+        .badge-completed { background: #eaf1ff; color: #245fb6; }
+        .badge-progress { background:#fff5d9; color:#875c00; }
+        .badge-closed { background:#edf0f4; color:#536176; }
+        .badge-resolved { background: #eaf1ff; color: #245fb6; }
+
+        .modal-backdrop {
+            position: fixed; inset: 0; z-index: 100; display: none;
+            align-items: center; justify-content: center; padding: 20px;
+            background: rgba(8,24,45,.55);
+        }
+        .modal-backdrop.show { display: flex; }
+        .modal {
+            width: min(760px, 100%); max-height: 90vh; overflow-y: auto;
+            background: white; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,.24);
+        }
+        .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 20px 22px; border-bottom: 1px solid var(--border); }
+        .modal-head h3 { margin: 0; }
+        .close { border: 0; background: #f2f6fb; width: 36px; height: 36px; border-radius: 10px; font-size: 20px; }
+        .modal-body { padding: 20px 22px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+        .field { display: flex; flex-direction: column; gap: 7px; }
+        .field.full { grid-column: 1 / -1; }
+        label { font-size: 13px; font-weight: 750; }
+        input, select, textarea {
+            width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px;
+            color: var(--text); background: white;
+        }
+        textarea { min-height: 110px; resize: vertical; }
+        .hint { color: var(--muted); font-size: 12px; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+
+        .toast-area { position: fixed; top: 84px; right: 22px; z-index: 200; display: grid; gap: 9px; width: min(390px, calc(100vw - 44px)); }
+        .toast {
+            padding: 13px 15px; border-radius: 12px; color: white; box-shadow: 0 16px 35px rgba(0,0,0,.18);
+            animation: slideIn .2s ease;
+        }
+        .toast.success { background: #137c4d; }
+        .toast.error { background: #b83a3a; }
+        .toast.info { background: #315f9b; }
+        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .loading {
+            position: fixed; inset: 0; z-index: 250; display: none; align-items: center; justify-content: center;
+            background: rgba(246,249,253,.7); backdrop-filter: blur(2px);
+        }
+        .loading.show { display: flex; }
+        .spinner { width: 46px; height: 46px; border: 5px solid #d9e8fb; border-top-color: var(--blue); border-radius: 50%; animation: spin .75s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        footer { text-align: center; color: var(--muted); font-size: 12px; padding: 28px; }
+
+        @media (max-width: 900px) {
+            .topbar { padding: 12px 16px; align-items: flex-start; }
+            .brand p { display: none; }
+            .user-chip { display: none; }
+            .page { padding: 18px; }
+            .hero { align-items: flex-start; flex-direction: column; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .form-grid { grid-template-columns: 1fr; }
+            .field.full { grid-column: auto; }
+        }
+        @media (max-width: 560px) {
+            .stats { grid-template-columns: 1fr; }
+            .top-actions .btn-light { display: none; }
+            .hero h2 { font-size: 25px; }
+            .search { min-width: 100%; width: 100%; }
+            .toolbar { align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon">◎</div>
+        <div>
+            <h1>Lanka Tech Components (Pvt) Ltd</h1>
+            <p>Computer Spare Parts Management System</p>
+        </div>
+    </div>
+    <div class="top-actions">
+        <div class="user-chip">
+            <strong id="userName">Signed-in User</strong>
+            <span id="userRole">Loading role...</span>
+        </div>
+        <a class="btn btn-light" href="../index.html">← Home</a>
+        <form action="/logout" method="post" style="margin:0">
+            <button class="btn btn-primary" type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+
+<main class="page">
+    <section class="hero">
+        <div>
+            <h2>Customer Service, Reservations & Complaints</h2>
+            <p>Manage customer records, reserve available spare parts, register complaints and follow up on customer issues from one place.</p>
+        </div>
+        <div class="hero-actions">
+            <button class="btn btn-light" onclick="openCustomerModal()">+ New Customer</button>
+            <button class="btn btn-light" onclick="openReservationModal()">+ New Reservation</button>
+            <button class="btn btn-light" onclick="openComplaintModal()">+ New Complaint</button>
+        </div>
+    </section>
+
+    <section class="stats summary-topics" aria-label="Summary topic">
+        <button type="button" class="stat-card topic-button" data-summary-topic="customers" aria-pressed="false" aria-controls="summaryCounts" onclick="selectSummaryTopic('customers')"><span class="label">Total Customers</span><span class="value" id="statCustomers">0</span></button>
+        <button type="button" class="stat-card topic-button" data-summary-topic="reservations" aria-pressed="true" aria-controls="summaryCounts" onclick="selectSummaryTopic('reservations')"><span class="label">Total Reservations</span><span class="value" id="statReservations">0</span></button>
+        <button type="button" class="stat-card topic-button" data-summary-topic="complaints" aria-pressed="false" aria-controls="summaryCounts" onclick="selectSummaryTopic('complaints')"><span class="label">Total Complaints</span><span class="value" id="statComplaints">0</span></button>
+    </section>
+    <div class="stats summary-counts" id="summaryCounts" aria-live="polite" aria-label="Reservation counts"></div>
+
+    <div class="toolbar">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="customers" onclick="switchTab('customers')">Customers <span class="tab-count" id="customersTabCount">0</span></button>
+            <button class="tab-btn" data-tab="reservations" onclick="switchTab('reservations')">Reservations <span class="tab-count" id="reservationsTabCount">0</span></button>
+            <button class="tab-btn" data-tab="complaints" onclick="switchTab('complaints')">Complaints <span class="tab-count" id="complaintsTabCount">0</span></button>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input class="search" id="globalSearch" placeholder="Search current table..." oninput="renderCurrentTab()">
+            <button class="btn btn-light" onclick="refreshAll()">↻ Refresh</button>
+        </div>
+    </div>
+
+    <section class="panel" id="panelCustomers">
+        <div class="panel-head">
+            <div><h3>Customers</h3><p>Registered customers available for reservations and complaints.</p></div>
+            <button class="btn btn-primary" onclick="openCustomerModal()">+ Add Customer</button>
+        </div>
+        <div class="table-wrap"><table>
+            <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Created</th></tr></thead>
+            <tbody id="customersBody"></tbody>
+        </table></div>
+    </section>
+
+    <section class="panel" id="panelReservations" style="display:none">
+        <div class="panel-head">
+            <div><h3>Reservations</h3><p>Track pending, active, completed, cancelled and rejected reservations.</p></div>
+            <div class="panel-controls"><label class="status-filter" for="reservationStatusFilter">Status <select id="reservationStatusFilter" onchange="renderReservations()"><option value="">All statuses</option><option value="PENDING">Pending</option><option value="ACTIVE">Active</option><option value="COMPLETED">Completed</option><option value="CANCELLED">Cancelled</option><option value="REJECTED">Rejected</option></select></label><button class="btn btn-primary" onclick="openReservationModal()">+ New Reservation</button></div>
+        </div>
+        <div class="table-wrap"><table>
+            <thead><tr><th>ID</th><th>Customer</th><th>Spare Part</th><th>Location</th><th>Qty</th><th>Status</th><th>Reserved At</th><th>Action</th></tr></thead>
+            <tbody id="reservationsBody"></tbody>
+        </table></div>
+    </section>
+
+    <section class="panel" id="panelComplaints" style="display:none">
+        <div class="panel-head">
+            <div><h3>Complaints</h3><p>Customer complaints and resolution status.</p></div>
+            <div class="panel-controls"><label class="status-filter" for="complaintStatusFilter">Status <select id="complaintStatusFilter" onchange="renderComplaints()"><option value="">All statuses</option><option value="OPEN">Open</option><option value="IN_PROGRESS">In Progress</option><option value="RESOLVED">Resolved</option><option value="CLOSED">Closed</option></select></label><button class="btn btn-primary" onclick="openComplaintModal()">+ New Complaint</button></div>
+        </div>
+        <div class="table-wrap"><table>
+            <thead><tr><th>ID</th><th>Customer</th><th>Subject</th><th>Description</th><th>Status</th><th>Created</th><th>Resolved</th><th>Action</th></tr></thead>
+            <tbody id="complaintsBody"></tbody>
+        </table></div>
+    </section>
+</main>
+
+<footer>Lanka Tech Components (Pvt) Ltd • Customer Service Management</footer>
+<div class="toast-area" id="toastArea"></div>
+<div class="loading" id="loading"><div class="spinner"></div></div>
+
+<!-- Customer Modal -->
+<div class="modal-backdrop" id="customerModal">
+    <div class="modal">
+        <div class="modal-head"><h3>Add New Customer</h3><button class="close" onclick="closeModal('customerModal')">×</button></div>
+        <div class="modal-body">
+            <form id="customerForm" onsubmit="submitCustomer(event)">
+                <div class="form-grid">
+                    <div class="field"><label>Customer Name *</label><input id="customerName" maxlength="120" required></div>
+                    <div class="field"><label>Phone</label><input id="customerPhone" maxlength="30" placeholder="0771234567"></div>
+                    <div class="field"><label>Email</label><input id="customerEmail" maxlength="120" type="email" placeholder="customer@example.com"></div>
+                    <div class="field"><label>Address</label><input id="customerAddress" maxlength="255" placeholder="Customer address"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-light" onclick="closeModal('customerModal')">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Reservation Modal -->
+<div class="modal-backdrop" id="reservationModal">
+    <div class="modal">
+        <div class="modal-head"><h3>Create Spare Part Reservation</h3><button class="close" onclick="closeModal('reservationModal')">×</button></div>
+        <div class="modal-body">
+            <form id="reservationForm" onsubmit="submitReservation(event)">
+                <div class="form-grid">
+                    <div class="field full"><label>Customer *</label><select id="reservationCustomer" required></select></div>
+                    <div class="field"><label>Spare Part *</label><select id="reservationPart" required onchange="populateReservationLocations()"></select></div>
+                    <div class="field"><label>Pickup Location *</label><select id="reservationLocation" required onchange="updateAvailableStock()"></select></div>
+                    <div class="field"><label>Quantity *</label><input id="reservationQuantity" type="number" min="1" value="1" required></div>
+                    <div class="field"><label>Available Stock</label><input id="availableStock" value="-" readonly></div>
+                    <div class="field full"><div class="hint">A reservation is accepted only when enough stock exists at the selected location.</div></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-light" onclick="closeModal('reservationModal')">Cancel</button>
+                    <button type="submit" class="btn btn-success">Create Reservation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Complaint Modal -->
+<div class="modal-backdrop" id="complaintModal">
+    <div class="modal">
+        <div class="modal-head"><h3>Register Customer Complaint</h3><button class="close" onclick="closeModal('complaintModal')">×</button></div>
+        <div class="modal-body">
+            <form id="complaintForm" onsubmit="submitComplaint(event)">
+                <div class="form-grid">
+                    <div class="field full"><label>Customer *</label><select id="complaintCustomer" required></select></div>
+                    <div class="field full"><label>Subject *</label><input id="complaintSubject" maxlength="150" required placeholder="Example: Product issue"></div>
+                    <div class="field full"><label>Description *</label><textarea id="complaintDescription" maxlength="1000" required placeholder="Describe the customer's complaint..."></textarea></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-light" onclick="closeModal('complaintModal')">Cancel</button>
+                    <button type="submit" class="btn btn-success">Register Complaint</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<dialog id="complaintDetailsDialog" aria-labelledby="complaintDetailsTitle" style="border:1px solid #dce7f4;border-radius:16px;padding:24px;width:min(540px,90vw);max-height:85vh;color:#102a4c">
+    <h3 id="complaintDetailsTitle">Complaint details</h3>
+    <div id="complaintDetailsContent"></div>
+    <form method="dialog" style="margin-top:20px"><button class="btn btn-light">Close details</button></form>
+</dialog>
+<script>
+    const API = {
+        me: '/api/auth/me',
+        customers: '/api/customer/customers',
+        reservations: '/api/customer/reservations',
+        complaints: '/api/customer/complaints',
+        stocks: '/api/customer/stocks'
+    };
+
+    let state = { customers: [], reservations: [], complaints: [], stocks: [], currentTab: 'customers' };
+
+    const $ = id => document.getElementById(id);
+    const esc = value => String(value ?? '')
+        .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+        .replaceAll('"','&quot;').replaceAll("'",'&#039;');
+    const fmtDate = value => value ? new Date(value).toLocaleString() : '-';
+    const nameOf = obj => obj?.customerName ?? '-';
+    const partNameOf = obj => obj?.partName ?? '-';
+    const locationNameOf = obj => obj?.locationName ?? '-';
+
+    function setLoading(on) { $('loading').classList.toggle('show', !!on); }
+    function showToast(message, type='info') {
+        const t = document.createElement('div');
+        t.className = 'toast ' + type;
+        t.textContent = message;
+        $('toastArea').appendChild(t);
+        setTimeout(() => t.remove(), 3500);
+    }
+
+    async function api(url, options={}) {
+        if (location.protocol === 'file:') throw new Error('Open the homepage through the running application, not a local HTML file.');
+        let response;
+        try {
+            response = await fetch(url, {...options, credentials: 'same-origin', headers: {'Content-Type':'application/json', ...(options.headers || {})}});
+        } catch (error) {
+            throw new Error('Cannot reach the application server. Check that it is running, then refresh before retrying. Your input has been kept.');
+        }
+        if(response.status === 401 || response.redirected) throw new Error('Your session has expired. Return Home and log in again.');
+        if(response.status === 403) throw new Error('This action requires a Customer Service Officer account.');
+        if(response.status === 204) return null;
+        const text = await response.text();
+        let data;
+        try { data = text ? JSON.parse(text) : null; } catch (_) { throw new Error('The server returned an unexpected response. Open this page from the application homepage.'); }
+        if(!response.ok) throw new Error(data?.messages?.join(', ') || data?.details?.join(', ') || data?.message || data?.error || 'Request failed (' + response.status + ')');
+        return data;
+    }
+
+    async function loadCurrentUser() {
+        try {
+            const me = await api(API.me);
+            $('userName').textContent = me.fullName || me.email || 'Signed-in User';
+            $('userRole').textContent = String(me.role || '').replaceAll('_', ' ');
+        } catch (_) {
+            $('userName').textContent = 'Not signed in';
+            $('userRole').textContent = 'Return Home to log in';
+        }
+    }
+
+    async function refreshAll() {
+        setLoading(true);
+        try {
+            const keys = ['customers', 'reservations', 'complaints', 'stocks'];
+            const results = await Promise.allSettled(keys.map(key => api(API[key])));
+            const errors = [];
+            results.forEach((result, i) => {
+                if(result.status === 'fulfilled' && Array.isArray(result.value)) state[keys[i]] = result.value;
+                else errors.push(keys[i] + ': ' + (result.reason?.message || 'Invalid data received'));
+            });
+            if(errors.length) showToast(errors.join(' | '), 'error');
+            updateStats();
+            fillCustomerSelects();
+            fillPartSelect();
+            renderCurrentTab();
+        } catch (e) {
+            showToast(e.message, 'error');
+        } finally { setLoading(false); }
+    }
+
+    function updateTabCounts() {
+        for (const key of ['customers', 'reservations', 'complaints']) {
+            $(key + 'TabCount').textContent = state[key].length;
+        }
+        for (const [id, records] of [['reservationStatusFilter', state.reservations], ['complaintStatusFilter', state.complaints]]) {
+            for (const option of $(id).options) {
+                const label = option.dataset.label || option.textContent;
+                option.dataset.label = label;
+                const count = option.value ? records.filter(record => String(record.status).toUpperCase() === option.value).length : records.length;
+                option.textContent = label + ' (' + count + ')';
+            }
+        }
+    }
+
+    let summaryTopic = 'reservations';
+    function selectSummaryTopic(topic) {
+        if (!['customers', 'reservations', 'complaints'].includes(topic)) return;
+        summaryTopic = topic;
+        renderSummaryCounts();
+    }
+    function renderSummaryCounts() {
+        document.querySelectorAll('[data-summary-topic]').forEach(button => {
+            button.setAttribute('aria-pressed', String(button.dataset.summaryTopic === summaryTopic));
+        });
+        const statuses = summaryTopic === 'reservations'
+            ? ['PENDING', 'ACTIVE', 'COMPLETED', 'CANCELLED', 'REJECTED']
+            : ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+        const counts = summaryTopic === 'customers'
+            ? [['Registered customers', state.customers.length, '']]
+            : statuses.map(status => [status.toLowerCase().replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase()), state[summaryTopic].filter(row => String(row.status).toUpperCase() === status).length, status]);
+        $('summaryCounts').setAttribute('aria-label', summaryTopic + ' counts');
+        $('summaryCounts').innerHTML = counts.map(([label, count, status]) =>
+            `<div class="stat-card"><div class="label">${label}</div><div class="value">${count}</div><button type="button" class="summary-view" onclick="showSummaryDetails('${summaryTopic}', '${status}')" aria-label="View ${label.toLowerCase()} ${summaryTopic === 'customers' ? '' : summaryTopic} details">View details <span aria-hidden="true">→</span></button></div>`
+        ).join('');
+    }
+    function showSummaryDetails(topic, status) {
+        if (!['customers', 'reservations', 'complaints'].includes(topic)) return;
+        if (topic === 'reservations') $('reservationStatusFilter').value = status;
+        if (topic === 'complaints') $('complaintStatusFilter').value = status;
+        switchTab(topic);
+        const panel = $('panel' + topic.charAt(0).toUpperCase() + topic.slice(1));
+        panel.setAttribute('tabindex', '-1');
+        panel.focus({preventScroll: true});
+        panel.scrollIntoView({behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ? 'auto' : 'smooth', block: 'start'});
+    }
+    function updateStats() {
+        updateTabCounts();
+        $('statCustomers').textContent = state.customers.length;
+        $('statReservations').textContent = state.reservations.length;
+        $('statComplaints').textContent = state.complaints.length;
+        renderSummaryCounts();
+    }
+
+    function switchTab(tab) {
+        state.currentTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+        $('panelCustomers').style.display = tab === 'customers' ? '' : 'none';
+        $('panelReservations').style.display = tab === 'reservations' ? '' : 'none';
+        $('panelComplaints').style.display = tab === 'complaints' ? '' : 'none';
+        $('globalSearch').value = '';
+        renderCurrentTab();
+    }
+
+    function renderCurrentTab() {
+        if (state.currentTab === 'customers') renderCustomers();
+        if (state.currentTab === 'reservations') renderReservations();
+        if (state.currentTab === 'complaints') renderComplaints();
+    }
+
+    function renderCustomers() {
+        const q = $('globalSearch').value.trim().toLowerCase();
+        const rows = state.customers.filter(c => [c.customerId,c.customerName,c.phone,c.email,c.address].join(' ').toLowerCase().includes(q));
+        $('customersBody').innerHTML = rows.length ? rows.map(c => `
+            <tr>
+                <td>${esc(c.customerId)}</td><td><strong>${esc(c.customerName)}</strong></td>
+                <td>${esc(c.phone || '-')}</td><td>${esc(c.email || '-')}</td>
+                <td>${esc(c.address || '-')}</td><td>${esc(fmtDate(c.createdAt))}</td>
+            </tr>`).join('') : `<tr><td colspan="6" class="empty">No customer records found.</td></tr>`;
+    }
+
+    function reservationActions(r) {
+        const id = Number(r.reservationId);
+        const status = String(r.status).toUpperCase();
+        const button = (action, label, color) => `<button class="btn ${color} btn-sm" onclick="changeReservation(${id}, '${action}')">${label}</button>`;
+        if (status === 'PENDING') return button('accept', 'Accept', 'btn-success') + ' ' + button('reject', 'Reject', 'btn-danger');
+        const reconcile = r.stockDeducted !== true ? ' ' + button('reconcile-stock', 'Deduct stock', 'btn-primary') : '';
+        if (status === 'ACTIVE') return button('cancel', 'Cancel', 'btn-danger') + ' ' + button('complete', 'Complete', 'btn-success') + reconcile;
+        if (status === 'COMPLETED' && r.stockDeducted !== true) return reconcile;
+        return '—';
+    }
+
+    function renderReservations() {
+        const q = $('globalSearch').value.trim().toLowerCase();
+        const rows = state.reservations.filter(r => (!$('reservationStatusFilter').value || String(r.status).toUpperCase() === $('reservationStatusFilter').value)).filter(r => [r.reservationId,nameOf(r.customer),partNameOf(r.sparePart),locationNameOf(r.location),r.quantity,r.status].join(' ').toLowerCase().includes(q));
+        $('reservationsBody').innerHTML = rows.length ? rows.map(r => {
+            const status = String(r.status).toUpperCase();
+            const badge = ({PENDING:'badge-pending', ACTIVE:'badge-active', REJECTED:'badge-rejected', CANCELLED:'badge-cancelled', COMPLETED:'badge-completed'})[status] || '';
+            return `<tr>
+                <td>${esc(r.reservationId)}</td><td><strong>${esc(nameOf(r.customer))}</strong></td>
+                <td>${esc(partNameOf(r.sparePart))}</td><td>${esc(locationNameOf(r.location))}</td>
+                <td>${esc(r.quantity)}</td><td><span class="badge ${badge}">${esc(r.status)}</span></td>
+                <td>${esc(fmtDate(r.reservedAt))}</td>
+                <td>${reservationActions(r)}</td>
+            </tr>`;
+        }).join('') : `<tr><td colspan="8" class="empty">No reservations match your search and status filter.</td></tr>`;
+    }
+
+    function complaintActions(c) {
+        const id = Number(c.complaintId);
+        const actions = {OPEN:['start','Start Progress'], IN_PROGRESS:['resolve','Mark Resolved'], RESOLVED:['close','Close']};
+        const action = actions[String(c.status).toUpperCase()];
+        if (action) return `<button type="button" class="btn btn-success btn-sm" onclick="changeComplaint(${id}, '${action[0]}')">${action[1]}</button>`;
+        return `<button type="button" class="btn btn-light btn-sm" onclick="viewComplaintDetails(${id})">View Details</button>`;
+    }
+    function viewComplaintDetails(id) {
+        const complaint = state.complaints.find(c => Number(c.complaintId) === id);
+        if (!complaint) return;
+        $('complaintDetailsContent').innerHTML = '<dl>' + [
+            ['Customer', nameOf(complaint.customer)], ['Subject', complaint.subject],
+            ['Description', complaint.description], ['Status', String(complaint.status).replaceAll('_', ' ')],
+            ['Created', fmtDate(complaint.createdAt)], ['Resolved', fmtDate(complaint.resolvedAt)]
+        ].map(([label, value]) => '<dt style="font-weight:700;margin-top:14px">' + label + '</dt><dd style="margin:4px 0;white-space:pre-wrap;overflow-wrap:anywhere">' + esc(value) + '</dd>').join('') + '</dl>';
+        $('complaintDetailsDialog').showModal();
+    }
+    function renderComplaints() {
+        const q = $('globalSearch').value.trim().toLowerCase();
+        const rows = state.complaints.filter(c => (!$('complaintStatusFilter').value || String(c.status).toUpperCase() === $('complaintStatusFilter').value)).filter(c => [c.complaintId,nameOf(c.customer),c.subject,c.description,c.status].join(' ').toLowerCase().includes(q));
+        $('complaintsBody').innerHTML = rows.length ? rows.map(c => {
+            const badge = ({OPEN:'badge-open',IN_PROGRESS:'badge-progress',RESOLVED:'badge-resolved',CLOSED:'badge-closed'})[String(c.status).toUpperCase()] || '';
+            return `<tr>
+                <td>${esc(c.complaintId)}</td><td><strong>${esc(nameOf(c.customer))}</strong></td>
+                <td>${esc(c.subject)}</td><td>${esc(c.description)}</td>
+                <td><span class="badge ${badge}">${esc(c.status)}</span></td>
+                <td>${esc(fmtDate(c.createdAt))}</td><td>${esc(fmtDate(c.resolvedAt))}</td>
+                <td>${complaintActions(c)}</td>
+            </tr>`;
+        }).join('') : `<tr><td colspan="8" class="empty">No complaints match your search and status filter.</td></tr>`;
+    }
+
+    function fillCustomerSelects() {
+        const options = `<option value="">Select Customer</option>` + state.customers
+            .map(c => `<option value="${Number(c.customerId)}">${esc(c.customerName)}${c.phone ? ' - ' + esc(c.phone) : ''}</option>`).join('');
+        $('reservationCustomer').innerHTML = options;
+        $('complaintCustomer').innerHTML = options;
+    }
+
+    function uniquePartsFromStocks() {
+        const map = new Map();
+        state.stocks.forEach(s => {
+            if (s?.sparePart?.sparePartId != null) map.set(Number(s.sparePart.sparePartId), s.sparePart);
+        });
+        return [...map.values()].filter(p => p.active !== false).sort((a,b) => String(a.partName).localeCompare(String(b.partName)));
+    }
+
+    function fillPartSelect() {
+        const parts = uniquePartsFromStocks();
+        $('reservationPart').innerHTML = `<option value="">Select Spare Part</option>` + parts
+            .map(p => `<option value="${Number(p.sparePartId)}">${esc(p.partCode)} - ${esc(p.partName)}</option>`).join('');
+        populateReservationLocations();
+    }
+
+    function populateReservationLocations() {
+        const partId = Number($('reservationPart').value);
+        const matching = state.stocks.filter(s => Number(s?.sparePart?.sparePartId) === partId && Number(s.quantity || 0) > 0 && s.location);
+        const seen = new Set();
+        const options = matching.filter(s => {
+            const id = Number(s.location.locationId);
+            if (seen.has(id)) return false; seen.add(id); return true;
+        }).map(s => `<option value="${Number(s.location.locationId)}">${esc(s.location.locationName)}</option>`).join('');
+        $('reservationLocation').innerHTML = `<option value="">Select Location</option>` + options;
+        updateAvailableStock();
+    }
+
+    function updateAvailableStock() {
+        const partId = Number($('reservationPart').value);
+        const locationId = Number($('reservationLocation').value);
+        const stock = state.stocks.find(s => Number(s?.sparePart?.sparePartId) === partId && Number(s?.location?.locationId) === locationId);
+        $('availableStock').value = stock ? String(stock.quantity ?? 0) : '-';
+    }
+
+    function openModal(id) { $(id).classList.add('show'); }
+    function closeModal(id) { $(id).classList.remove('show'); }
+    function openCustomerModal() { $('customerForm').reset(); openModal('customerModal'); }
+    function openReservationModal() {
+        if (!state.customers.length) { showToast('Add a customer before creating a reservation.', 'info'); openCustomerModal(); return; }
+        $('reservationForm').reset(); fillCustomerSelects(); fillPartSelect(); $('reservationQuantity').value = 1; openModal('reservationModal');
+    }
+    function openComplaintModal() {
+        if (!state.customers.length) { showToast('Add a customer before registering a complaint.', 'info'); openCustomerModal(); return; }
+        $('complaintForm').reset(); fillCustomerSelects(); openModal('complaintModal');
+    }
+
+    async function submitCustomer(event) {
+        event.preventDefault(); setLoading(true);
+        try {
+            await api(API.customers, { method: 'POST', body: JSON.stringify({
+                customerName: $('customerName').value.trim(),
+                phone: $('customerPhone').value.trim() || null,
+                email: $('customerEmail').value.trim() || null,
+                address: $('customerAddress').value.trim() || null
+            })});
+            closeModal('customerModal'); showToast('Customer added successfully.', 'success'); await refreshAll(); switchTab('customers');
+        } catch (e) { showToast(e.message, 'error'); } finally { setLoading(false); }
+    }
+
+    async function submitReservation(event) {
+        event.preventDefault();
+        const partId = Number($('reservationPart').value), locationId = Number($('reservationLocation').value), quantity = Number($('reservationQuantity').value);
+        const stock = state.stocks.find(s => Number(s?.sparePart?.sparePartId) === partId && Number(s?.location?.locationId) === locationId);
+        if (!Number.isSafeInteger(quantity) || !stock || quantity < 1 || quantity > Number(stock.quantity || 0)) {
+            showToast(`Enter a quantity between 1 and ${stock ? stock.quantity : 0}.`, 'error'); return;
+        }
+        setLoading(true);
+        try {
+            await api(API.reservations, { method: 'POST', body: JSON.stringify({
+                customerId: Number($('reservationCustomer').value), sparePartId: partId, locationId, quantity
+            })});
+            closeModal('reservationModal'); showToast('Reservation submitted for acceptance.', 'success'); await refreshAll(); switchTab('reservations');
+        } catch (e) { showToast(e.message, 'error'); } finally { setLoading(false); }
+    }
+
+    async function submitComplaint(event) {
+        event.preventDefault(); setLoading(true);
+        try {
+            await api(API.complaints, { method: 'POST', body: JSON.stringify({
+                customerId: Number($('complaintCustomer').value),
+                subject: $('complaintSubject').value.trim(),
+                description: $('complaintDescription').value.trim()
+            })});
+            closeModal('complaintModal'); showToast('Complaint registered successfully.', 'success'); await refreshAll(); switchTab('complaints');
+        } catch (e) { showToast(e.message, 'error'); } finally { setLoading(false); }
+    }
+
+    async function changeReservation(id, action) {
+        const labels = {accept:'Accept', reject:'Reject', cancel:'Cancel', complete:'Complete', 'reconcile-stock':'Deduct stock for'};
+        if (!labels[action]) return;
+        const question = action === 'reconcile-stock' ? 'Deduct stock for older reservation #' + id + '? Only continue if this quantity has not already been adjusted manually.' : labels[action] + ' reservation #' + id + '?';
+        if (!confirm(question)) return;
+        setLoading(true);
+        try {
+            await api(API.reservations + '/' + id + '/' + action, {method:'PUT'});
+            showToast('Reservation updated successfully.', 'success');
+            await refreshAll(); switchTab('reservations');
+        } catch (e) { showToast(e.message, 'error'); }
+        finally { setLoading(false); }
+    }
+
+    async function changeComplaint(id, action) {
+        const labels = {start:'Start progress on', resolve:'Mark resolved', close:'Close'};
+        if (!labels[action] || !confirm(labels[action] + ' complaint #' + id + '?')) return;
+        setLoading(true);
+        try {
+            await api(API.complaints + '/' + id + '/' + action, {method:'PUT'});
+            showToast('Complaint updated successfully.', 'success');
+            await refreshAll(); switchTab('complaints');
+        } catch (e) { showToast(e.message, 'error'); }
+        finally { setLoading(false); }
+    }
+
+    document.querySelectorAll('.modal-backdrop').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); }));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal-backdrop.show').forEach(m => closeModal(m.id)); });
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        await loadCurrentUser();
+        await refreshAll();
+    });
+</script>
+</body>
+</html>
