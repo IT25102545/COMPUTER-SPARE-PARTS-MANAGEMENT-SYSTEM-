@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Management - LankaTech</title>
+
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: #212529;
+            color: white;
+        }
+
+        .sidebar h4 {
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .summary-card {
+            border-left: 5px solid #0d6efd;
+        }
+
+        .table th {
+            background: #212529;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar p-0">
+
+            <h4>LankaTech</h4>
+
+            <a href="inventory.html">Inventory</a>
+            <a href="stock-transfer.html">Stock Transfer</a>
+            <a href="supplier-purchase.html">Supplier & Purchase</a>
+            <a href="sales.html" class="active">Sales</a>
+            <a href="customer-service.html">Customer Service</a>
+            <a href="reports.html">Reports</a>
+
+        </div>
+
+
+        <!-- Main Content -->
+        <div class="col-md-10 p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2>Sales Management</h2>
+                    <p class="text-muted">
+                        Create sales, process payments and generate invoices
+                    </p>
+                </div>
+
+                <span class="badge bg-success p-2">
+                    Sales Module
+                </span>
+            </div>
+
+
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+
+                <div class="col-md-4">
+                    <div class="card summary-card p-3">
+                        <h6 class="text-muted">Today's Sales</h6>
+                        <h3>Rs. 125,500</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card summary-card p-3">
+                        <h6 class="text-muted">Transactions</h6>
+                        <h3>18</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card summary-card p-3">
+                        <h6 class="text-muted">Invoices Generated</h6>
+                        <h3>18</h3>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Create Sale -->
+            <div class="card p-4 mb-4">
+
+                <h4 class="mb-3">Create New Sale</h4>
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Customer</label>
+
+                        <select id="customer" class="form-select">
+                            <option value="">Walk-in Customer</option>
+                            <option>Customer 001 - Nimal</option>
+                            <option>Customer 002 - Kamal</option>
+                            <option>Customer 003 - Saman</option>
+                        </select>
+                    </div>
+
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">Spare Part</label>
+
+                        <select id="part" class="form-select">
+                            <option value="">Select Product</option>
+                            <option value="15000">Samsung 1TB SSD</option>
+                            <option value="18000">Kingston 16GB RAM</option>
+                            <option value="45000">Intel Core i5 Processor</option>
+                            <option value="22000">Cooler Master PSU</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2 mb-3">
+
+                        <label class="form-label">Quantity</label>
+
+                        <input
+                                id="quantity"
+                                type="number"
+                                class="form-control"
+                                value="1"
+                                min="1"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-2 mb-3 d-flex align-items-end">
+
+                        <button
+                                class="btn btn-primary w-100"
+                                onclick="addItem()"
+                        >
+                            Add Item
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Cart -->
+                <h5 class="mt-3">Sale Items</h5>
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered">
+
+                        <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="cartBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- Payment -->
+                <div class="row mt-3">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Payment Method
+                        </label>
+
+                        <select id="payment" class="form-select">
+
+                            <option value="CASH">
+                                Cash
+                            </option>
+
+                            <option value="CARD">
+                                Card
+                            </option>
+
+                            <option value="BANK_TRANSFER">
+                                Bank Transfer
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Total Amount
+                        </label>
+
+                        <input
+                                id="total"
+                                class="form-control"
+                                value="Rs. 0.00"
+                                readonly
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-4 d-flex align-items-end">
+
+                        <button
+                                class="btn btn-success w-100"
+                                onclick="completeSale()"
+                        >
+                            Complete Sale & Generate Invoice
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Recent Sales -->
+            <div class="card p-4">
+
+                <div class="d-flex justify-content-between">
+
+                    <h4>Recent Sales</h4>
+
+                    <button
+                            class="btn btn-outline-primary"
+                            onclick="loadSales()"
+                    >
+                        Refresh
+                    </button>
+
+                </div>
+
+                <div class="table-responsive mt-3">
+
+                    <table class="table table-hover">
+
+                        <thead>
+
+                        <tr>
+                            <th>Invoice</th>
+                            <th>Customer</th>
+                            <th>Payment</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="salesTable">
+
+                        <tr>
+                            <td>INV-10001</td>
+                            <td>Nimal</td>
+                            <td>CASH</td>
+                            <td>Rs. 45,000</td>
+                            <td>
+                                <span class="badge bg-success">
+                                    COMPLETED
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>INV-10002</td>
+                            <td>Walk-in Customer</td>
+                            <td>CARD</td>
+                            <td>Rs. 30,000</td>
+                            <td>
+                                <span class="badge bg-success">
+                                    COMPLETED
+                                </span>
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <pre
+                        id="apiOutput"
+                        class="bg-light p-3"
+                ></pre>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+    let cart = [];
+
+
+    function addItem() {
+
+        const partSelect =
+            document.getElementById("part");
+
+        const quantity =
+            parseInt(
+                document.getElementById("quantity").value
+            );
+
+
+        if (!partSelect.value) {
+
+            alert("Please select a spare part");
+
+            return;
+        }
+
+
+        if (quantity < 1) {
+
+            alert("Quantity must be at least 1");
+
+            return;
+        }
+
+
+        const price =
+            parseFloat(partSelect.value);
+
+        const name =
+            partSelect.options[
+                partSelect.selectedIndex
+                ].text;
+
+
+        cart.push({
+
+            name: name,
+
+            quantity: quantity,
+
+            price: price,
+
+            total: price * quantity
+
+        });
+
+
+        renderCart();
+    }
+
+
+
+    function renderCart() {
+
+        const body =
+            document.getElementById("cartBody");
+
+
+        body.innerHTML = "";
+
+
+        let totalAmount = 0;
+
+
+        cart.forEach((item, index) => {
+
+            totalAmount += item.total;
+
+
+            body.innerHTML += `
+
+                <tr>
+
+                    <td>${item.name}</td>
+
+                    <td>${item.quantity}</td>
+
+                    <td>
+                        Rs. ${item.price.toFixed(2)}
+                    </td>
+
+                    <td>
+                        Rs. ${item.total.toFixed(2)}
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="btn btn-sm btn-danger"
+                            onclick="removeItem(${index})"
+                        >
+
+                            Remove
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+        });
+
+
+        document.getElementById("total").value =
+            "Rs. " + totalAmount.toFixed(2);
+    }
+
+
+
+    function removeItem(index) {
+
+        cart.splice(index, 1);
+
+        renderCart();
+    }
+
+
+
+    function completeSale() {
+
+        if (cart.length === 0) {
+
+            alert(
+                "Please add at least one product"
+            );
+
+            return;
+        }
+
+
+        const payment =
+            document.getElementById("payment").value;
+
+
+        alert(
+            "Sale completed successfully!\n" +
+            "Payment: " + payment +
+            "\nInvoice generated."
+        );
+
+
+        cart = [];
+
+        renderCart();
+    }
+
+
+
+    async function loadSales() {
+
+        try {
+
+            const response =
+                await fetch("/api/sales");
+
+
+            const data =
+                await response.json();
+
+
+            document.getElementById(
+                "apiOutput"
+            ).textContent =
+                JSON.stringify(
+                    data,
+                    null,
+                    2
+                );
+
+        }
+
+        catch (error) {
+
+            document.getElementById(
+                "apiOutput"
+            ).textContent =
+                "Backend is not available yet.";
+        }
+    }
+
+</script>
+
+
+</body>
+</html>
