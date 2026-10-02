@@ -113,7 +113,7 @@ public class SecurityConfig {
                         /*
                          * Everything else requires login.
                          */
-                        .requestMatchers("/customer/**")
+                        .requestMatchers("/customer/**", "/customer.html", "/customer-service")
                         .hasRole("CUSTOMER_SERVICE_OFFICER")
 
                         .requestMatchers("/api/customer/**")
@@ -136,11 +136,11 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception
 
                         .authenticationEntryPoint((request, response, authException) ->
-                                response.sendRedirect("/?loginRequired=true")
+                                { if (request.getRequestURI().startsWith(request.getContextPath() + "/api/")) response.sendError(401); else response.sendRedirect("/?loginRequired=true"); }
                         )
 
                         .accessDeniedHandler((request, response, accessDeniedException) ->
-                                response.sendRedirect("/?accessDenied=true")
+                                { if (request.getRequestURI().startsWith(request.getContextPath() + "/api/")) response.sendError(403); else response.sendRedirect("/?accessDenied=true"); }
                         )
                 )
                 .formLogin(form -> form
