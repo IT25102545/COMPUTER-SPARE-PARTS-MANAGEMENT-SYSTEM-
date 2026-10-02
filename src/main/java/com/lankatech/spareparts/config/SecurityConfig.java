@@ -124,6 +124,11 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/inventory/**")
                         .hasRole("INVENTORY_SUPERVISOR")
+                        .requestMatchers("/sales.html", "/sales/**")
+                        .hasRole("SALES_OFFICER")
+
+                        .requestMatchers("/api/sales", "/api/sales/**")
+                        .hasRole("SALES_OFFICER")
 
                         .anyRequest().authenticated()
                 )
