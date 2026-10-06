@@ -2050,6 +2050,7 @@
     let locations = [];
     let users = [];
     let selectedItems = [];
+    let currentUser = null;
     let receivingTransferId = null;
     let dispatchingTransferId = null;
     let approvingTransferId = null;
@@ -2211,54 +2212,52 @@
     function populateUserOptions() {
 
         const requestedBySelect =
-            document.getElementById(
-                "requestedById"
-            );
+            document.getElementById("requestedById");
 
         const approvedBySelect =
-            document.getElementById(
-                "approvedById"
-            );
+            document.getElementById("approvedById");
 
-        if (!requestedBySelect ||
-            !approvedBySelect) {
+        if (!requestedBySelect || !approvedBySelect) {
             return;
         }
 
+        // Requested By = currently logged-in user only
         requestedBySelect.innerHTML = `
-            <option value="">Select Requesting User</option>
-        `;
+        <option value="">Select Requesting User</option>
+    `;
 
+        if (currentUser) {
+
+            const currentRole =
+                currentUser.role?.roleName ||
+                currentUser.role ||
+                "USER";
+
+            const option =
+                document.createElement("option");
+
+            option.value = currentUser.userId;
+
+            option.textContent =
+                `${currentUser.fullName || `User ${currentUser.userId}`} (${currentRole})`;
+
+            requestedBySelect.appendChild(option);
+
+            requestedBySelect.value =
+                String(currentUser.userId);
+
+            requestedBySelect.disabled = true;
+        }
+
+        // Approved By = Inventory Supervisors only
         approvedBySelect.innerHTML = `
-            <option value="">Select Inventory Supervisor</option>
-        `;
+        <option value="">Select Inventory Supervisor</option>
+    `;
 
         const activeUsers =
             users.filter(user =>
                 user.active !== false
             );
-
-        activeUsers.forEach(user => {
-
-            const roleName =
-                user.role?.roleName ||
-                "USER";
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                user.userId;
-
-            option.textContent =
-                `${user.fullName || `User ${user.userId}`} (${roleName})`;
-
-            requestedBySelect.appendChild(
-                option
-            );
-        });
 
         const inventorySupervisors =
             activeUsers.filter(user =>
@@ -2270,29 +2269,16 @@
         inventorySupervisors.forEach(user => {
 
             const option =
-                document.createElement(
-                    "option"
-                );
+                document.createElement("option");
 
-            option.value =
-                user.userId;
+            option.value = user.userId;
 
             option.textContent =
                 user.fullName ||
                 `User ${user.userId}`;
 
-            approvedBySelect.appendChild(
-                option
-            );
+            approvedBySelect.appendChild(option);
         });
-
-        // Keep the current demo flow convenient:
-        // automatically select the first active user
-        // and the first Inventory Supervisor.
-        if (activeUsers.length > 0) {
-            requestedBySelect.value =
-                String(activeUsers[0].userId);
-        }
 
         if (inventorySupervisors.length > 0) {
             approvedBySelect.value =
@@ -5123,6 +5109,8 @@
             }
 
             const user = await response.json();
+            currentUser = user;
+            populateUserOptions();
 
             const userNameElement =
                 document.getElementById("siteUserName");
