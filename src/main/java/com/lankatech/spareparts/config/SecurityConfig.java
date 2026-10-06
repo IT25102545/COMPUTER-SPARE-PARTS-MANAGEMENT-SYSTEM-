@@ -1,5 +1,5 @@
 package com.lankatech.spareparts.config;
-
+import org.springframework.http.HttpMethod;
 import com.lankatech.spareparts.auth.service.CustomUserDetailsService;
 
 import org.springframework.context.annotation.Bean;
@@ -119,8 +119,20 @@ public class SecurityConfig {
                         .requestMatchers("/api/customer/**")
                         .hasRole("CUSTOMER_SERVICE_OFFICER")
 
+
                         .requestMatchers("/inventory.html")
                         .hasRole("INVENTORY_SUPERVISOR")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/inventory/parts",
+                                "/api/inventory/stocks"
+                        )
+                        .hasAnyRole(
+                                "BRANCH_SUPERVISOR",
+                                "INVENTORY_SUPERVISOR"
+                        )
+
 
                         .requestMatchers("/api/inventory/**")
                         .hasRole("INVENTORY_SUPERVISOR")
@@ -129,6 +141,9 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/sales", "/api/sales/**")
                         .hasRole("SALES_OFFICER")
+
+                        .requestMatchers("/inventory.html")
+                        .hasRole("INVENTORY_SUPERVISOR")
 
                         .anyRequest().authenticated()
                 )
