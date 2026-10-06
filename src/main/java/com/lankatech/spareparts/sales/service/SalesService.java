@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import com.lankatech.spareparts.sales.strategy.PaymentContext;
 
 @Service
 @Transactional
@@ -32,6 +33,8 @@ public class SalesService {
 
     private final SparePartRepository parts;
     private final StockRepository stocks;
+
+    private final PaymentContext paymentContext;
 
     private final LocationRepository locations;
     private final UserRepository users;
@@ -45,7 +48,8 @@ public class SalesService {
             StockRepository stocks,
             LocationRepository locations,
             UserRepository users,
-            CustomerRepository customers
+            CustomerRepository customers,
+            PaymentContext paymentContext
     ) {
         this.sales = sales;
         this.payments = payments;
@@ -55,6 +59,7 @@ public class SalesService {
         this.locations = locations;
         this.users = users;
         this.customers = customers;
+        this.paymentContext = paymentContext;
     }
 
     public List<Sale> getSales() {
@@ -137,6 +142,8 @@ public class SalesService {
         sale.setTotalAmount(total);
 
         Sale savedSale = sales.save(sale);
+
+        paymentContext.processPayment(r.getPaymentMethod(), total);
 
         Payment payment = new Payment();
         payment.setSale(savedSale);
