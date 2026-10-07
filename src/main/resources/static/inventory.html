@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory & Stock Management | Lanka Tech Components</title>
+    <style>
+        :root{--navy:#0b2a4a;--blue:#0d6efd;--bg:#f4f8fc;--line:#dce7f2;--text:#102a43;--shadow:0 10px 28px rgba(12,43,75,.08)}
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);background:var(--bg)}
+        button{font:inherit;cursor:pointer}a{text-decoration:none;color:inherit}
+        .hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100}
+        .hdr-in,.container{width:min(1500px,calc(100% - 40px));margin:auto}
+        .hdr-in{display:flex;justify-content:space-between;align-items:center;min-height:68px;gap:16px}
+        .brand b{display:block;color:var(--navy);font-size:15px}.brand small{color:#607a95;font-size:11px}
+        .user{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;color:var(--navy)}
+        .container{margin:26px auto 40px}
+        .page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+        .eyebrow{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--blue)}
+        h1{margin:6px 0 0;color:var(--navy);font-size:32px}
+        .actions{display:flex;gap:9px;flex-wrap:wrap}
+        .btn{border:0;border-radius:10px;padding:10px 15px;font-weight:750;font-size:12px}
+        .btn-p{background:var(--blue);color:#fff}.btn-s{background:#eaf2fb;color:var(--navy)}.btn-g{background:#168a4b;color:#fff}
+        .btn-d{background:#c83232;color:#fff}.btn-k{background:var(--navy);color:#fff}.btn-sm{padding:6px 10px;font-size:11px;border-radius:8px}
+        .metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:22px}
+        .metric{background:#fff;border:1px solid #e6eef7;border-left:4px solid var(--blue);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+        .metric small{font-size:11px;font-weight:800;color:#617991}.metric div{font-size:28px;font-weight:850;color:var(--navy);margin-top:8px}
+        .m2{border-left-color:#168a4b}.m3{border-left-color:#f59e0b}.m4{border-left-color:#dc3545}.m5{border-left-color:#7c3aed}.m6{border-left-color:#0284c7}
+        .panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+        .panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 22px;border-bottom:1px solid #edf3f8}
+        .panel-head h2{margin:0;color:var(--navy);font-size:20px}
+        .tools{display:flex;gap:9px;flex-wrap:wrap}
+        .input,.select,.textarea{width:100%;border:1px solid #cedbea;border-radius:10px;padding:10px 11px;font:inherit;outline:none}
+        .input:focus,.select:focus,.textarea:focus{border-color:var(--blue)}
+        .tools .input{min-width:220px}.tools .select{min-width:150px;width:auto}
+        .tabs{display:flex;gap:7px;padding:14px 22px 0;background:#fbfdff;flex-wrap:wrap}
+        .tab{border:1px solid #dfe9f4;background:#f3f7fb;color:#486782;border-radius:10px 10px 0 0;padding:9px 14px;font-size:11px;font-weight:800}
+        .tab.active{background:#fff;color:var(--blue)}
+        .view{display:none;overflow:auto;padding:0 22px 20px}.view.active{display:block}
+        table{width:100%;border-collapse:collapse;min-width:900px}
+        th{background:#eef6ff;color:var(--navy);font-size:11px;text-align:left;padding:12px;white-space:nowrap}
+        td{padding:12px;border-bottom:1px solid #edf2f7;font-size:12px;vertical-align:middle}
+        tr:hover td{background:#f8fbff}
+        .nm{font-weight:800;color:var(--navy)}.sub{font-size:10px;color:#7a8ea2;margin-top:3px}
+        .pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:800}
+        .ok,.active-p{background:#e4f7ec;color:#157a42}.low{background:#fff2d9;color:#9a640e}.out{background:#fde7e7;color:#b42323}.inactive{background:#eef1f4;color:#66788b}
+        .row-act{display:flex;gap:6px}
+        .empty{padding:34px;text-align:center;color:#73879a;font-size:12px;display:none}
+        .modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,22,43,.6)}
+        .modal.open{display:flex}
+        .card{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px}
+        .card.sm{width:min(500px,100%)}
+        .mh{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #edf2f7}
+        .mh h3{margin:0;color:var(--navy)}
+        .x{border:0;background:#eef4fa;width:32px;height:32px;border-radius:9px;font-size:20px}
+        .mb{padding:22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}
+        label{display:block;margin-bottom:6px;font-size:11px;font-weight:800;color:#193955}
+        .chk{display:flex;align-items:center;gap:8px}.chk input{width:auto}
+        .ma{display:flex;justify-content:flex-end;gap:9px;padding:16px 22px;border-top:1px solid #edf2f7}
+        .prev{margin-top:12px;padding:11px;border-radius:10px;background:#f3f8fd;font-size:11px}
+        #toast{display:none;position:fixed;top:80px;right:22px;z-index:300;max-width:420px;padding:14px 17px;border-radius:12px;font-size:12px;font-weight:700;box-shadow:0 18px 42px rgba(6,34,61,.18)}
+        #toast.success{display:block;background:#e7f7ee;color:#126b3c}#toast.error{display:block;background:#fdeaea;color:#a62626}#toast.info{display:block;background:#eaf3ff;color:#155eaa}
+        .loading{opacity:.55;pointer-events:none}
+        @media(max-width:1100px){.metrics{grid-template-columns:repeat(3,1fr)}}
+        @media(max-width:600px){.metrics{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+<header class="hdr"><div class="hdr-in">
+    <a class="brand" href="/"><b>Lanka Tech Components (Pvt) Ltd</b><small>Computer Spare Parts Management System</small></a>
+    <div class="user"><span>👤 <span id="userName">Loading...</span> <small id="userRole"></small></span>
+        <form action="/logout" method="post"><button class="btn btn-k" type="submit">Logout</button></form></div>
+</div></header>
+
+<main class="container" id="main">
+    <div class="page-head">
+        <div><div class="eyebrow">Inventory Operations</div><h1>Inventory & Stock Management</h1></div>
+        <div class="actions">
+            <button class="btn btn-s" onclick="openSimple('category')">+ Category</button>
+            <button class="btn btn-s" onclick="openSimple('brand')">+ Brand</button>
+            <button class="btn btn-g" onclick="openAdjust()">± Adjust Stock</button>
+            <button class="btn btn-p" onclick="openPart()">+ Add Spare Part</button>
+        </div>
+    </div>
+    <div id="toast"></div>
+
+    <section class="metrics">
+        <div class="metric"><small>TOTAL SPARE PARTS</small><div id="mParts">0</div></div>
+        <div class="metric m2"><small>TOTAL STOCK UNITS</small><div id="mStock">0</div></div>
+        <div class="metric m3"><small>LOW STOCK</small><div id="mLow">0</div></div>
+        <div class="metric m4"><small>OUT OF STOCK</small><div id="mOut">0</div></div>
+        <div class="metric m5"><small>CATEGORIES</small><div id="mCat">0</div></div>
+        <div class="metric m6"><small>BRANDS</small><div id="mBrand">0</div></div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-head"><h2>Inventory Register</h2>
+            <div class="tools">
+                <input class="input" id="q" type="search" placeholder="Search..." oninput="render()">
+                <select class="select" id="fCat" onchange="render()"><option value="">All categories</option></select>
+                <select class="select" id="fStock" onchange="render()"><option value="">All stock levels</option><option value="OK">Available</option><option value="LOW">Low stock</option><option value="OUT">Out of stock</option></select>
+                <button class="btn btn-k" onclick="loadAll()">Refresh</button>
+            </div></div>
+        <div class="tabs" id="tabs">
+            <button class="tab active" data-t="parts">Spare Parts</button>
+            <button class="tab" data-t="stocks">Stock by Location</button>
+            <button class="tab" data-t="categories">Categories</button>
+            <button class="tab" data-t="brands">Brands</button>
+        </div>
+        <div class="view active" id="partsView"><table><thead><tr><th>Part</th><th>Category</th><th>Brand</th><th>Unit Price</th><th>Reorder</th><th>Total Stock</th><th>Status</th><th>Active</th><th>Actions</th></tr></thead><tbody id="partsBody"></tbody></table><div class="empty" id="partsEmpty">No spare parts found.</div></div>
+        <div class="view" id="stocksView"><table><thead><tr><th>ID</th><th>Part</th><th>Location</th><th>Type</th><th>Qty</th><th>Reorder</th><th>Status</th><th>Updated</th></tr></thead><tbody id="stocksBody"></tbody></table><div class="empty" id="stocksEmpty">No stock records found.</div></div>
+        <div class="view" id="categoriesView"><table><thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Active</th><th>Actions</th></tr></thead><tbody id="categoriesBody"></tbody></table><div class="empty" id="categoriesEmpty">No categories found.</div></div>
+        <div class="view" id="brandsView"><table><thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Active</th><th>Actions</th></tr></thead><tbody id="brandsBody"></tbody></table><div class="empty" id="brandsEmpty">No brands found.</div></div>
+    </section>
+</main>
+
+<!-- Part modal (create + edit) -->
+<div class="modal" id="partModal"><div class="card">
+    <div class="mh"><h3 id="partTitle">Add Spare Part</h3><button class="x" onclick="closeM('partModal')">×</button></div>
+    <form onsubmit="savePart(event)"><div class="mb"><div class="grid">
+        <div><label>Part Code *</label><input class="input" id="pCode" maxlength="50" required></div>
+        <div><label>Part Name *</label><input class="input" id="pName" maxlength="150" required></div>
+        <div><label>Category *</label><select class="select" id="pCat" required></select></div>
+        <div><label>Brand *</label><select class="select" id="pBrand" required></select></div>
+        <div><label>Unit Price (LKR) *</label><input class="input" id="pPrice" type="number" min="0" step="0.01" required></div>
+        <div><label>Reorder Level *</label><input class="input" id="pReorder" type="number" min="0" step="1" required value="0"></div>
+        <div class="full"><label>Description</label><textarea class="textarea" id="pDesc" rows="3" maxlength="500"></textarea></div>
+        <div class="full chk"><input type="checkbox" id="pActive" checked><label style="margin:0" for="pActive">Active</label></div>
+    </div></div>
+        <div class="ma"><button type="button" class="btn btn-s" onclick="closeM('partModal')">Cancel</button><button class="btn btn-p" type="submit">Save</button></div></form>
+</div></div>
+
+<!-- Category / Brand modal (create + edit) -->
+<div class="modal" id="simpleModal"><div class="card sm">
+    <div class="mh"><h3 id="simpleTitle">Add</h3><button class="x" onclick="closeM('simpleModal')">×</button></div>
+    <form onsubmit="saveSimple(event)"><div class="mb">
+        <label>Name *</label><input class="input" id="sName" maxlength="100" required>
+        <label style="margin-top:14px">Description</label><textarea class="textarea" id="sDesc" rows="3" maxlength="255"></textarea>
+        <div class="chk" style="margin-top:14px"><input type="checkbox" id="sActive" checked><label style="margin:0" for="sActive">Active</label></div>
+    </div>
+        <div class="ma"><button type="button" class="btn btn-s" onclick="closeM('simpleModal')">Cancel</button><button class="btn btn-p" type="submit">Save</button></div></form>
+</div></div>
+
+<!-- Adjust stock modal -->
+<div class="modal" id="adjustModal"><div class="card sm">
+    <div class="mh"><h3>Adjust Stock</h3><button class="x" onclick="closeM('adjustModal')">×</button></div>
+    <form onsubmit="saveAdjust(event)"><div class="mb">
+        <label>Spare Part *</label><select class="select" id="aPart" required onchange="preview()"></select>
+        <label style="margin-top:14px">Location *</label><select class="select" id="aLoc" required onchange="preview()"></select>
+        <label style="margin-top:14px">Quantity Change * (+10 adds, -5 reduces)</label><input class="input" id="aQty" type="number" step="1" required oninput="preview()">
+        <div class="prev" id="aPrev">Select a part and location.</div>
+    </div>
+        <div class="ma"><button type="button" class="btn btn-s" onclick="closeM('adjustModal')">Cancel</button><button class="btn btn-g" type="submit">Save Adjustment</button></div></form>
+</div></div>
+
+<script>
+    const API={categories:'/api/inventory/categories',brands:'/api/inventory/brands',parts:'/api/inventory/parts',stocks:'/api/inventory/stocks',adjust:'/api/inventory/stocks/adjust',locations:'/api/stock-transfers/locations',me:'/api/auth/me'};
+    const ENT={category:{url:API.categories,id:'categoryId',name:'categoryName',label:'Category',list:'categories'},brand:{url:API.brands,id:'brandId',name:'brandName',label:'Brand',list:'brands'}};
+    let D={categories:[],brands:[],parts:[],stocks:[],locations:[]},tab='parts',editPartId=null,simple={type:null,id:null},timer;
+    const $=id=>document.getElementById(id);
+    const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    const money=v=>Number(v||0).toLocaleString('en-LK',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+    document.addEventListener('DOMContentLoaded',async()=>{
+      $('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)switchTab(b.dataset.t)});
+      document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+      await loadUser();await loadAll();
+    });
+    async function loadUser(){try{const r=await fetch(API.me);if(!r.ok)return;const u=await r.json();
+      $('userName').textContent=u.fullName||u.name||u.email||'User';
+      $('userRole').textContent=String(u.role?.roleName||u.roleName||u.role||'').replace(/^ROLE_/,'').replaceAll('_',' ');}catch(e){}}
+
+    async function call(url,method='GET',body){
+      const r=await fetch(url,{method,headers:body?{'Content-Type':'application/json'}:{'Accept':'application/json'},body:body?JSON.stringify(body):undefined});
+      if(!r.ok){let m=`${r.status} ${r.statusText}`;
+        try{const b=await r.json();m=b.message||(b.fieldErrors?Object.entries(b.fieldErrors).map(([f,x])=>`${f}: ${x}`).join(' · '):b.error)||m}catch(e){}
+        throw new Error(m)}
+      const t=await r.text();return t?JSON.parse(t):null;
+    }
+    async function loadAll(){
+      $('main').classList.add('loading');
+      try{
+        const [c,b,p,s]=await Promise.all([call(API.categories),call(API.brands),call(API.parts),call(API.stocks)]);
+        D.categories=c;D.brands=b;D.parts=p;D.stocks=s;
+        try{D.locations=await call(API.locations)}catch(e){D.locations=[...new Map(s.filter(x=>x.location).map(x=>[x.location.locationId,x.location])).values()]}
+        fillSelects();dashboard();render();
+      }catch(e){toast(e.message,'error')}finally{$('main').classList.remove('loading')}
+    }
+    function fillSelects(){
+      const opt=(a,id,nm)=>a.filter(x=>x.active!==false).map(x=>`<option value="${x[id]}">${esc(x[nm])}</option>`).join('');
+      $('pCat').innerHTML='<option value="">Select category</option>'+opt(D.categories,'categoryId','categoryName');
+      $('pBrand').innerHTML='<option value="">Select brand</option>'+opt(D.brands,'brandId','brandName');
+      $('aPart').innerHTML='<option value="">Select spare part</option>'+D.parts.filter(x=>x.active!==false).map(p=>`<option value="${p.sparePartId}">${esc(p.partCode)} — ${esc(p.partName)}</option>`).join('');
+      $('aLoc').innerHTML='<option value="">Select location</option>'+D.locations.filter(x=>x.active!==false).map(l=>`<option value="${l.locationId}">${esc(l.locationName)}${l.locationType?' ('+esc(l.locationType)+')':''}</option>`).join('');
+      const f=$('fCat'),sel=f.value;
+      f.innerHTML='<option value="">All categories</option>'+D.categories.map(c=>`<option value="${c.categoryId}">${esc(c.categoryName)}</option>`).join('');
+      f.value=sel;
+    }
+    const total=id=>D.stocks.filter(s=>String(s.sparePart?.sparePartId)===String(id)).reduce((a,s)=>a+Number(s.quantity||0),0);
+    function status(q,r){q=Number(q||0);r=Number(r||0);return q<=0?{k:'OUT',l:'Out of Stock',c:'out'}:q<=r?{k:'LOW',l:'Low Stock',c:'low'}:{k:'OK',l:'Available',c:'ok'}}
+    function dashboard(){
+      let low=0,out=0;D.parts.forEach(p=>{const t=total(p.sparePartId);if(t<=0)out++;else if(t<=Number(p.reorderLevel||0))low++});
+      $('mParts').textContent=D.parts.length;$('mStock').textContent=D.stocks.reduce((a,s)=>a+Number(s.quantity||0),0).toLocaleString();
+      $('mLow').textContent=low;$('mOut').textContent=out;$('mCat').textContent=D.categories.length;$('mBrand').textContent=D.brands.length;
+    }
+    function switchTab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.t===t));
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(t+'View').classList.add('active');render()}
+    const pill=a=>`<span class="pill ${a!==false?'active-p':'inactive'}">${a!==false?'Active':'Inactive'}</span>`;
+
+    function render(){
+      const q=$('q').value.trim().toLowerCase(),cat=$('fCat').value,st=$('fStock').value;let rows,html;
+      if(tab==='parts'){
+        rows=D.parts.filter(p=>{const s=status(total(p.sparePartId),p.reorderLevel);
+          return(!q||`${p.partCode} ${p.partName} ${p.category?.categoryName} ${p.brand?.brandName}`.toLowerCase().includes(q))&&(!cat||String(p.category?.categoryId)===cat)&&(!st||s.k===st)});
+        html=rows.map(p=>{const t=total(p.sparePartId),s=status(t,p.reorderLevel);
+          return `<tr><td><div class="nm">${esc(p.partCode)} · ${esc(p.partName)}</div><div class="sub">${esc(p.description||'No description')}</div></td>
+          <td>${esc(p.category?.categoryName||'—')}</td><td>${esc(p.brand?.brandName||'—')}</td><td><b>LKR ${money(p.unitPrice)}</b></td>
+          <td>${Number(p.reorderLevel||0)}</td><td><b>${t}</b></td><td><span class="pill ${s.c}">${s.l}</span></td><td>${pill(p.active)}</td>
+          <td><div class="row-act"><button class="btn btn-s btn-sm" onclick="openPart(${p.sparePartId})">Edit</button><button class="btn btn-d btn-sm" onclick="del('${API.parts}',${p.sparePartId},'spare part')">Delete</button></div></td></tr>`}).join('');
+      }else if(tab==='stocks'){
+        rows=D.stocks.filter(i=>{const p=i.sparePart||{},s=status(i.quantity,p.reorderLevel);
+          return(!q||`${p.partCode} ${p.partName} ${p.brand?.brandName} ${i.location?.locationName}`.toLowerCase().includes(q))&&(!cat||String(p.category?.categoryId)===cat)&&(!st||s.k===st)});
+        html=rows.map(i=>{const p=i.sparePart||{},l=i.location||{},s=status(i.quantity,p.reorderLevel);
+          return `<tr><td>#${esc(i.stockId)}</td><td><div class="nm">${esc(p.partCode||'—')} · ${esc(p.partName||'—')}</div><div class="sub">${esc(p.brand?.brandName||'')}</div></td>
+          <td>${esc(l.locationName||'—')}</td><td>${esc(l.locationType||'—')}</td><td><b>${Number(i.quantity||0)}</b></td><td>${Number(p.reorderLevel||0)}</td>
+          <td><span class="pill ${s.c}">${s.l}</span></td><td>${i.lastUpdated?new Date(i.lastUpdated).toLocaleString('en-LK'):'—'}</td></tr>`}).join('');
+      }else{
+        const type=tab==='categories'?'category':'brand',E=ENT[type];
+        rows=D[tab].filter(x=>!q||`${x[E.name]} ${x.description}`.toLowerCase().includes(q));
+        html=rows.map(x=>`<tr><td>#${x[E.id]}</td><td class="nm">${esc(x[E.name])}</td><td>${esc(x.description||'—')}</td><td>${pill(x.active)}</td>
+          <td><div class="row-act"><button class="btn btn-s btn-sm" onclick="openSimple('${type}',${x[E.id]})">Edit</button><button class="btn btn-d btn-sm" onclick="del('${E.url}',${x[E.id]},'${E.label.toLowerCase()}')">Delete</button></div></td></tr>`).join('');
+      }
+      $(tab+'Body').innerHTML=html;$(tab+'Empty').style.display=rows.length?'none':'block';
+    }
+
+    /* ---- Spare parts: create / update ---- */
+    function openPart(id){
+      editPartId=id||null;fillSelects();
+      const p=id?D.parts.find(x=>x.sparePartId===id):null;
+      $('partTitle').textContent=p?'Edit Spare Part':'Add Spare Part';
+      $('pCode').value=p?.partCode||'';$('pName').value=p?.partName||'';$('pCat').value=p?.category?.categoryId||'';
+      $('pBrand').value=p?.brand?.brandId||'';$('pPrice').value=p?.unitPrice??'';$('pReorder').value=p?.reorderLevel??0;
+      $('pDesc').value=p?.description||'';$('pActive').checked=p?p.active!==false:true;openM('partModal');
+    }
+    async function savePart(e){
+      e.preventDefault();
+      const b={partCode:$('pCode').value.trim(),partName:$('pName').value.trim(),description:$('pDesc').value.trim(),
+        categoryId:Number($('pCat').value),brandId:Number($('pBrand').value),unitPrice:Number($('pPrice').value),reorderLevel:Number($('pReorder').value),active:$('pActive').checked};
+      if(!b.partCode||!b.partName||!b.categoryId||!b.brandId||b.unitPrice<0||b.reorderLevel<0)return toast('Please complete all required fields correctly.','error');
+      try{await call(editPartId?`${API.parts}/${editPartId}`:API.parts,editPartId?'PUT':'POST',b);
+        closeM('partModal');toast(editPartId?'Spare part updated.':'Spare part created.','success');await loadAll()}catch(err){toast(err.message,'error')}
+    }
+
+    /* ---- Category / Brand: create / update ---- */
+    function openSimple(type,id){
+      const E=ENT[type],x=id?D[E.list].find(i=>i[E.id]===id):null;
+      simple={type,id:id||null};$('simpleTitle').textContent=(x?'Edit ':'Add ')+E.label;
+      $('sName').value=x?.[E.name]||'';$('sDesc').value=x?.description||'';$('sActive').checked=x?x.active!==false:true;openM('simpleModal');
+    }
+    async function saveSimple(e){
+      e.preventDefault();const E=ENT[simple.type];
+      const b={[E.name]:$('sName').value.trim(),description:$('sDesc').value.trim(),active:$('sActive').checked};
+      if(!b[E.name])return toast('Name is required.','error');
+      try{await call(simple.id?`${E.url}/${simple.id}`:E.url,simple.id?'PUT':'POST',b);
+        closeM('simpleModal');toast(`${E.label} ${simple.id?'updated':'created'}.`,'success');await loadAll()}catch(err){toast(err.message,'error')}
+    }
+
+    /* ---- Delete (parts, categories, brands) ---- */
+    async function del(url,id,label){
+      if(!confirm(`Delete this ${label}? This cannot be undone.`))return;
+      try{await call(`${url}/${id}`,'DELETE');toast(`${label[0].toUpperCase()+label.slice(1)} deleted.`,'success');await loadAll()}
+      catch(err){toast(err.message,'error')}
+    }
+
+    /* ---- Stock adjustment ---- */
+    function openAdjust(){fillSelects();$('aPart').value='';$('aLoc').value='';$('aQty').value='';preview();
+      if(!D.locations.length)toast('No locations could be loaded.','info');openM('adjustModal')}
+    function preview(){
+      const p=$('aPart').value,l=$('aLoc').value,c=Number($('aQty').value||0);
+      const r=D.stocks.find(s=>String(s.sparePart?.sparePartId)===p&&String(s.location?.locationId)===l),cur=Number(r?.quantity||0),n=cur+c;
+      $('aPrev').innerHTML=p&&l?`Current stock: <b>${cur}</b> → After adjustment: <b style="color:${n<0?'#b42323':'#126b3c'}">${n}</b>`:'Select a part and location.';
+    }
+    async function saveAdjust(e){
+      e.preventDefault();const q=Number($('aQty').value);
+      const b={sparePartId:Number($('aPart').value),locationId:Number($('aLoc').value),quantityChange:q};
+      if(!b.sparePartId||!b.locationId||!Number.isInteger(q)||q===0)return toast('Select a part and location, and enter a non-zero whole number.','error');
+      try{await call(API.adjust,'POST',b);closeM('adjustModal');toast('Stock adjusted.','success');await loadAll()}catch(err){toast(err.message,'error')}
+    }
+
+    function openM(id){$(id).classList.add('open')}
+    function closeM(id){$(id).classList.remove('open')}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'))});
+    function toast(m,t='info'){const b=$('toast');b.className=t;b.textContent=m;clearTimeout(timer);timer=setTimeout(()=>{b.className='';b.style.display='none'},4200);b.style.display='block'}
+</script>
+</body>
+</html>
