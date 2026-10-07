@@ -3,7 +3,7 @@ package com.lankatech.spareparts.inventory.repository;
 import com.lankatech.spareparts.inventory.entity.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.Optional;import java.util.List;
 
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
@@ -17,4 +17,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
             Long sparePartId,
             Long locationId
     );
+
+    List<Stock> findBySparePartSparePartId(Long sparePartId);
 }
