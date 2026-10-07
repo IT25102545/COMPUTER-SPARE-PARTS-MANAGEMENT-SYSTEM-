@@ -1,5 +1,5 @@
 package com.lankatech.spareparts.config;
-
+import org.springframework.http.HttpMethod;
 import com.lankatech.spareparts.auth.service.CustomUserDetailsService;
 
 import org.springframework.context.annotation.Bean;
@@ -113,16 +113,36 @@ public class SecurityConfig {
                         /*
                          * Everything else requires login.
                          */
-                        .requestMatchers("/customer/**")
+                        .requestMatchers("/customer/**", "/customer.html", "/customer-service")
                         .hasRole("CUSTOMER_SERVICE_OFFICER")
 
                         .requestMatchers("/api/customer/**")
                         .hasRole("CUSTOMER_SERVICE_OFFICER")
 
+
                         .requestMatchers("/inventory.html")
                         .hasRole("INVENTORY_SUPERVISOR")
 
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/inventory/parts",
+                                "/api/inventory/stocks"
+                        )
+                        .hasAnyRole(
+                                "BRANCH_SUPERVISOR",
+                                "INVENTORY_SUPERVISOR"
+                        )
+
+
                         .requestMatchers("/api/inventory/**")
+                        .hasRole("INVENTORY_SUPERVISOR")
+                        .requestMatchers("/sales.html", "/sales/**")
+                        .hasRole("SALES_OFFICER")
+
+                        .requestMatchers("/api/sales", "/api/sales/**")
+                        .hasRole("SALES_OFFICER")
+
+                        .requestMatchers("/inventory.html")
                         .hasRole("INVENTORY_SUPERVISOR")
 
                         .anyRequest().authenticated()
@@ -136,11 +156,11 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception
 
                         .authenticationEntryPoint((request, response, authException) ->
-                                response.sendRedirect("/?loginRequired=true")
+                                { if (request.getRequestURI().startsWith(request.getContextPath() + "/api/")) response.sendError(401); else response.sendRedirect("/?loginRequired=true"); }
                         )
 
                         .accessDeniedHandler((request, response, accessDeniedException) ->
-                                response.sendRedirect("/?accessDenied=true")
+                                { if (request.getRequestURI().startsWith(request.getContextPath() + "/api/")) response.sendError(403); else response.sendRedirect("/?accessDenied=true"); }
                         )
                 )
                 .formLogin(form -> form

@@ -11,5 +11,7 @@ public class Reservation {
     @Column(nullable=false) private Integer quantity;
     @Column(nullable=false,length=30) private String status;
     @Column(name="reserved_at") private LocalDateTime reservedAt;
-    @PrePersist public void onCreate(){if(status==null)status="ACTIVE";if(reservedAt==null)reservedAt=LocalDateTime.now();}
+    // Null identifies older rows whose stock was never deducted by this workflow.
+    @Column(name="stock_deducted") private Boolean stockDeducted = false;
+    @PrePersist public void onCreate(){if(status==null)status="PENDING";if(reservedAt==null)reservedAt=LocalDateTime.now();}
 }
