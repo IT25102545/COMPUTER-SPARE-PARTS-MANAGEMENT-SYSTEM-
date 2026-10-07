@@ -53,12 +53,23 @@ public class SupplierPurchaseService {
     }
 
     public Supplier createSupplier(Supplier supplier) {
+        if (supplier.getSupplierName() == null || supplier.getSupplierName().isBlank()) {
+            throw new IllegalArgumentException("Supplier name is required");
+        }
         supplier.setSupplierId(null);
         return supplierRepository.save(supplier);
     }
 
     public List<PurchaseOrder> getOrders() {
         return poRepository.findAll();
+    }
+
+    public List<Location> getLocations() {
+        return locationRepository.findAll();
+    }
+
+    public List<SparePart> getParts() {
+        return sparePartRepository.findAll();
     }
 
     public PurchaseOrder createOrder(PurchaseOrderRequestDTO request) {
@@ -123,6 +134,18 @@ public class SupplierPurchaseService {
         }
 
         purchaseOrder.setStatus(PurchaseOrderStatus.RECEIVED);
+        return poRepository.save(purchaseOrder);
+    }
+
+    public PurchaseOrder cancel(Long id) {
+        PurchaseOrder purchaseOrder = poRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("PO not found"));
+
+        if (purchaseOrder.getStatus() != PurchaseOrderStatus.ORDERED) {
+            throw new IllegalStateException("Only ordered PO can be cancelled");
+        }
+
+        purchaseOrder.setStatus(PurchaseOrderStatus.CANCELLED);
         return poRepository.save(purchaseOrder);
     }
 }

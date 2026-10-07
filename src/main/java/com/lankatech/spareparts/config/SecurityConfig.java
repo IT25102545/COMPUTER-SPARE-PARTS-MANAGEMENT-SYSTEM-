@@ -142,6 +142,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/sales", "/api/sales/**")
                         .hasRole("SALES_OFFICER")
 
+                        .requestMatchers(
+                                "/supplier-purchase.html",
+                                "/supplier/**"
+                        )
+                        .hasRole("SUPPLIER_RELATIONS_OFFICER")
+
+                        .requestMatchers("/api/supplier/**")
+                        .hasRole("SUPPLIER_RELATIONS_OFFICER")
+
                         .requestMatchers("/inventory.html")
                         .hasRole("INVENTORY_SUPERVISOR")
 

@@ -1,5 +1,7 @@
 package com.lankatech.spareparts.supplier.controller;
 
+import com.lankatech.spareparts.common.entity.Location;
+import com.lankatech.spareparts.inventory.entity.SparePart;
 import com.lankatech.spareparts.supplier.dto.PurchaseOrderRequestDTO;
 import com.lankatech.spareparts.supplier.entity.PurchaseOrder;
 import com.lankatech.spareparts.supplier.entity.Supplier;
@@ -31,6 +33,16 @@ public class SupplierController {
         return service.createSupplier(supplier);
     }
 
+    @GetMapping("/locations")
+    public List<Location> locations() {
+        return service.getLocations();
+    }
+
+    @GetMapping("/parts")
+    public List<SparePart> parts() {
+        return service.getParts();
+    }
+
     @GetMapping("/purchase-orders")
     public List<PurchaseOrder> orders() {
         return service.getOrders();
@@ -45,5 +57,10 @@ public class SupplierController {
     @PutMapping("/purchase-orders/{id}/receive")
     public PurchaseOrder receive(@PathVariable Long id) {
         return service.receive(id);
+    }
+
+    @PutMapping("/purchase-orders/{id}/cancel")
+    public PurchaseOrder cancel(@PathVariable Long id) {
+        return service.cancel(id);
     }
 }
