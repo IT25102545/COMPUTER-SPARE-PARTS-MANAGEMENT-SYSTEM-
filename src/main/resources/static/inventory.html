@@ -5,736 +5,292 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory & Stock Management | Lanka Tech Components</title>
     <style>
-        :root{
-            --navy:#0b2a4a;
-            --navy-2:#113b66;
-            --blue:#0d6efd;
-            --blue-2:#0a63c8;
-            --cyan:#3aa0ff;
-            --bg:#f4f8fc;
-            --surface:#ffffff;
-            --line:#dce7f2;
-            --text:#102a43;
-            --muted:#5f7388;
-            --green:#168a4b;
-            --amber:#b7791f;
-            --red:#c83232;
-            --slate:#64748b;
-            --shadow:0 10px 28px rgba(12,43,75,.08);
-            --shadow-hover:0 16px 38px rgba(12,43,75,.13);
-        }
-
+        :root{--navy:#0b2a4a;--blue:#0d6efd;--bg:#f4f8fc;--line:#dce7f2;--text:#102a43;--shadow:0 10px 28px rgba(12,43,75,.08)}
         *{box-sizing:border-box}
-        html{scroll-behavior:smooth}
-        body{
-            margin:0;
-            font-family:Inter,Segoe UI,Arial,sans-serif;
-            color:var(--text);
-            background:
-                radial-gradient(circle at 8% 0%, rgba(13,110,253,.06), transparent 26%),
-                linear-gradient(180deg,#f8fbff 0,#f4f8fc 240px,#f4f8fc 100%);
-        }
-        button,input,select,textarea{font:inherit}
-        button{cursor:pointer}
-        a{text-decoration:none;color:inherit}
-
-        /* ===== SHARED PROJECT HEADER ===== */
-        .site-header{
-            position:sticky;
-            top:0;
-            z-index:1000;
-            background:rgba(255,255,255,.97);
-            border-bottom:1px solid rgba(15,51,91,.08);
-            box-shadow:0 5px 18px rgba(15,51,91,.05);
-            backdrop-filter:blur(14px);
-        }
-        .site-header-inner{
-            width:min(1500px,calc(100% - 56px));
-            min-height:76px;
-            margin:auto;
-            display:grid;
-            grid-template-columns:minmax(290px,1fr) auto minmax(290px,1fr);
-            align-items:center;
-            gap:24px;
-        }
-        .site-brand{display:flex;align-items:center;gap:12px;min-width:0}
-        .brand-mark{
-            width:43px;height:43px;border-radius:12px;
-            display:grid;place-items:center;
-            background:linear-gradient(145deg,#eaf4ff,#fff);
-            border:1px solid #cfe1f4;
-            box-shadow:0 8px 20px rgba(13,110,253,.10);
-            flex:none;
-        }
-        .brand-mark svg{width:31px;height:31px}
-        .site-brand-name{font-size:15px;font-weight:800;color:var(--navy);letter-spacing:-.01em}
-        .site-brand-sub{font-size:11px;color:#607a95;margin-top:3px}
-        .site-nav-links{display:flex;align-items:center;gap:22px;font-size:13px;font-weight:700;color:#315473}
-        .site-nav-links a{padding:27px 0 24px;border-bottom:3px solid transparent}
-        .site-nav-links a:hover,.site-nav-links a.active{color:var(--blue);border-bottom-color:var(--blue)}
-        .site-nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px}
-        .site-user-area{display:flex;align-items:center;gap:12px}
-        .site-user-info{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:11px;background:#f6f9fc}
-        .site-user-info div div{font-size:12px;font-weight:800;color:var(--navy)}
-        .site-user-info small{font-size:10px;color:#67809a}
-        .site-login-btn,.site-ghost-btn{
-            border:0;border-radius:10px;padding:9px 14px;font-weight:750;font-size:12px;
-        }
-        .site-login-btn{background:var(--navy);color:#fff}
-        .site-ghost-btn{background:#eef5fc;color:var(--navy)}
-        .site-menu-btn{display:none;border:0;background:#eef5fc;border-radius:10px;padding:9px 11px;color:var(--navy)}
-
-        .site-module-strip{background:#fff;border-bottom:1px solid #e6eef7}
-        .site-module-strip-inner{
-            width:min(1500px,calc(100% - 56px));margin:auto;min-height:50px;
-            display:flex;align-items:center;justify-content:space-between;gap:20px;
-        }
-        .site-breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#6b8096}
-        .site-breadcrumb a:hover{color:var(--blue)}
-        .site-current-module{
-            display:inline-flex;align-items:center;gap:9px;padding:8px 13px;border-radius:10px;
-            color:#fff;background:linear-gradient(135deg,#0a5fb7,var(--blue));
-            box-shadow:0 7px 18px rgba(13,110,253,.16);font-size:12px;font-weight:800;
-        }
-
-        /* ===== PAGE ===== */
-        .container{width:min(1500px,calc(100% - 56px));margin:30px auto 42px}
-        .page-header{
-            display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:24px;
-        }
-        .eyebrow{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--blue);margin-bottom:7px}
-        .page-header h1{margin:0;color:var(--navy);font-size:clamp(28px,3vw,38px);letter-spacing:-.025em}
-        .page-header p{margin:7px 0 0;color:#4f6b86;font-size:14px;max-width:760px;line-height:1.6}
-        .header-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
-
-        .btn{
-            border:0;border-radius:10px;padding:10px 15px;font-weight:750;font-size:12px;
-            transition:transform .17s ease,box-shadow .17s ease,opacity .17s ease;
-        }
-        .btn:hover{transform:translateY(-1px)}
-        .btn-primary{background:linear-gradient(135deg,var(--blue-2),var(--blue));color:#fff;box-shadow:0 8px 20px rgba(13,110,253,.18)}
-        .btn-secondary{background:#eaf2fb;color:var(--navy)}
-        .btn-success{background:#168a4b;color:#fff}
-        .btn-danger{background:#c83232;color:#fff}
-        .btn-dark{background:var(--navy);color:#fff}
-        .btn-sm{padding:7px 10px;font-size:11px;border-radius:8px}
-
-        /* ===== METRICS ===== */
-        .metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:15px;margin-bottom:25px}
-        .metric{
-            position:relative;overflow:hidden;background:rgba(255,255,255,.98);
-            border:1px solid #e6eef7;border-left:4px solid var(--blue);
-            border-radius:15px;padding:18px;box-shadow:var(--shadow);min-height:128px;
-        }
-        .metric::after{content:"";position:absolute;width:70px;height:70px;right:-25px;top:-25px;border-radius:50%;background:rgba(13,110,253,.035)}
-        .metric-label{font-size:11px;font-weight:800;color:#617991;margin-bottom:12px}
-        .metric-value{font-size:29px;font-weight:850;color:var(--navy);line-height:1}
-        .metric-note{font-size:10.5px;color:#73879b;margin-top:8px}
-        .metric.stock{border-left-color:#168a4b}
-        .metric.low{border-left-color:#f59e0b}
-        .metric.out{border-left-color:#dc3545}
-        .metric.category{border-left-color:#7c3aed}
-        .metric.brand{border-left-color:#0284c7}
-
-        /* ===== TOOLBAR / TABS ===== */
-        .panel{
-            background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:24px;overflow:hidden;
-        }
-        .panel-head{
-            display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;border-bottom:1px solid #edf3f8;
-        }
-        .panel-title h2{margin:0;color:var(--navy);font-size:20px;letter-spacing:-.015em}
-        .panel-title p{margin:5px 0 0;color:#71859a;font-size:11px}
-        .panel-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
-        .input,.select,.textarea{
-            width:100%;border:1px solid #cedbea;border-radius:10px;background:#fff;color:#102a43;
-            padding:10px 11px;outline:none;transition:border-color .18s ease,box-shadow .18s ease;
-        }
-        .input:focus,.select:focus,.textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(13,110,253,.09)}
-        .search{min-width:225px}
-        .filter{min-width:155px}
-        .tabs{display:flex;gap:7px;padding:14px 22px 0;background:#fbfdff}
-        .tab{
-            border:1px solid #dfe9f4;background:#f3f7fb;color:#486782;border-radius:10px 10px 0 0;
-            padding:9px 13px;font-size:11px;font-weight:800;
-        }
-        .tab.active{background:#fff;color:var(--blue);border-bottom-color:#fff}
-        .tab-view{display:none}
-        .tab-view.active{display:block}
-
-        /* ===== TABLE ===== */
-        .table-wrap{overflow:auto;padding:0 22px 20px}
-        table{width:100%;border-collapse:separate;border-spacing:0;min-width:900px}
-        th{background:#eef6ff;color:var(--navy);font-size:11px;font-weight:800;text-align:left;padding:12px;border-top:1px solid #e3edf8;border-bottom:1px solid #dce7f3;white-space:nowrap}
-        td{padding:12px;border-bottom:1px solid #edf2f7;font-size:12px;color:#20384f;background:#fff;vertical-align:middle}
-        tbody tr:hover td{background:#f8fbff}
-        .part-name{font-weight:800;color:var(--navy)}
-        .subtext{font-size:10px;color:#7a8ea2;margin-top:3px}
-        .money{font-weight:800;color:#173d63}
-        .pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:800}
-        .pill.ok{background:#e4f7ec;color:#157a42}
-        .pill.low{background:#fff2d9;color:#9a640e}
-        .pill.out{background:#fde7e7;color:#b42323}
-        .pill.active{background:#e5f0ff;color:#1b5fad}
-        .pill.inactive{background:#eef1f4;color:#66788b}
-        .qty-positive{color:#148044;font-weight:800}
-        .qty-zero{color:#b42323;font-weight:800}
-        .empty{padding:38px 18px;text-align:center;color:#73879a;font-size:12px}
-
-        /* ===== FORMS / MODALS ===== */
-        .modal{
-            position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;
-            padding:24px;background:rgba(4,22,43,.62);backdrop-filter:blur(4px);
-        }
+        body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);background:var(--bg)}
+        button{font:inherit;cursor:pointer}a{text-decoration:none;color:inherit}
+        .hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100}
+        .hdr-in,.container{width:min(1500px,calc(100% - 40px));margin:auto}
+        .hdr-in{display:flex;justify-content:space-between;align-items:center;min-height:68px;gap:16px}
+        .brand b{display:block;color:var(--navy);font-size:15px}.brand small{color:#607a95;font-size:11px}
+        .user{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;color:var(--navy)}
+        .container{margin:26px auto 40px}
+        .page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+        .eyebrow{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--blue)}
+        h1{margin:6px 0 0;color:var(--navy);font-size:32px}
+        .actions{display:flex;gap:9px;flex-wrap:wrap}
+        .btn{border:0;border-radius:10px;padding:10px 15px;font-weight:750;font-size:12px}
+        .btn-p{background:var(--blue);color:#fff}.btn-s{background:#eaf2fb;color:var(--navy)}.btn-g{background:#168a4b;color:#fff}
+        .btn-d{background:#c83232;color:#fff}.btn-k{background:var(--navy);color:#fff}.btn-sm{padding:6px 10px;font-size:11px;border-radius:8px}
+        .metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:22px}
+        .metric{background:#fff;border:1px solid #e6eef7;border-left:4px solid var(--blue);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+        .metric small{font-size:11px;font-weight:800;color:#617991}.metric div{font-size:28px;font-weight:850;color:var(--navy);margin-top:8px}
+        .m2{border-left-color:#168a4b}.m3{border-left-color:#f59e0b}.m4{border-left-color:#dc3545}.m5{border-left-color:#7c3aed}.m6{border-left-color:#0284c7}
+        .panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+        .panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 22px;border-bottom:1px solid #edf3f8}
+        .panel-head h2{margin:0;color:var(--navy);font-size:20px}
+        .tools{display:flex;gap:9px;flex-wrap:wrap}
+        .input,.select,.textarea{width:100%;border:1px solid #cedbea;border-radius:10px;padding:10px 11px;font:inherit;outline:none}
+        .input:focus,.select:focus,.textarea:focus{border-color:var(--blue)}
+        .tools .input{min-width:220px}.tools .select{min-width:150px;width:auto}
+        .tabs{display:flex;gap:7px;padding:14px 22px 0;background:#fbfdff;flex-wrap:wrap}
+        .tab{border:1px solid #dfe9f4;background:#f3f7fb;color:#486782;border-radius:10px 10px 0 0;padding:9px 14px;font-size:11px;font-weight:800}
+        .tab.active{background:#fff;color:var(--blue)}
+        .view{display:none;overflow:auto;padding:0 22px 20px}.view.active{display:block}
+        table{width:100%;border-collapse:collapse;min-width:900px}
+        th{background:#eef6ff;color:var(--navy);font-size:11px;text-align:left;padding:12px;white-space:nowrap}
+        td{padding:12px;border-bottom:1px solid #edf2f7;font-size:12px;vertical-align:middle}
+        tr:hover td{background:#f8fbff}
+        .nm{font-weight:800;color:var(--navy)}.sub{font-size:10px;color:#7a8ea2;margin-top:3px}
+        .pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:800}
+        .ok,.active-p{background:#e4f7ec;color:#157a42}.low{background:#fff2d9;color:#9a640e}.out{background:#fde7e7;color:#b42323}.inactive{background:#eef1f4;color:#66788b}
+        .row-act{display:flex;gap:6px}
+        .empty{padding:34px;text-align:center;color:#73879a;font-size:12px;display:none}
+        .modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,22,43,.6)}
         .modal.open{display:flex}
-        .modal-card{
-            width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:17px;
-            box-shadow:0 28px 70px rgba(4,22,43,.25);border:1px solid rgba(255,255,255,.45);
-        }
-        .modal-card.small{width:min(520px,100%)}
-        .modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:20px 22px;border-bottom:1px solid #edf2f7;background:linear-gradient(180deg,#f9fcff,#fff)}
-        .modal-head h3{margin:0;color:var(--navy);font-size:20px}
-        .modal-head p{margin:5px 0 0;color:#6b8095;font-size:11px}
-        .modal-close{border:0;background:#eef4fa;color:var(--navy);width:32px;height:32px;border-radius:9px;font-size:20px;line-height:1}
-        .modal-body{padding:22px}
-        .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
-        .form-group.full{grid-column:1/-1}
-        .form-group label{display:block;margin-bottom:6px;color:#193955;font-size:11px;font-weight:800}
-        .field-note{font-size:10px;color:#7b8fa3;margin-top:5px;line-height:1.4}
-        .modal-actions{display:flex;justify-content:flex-end;gap:9px;padding:17px 22px;border-top:1px solid #edf2f7;background:#fbfdff}
-        .adjust-preview{margin-top:12px;padding:11px 12px;border-radius:10px;background:#f3f8fd;color:#46647f;font-size:11px}
-
-        /* ===== MESSAGES ===== */
-        #messageBox{
-            display:none;position:fixed;top:95px;right:25px;z-index:3000;min-width:300px;max-width:440px;
-            padding:14px 17px;border-radius:12px;box-shadow:0 18px 42px rgba(6,34,61,.18);font-size:12px;font-weight:700;
-        }
-        #messageBox.success{display:block;background:#e7f7ee;color:#126b3c;border:1px solid #bce7cf}
-        #messageBox.error{display:block;background:#fdeaea;color:#a62626;border:1px solid #f3c4c4}
-        #messageBox.info{display:block;background:#eaf3ff;color:#155eaa;border:1px solid #c7ddfa}
+        .card{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px}
+        .card.sm{width:min(500px,100%)}
+        .mh{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #edf2f7}
+        .mh h3{margin:0;color:var(--navy)}
+        .x{border:0;background:#eef4fa;width:32px;height:32px;border-radius:9px;font-size:20px}
+        .mb{padding:22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}
+        label{display:block;margin-bottom:6px;font-size:11px;font-weight:800;color:#193955}
+        .chk{display:flex;align-items:center;gap:8px}.chk input{width:auto}
+        .ma{display:flex;justify-content:flex-end;gap:9px;padding:16px 22px;border-top:1px solid #edf2f7}
+        .prev{margin-top:12px;padding:11px;border-radius:10px;background:#f3f8fd;font-size:11px}
+        #toast{display:none;position:fixed;top:80px;right:22px;z-index:300;max-width:420px;padding:14px 17px;border-radius:12px;font-size:12px;font-weight:700;box-shadow:0 18px 42px rgba(6,34,61,.18)}
+        #toast.success{display:block;background:#e7f7ee;color:#126b3c}#toast.error{display:block;background:#fdeaea;color:#a62626}#toast.info{display:block;background:#eaf3ff;color:#155eaa}
         .loading{opacity:.55;pointer-events:none}
-
-        footer{padding:22px;text-align:center;color:#6e8296;font-size:11px}
-
-        @media(max-width:1200px){
-            .metrics{grid-template-columns:repeat(3,1fr)}
-            .site-header-inner{grid-template-columns:1fr auto}.site-nav-links{display:none}
-        }
-        @media(max-width:760px){
-            .site-header-inner,.site-module-strip-inner,.container{width:min(100% - 28px,1500px)}
-            .site-user-info{display:none}.site-menu-btn{display:block}
-            .site-module-strip-inner{align-items:flex-start;flex-direction:column;padding:10px 0}.site-current-module{align-self:flex-start}
-            .page-header{align-items:flex-start;flex-direction:column}.header-actions{justify-content:flex-start}
-            .metrics{grid-template-columns:repeat(2,1fr)}
-            .panel-head{align-items:flex-start;flex-direction:column}.panel-tools{justify-content:flex-start;width:100%}.search,.filter{min-width:0;flex:1}
-            .form-grid{grid-template-columns:1fr}
-            .form-group.full{grid-column:auto}
-        }
-        @media(max-width:480px){.metrics{grid-template-columns:1fr}.site-user-area form{display:none}}
+        @media(max-width:1100px){.metrics{grid-template-columns:repeat(3,1fr)}}
+        @media(max-width:600px){.metrics{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
-<header class="site-header">
-    <div class="site-header-inner">
-        <a class="site-brand" href="/">
-            <div class="brand-mark" aria-hidden="true">
-                <svg viewBox="0 0 64 64" fill="none">
-                    <path d="M32 5 54 17v30L32 59 10 47V17L32 5Z" stroke="#0D6EFD" stroke-width="4"/>
-                    <path d="M11 18 32 31l21-13M32 31v27" stroke="#0D6EFD" stroke-width="4"/>
-                    <path d="m20 13 22 13" stroke="#65A9F7" stroke-width="4"/>
-                </svg>
-            </div>
-            <div>
-                <div class="site-brand-name">Lanka Tech Components (Pvt) Ltd</div>
-                <div class="site-brand-sub">Computer Spare Parts Management System</div>
-            </div>
-        </a>
+<header class="hdr"><div class="hdr-in">
+    <a class="brand" href="/"><b>Lanka Tech Components (Pvt) Ltd</b><small>Computer Spare Parts Management System</small></a>
+    <div class="user"><span>👤 <span id="userName">Loading...</span> <small id="userRole"></small></span>
+        <form action="/logout" method="post"><button class="btn btn-k" type="submit">Logout</button></form></div>
+</div></header>
 
-        <nav class="site-nav-links">
-            <a href="/">Home</a>
-            <a href="/#about">About Us</a>
-            <a class="active" href="/#modules">Modules</a>
-            <a href="/#contact">Contact</a>
-        </nav>
-
-        <div class="site-nav-actions">
-            <div class="site-user-area">
-                <div class="site-user-info">
-                    <span aria-hidden="true">👤</span>
-                    <div>
-                        <div id="siteUserName">Loading...</div>
-                        <small id="siteUserRole"></small>
-                    </div>
-                </div>
-                <form action="/logout" method="post">
-                    <button class="site-login-btn" type="submit">Logout</button>
-                </form>
-            </div>
-            <button class="site-menu-btn" type="button" onclick="window.location.href='/'">⌂</button>
+<main class="container" id="main">
+    <div class="page-head">
+        <div><div class="eyebrow">Inventory Operations</div><h1>Inventory & Stock Management</h1></div>
+        <div class="actions">
+            <button class="btn btn-s" onclick="openSimple('category')">+ Category</button>
+            <button class="btn btn-s" onclick="openSimple('brand')">+ Brand</button>
+            <button class="btn btn-g" onclick="openAdjust()">± Adjust Stock</button>
+            <button class="btn btn-p" onclick="openPart()">+ Add Spare Part</button>
         </div>
     </div>
-</header>
-
-<div class="site-module-strip">
-    <div class="site-module-strip-inner">
-        <div class="site-breadcrumb">
-            <a href="/">Home</a><span>›</span><a href="/#modules">Modules</a><span>›</span><span>Inventory & Stock Management</span>
-        </div>
-        <div class="site-current-module"><span>▣</span><span>Inventory & Stock Management</span></div>
-    </div>
-</div>
-
-<main class="container" id="mainContent">
-    <div class="page-header">
-        <div>
-            <div class="eyebrow">Inventory Operations</div>
-            <h1>Inventory & Stock Management</h1>
-            <p>Maintain spare-part master data, categories and brands, monitor stock levels by location, and record stock adjustments using the Inventory Management API.</p>
-        </div>
-        <div class="header-actions">
-            <button class="btn btn-secondary" onclick="openModal('categoryModal')">+ Category</button>
-            <button class="btn btn-secondary" onclick="openModal('brandModal')">+ Brand</button>
-            <button class="btn btn-success" onclick="prepareAdjustModal()">± Adjust Stock</button>
-            <button class="btn btn-primary" onclick="preparePartModal()">+ Add Spare Part</button>
-        </div>
-    </div>
-
-    <div id="messageBox"></div>
+    <div id="toast"></div>
 
     <section class="metrics">
-        <div class="metric"><div class="metric-label">TOTAL SPARE PARTS</div><div class="metric-value" id="totalParts">0</div><div class="metric-note">Registered inventory items</div></div>
-        <div class="metric stock"><div class="metric-label">TOTAL STOCK UNITS</div><div class="metric-value" id="totalStock">0</div><div class="metric-note">Across all locations</div></div>
-        <div class="metric low"><div class="metric-label">LOW STOCK ITEMS</div><div class="metric-value" id="lowStockCount">0</div><div class="metric-note">At or below reorder level</div></div>
-        <div class="metric out"><div class="metric-label">OUT OF STOCK</div><div class="metric-value" id="outStockCount">0</div><div class="metric-note">No available units</div></div>
-        <div class="metric category"><div class="metric-label">CATEGORIES</div><div class="metric-value" id="categoryCount">0</div><div class="metric-note">Active classification records</div></div>
-        <div class="metric brand"><div class="metric-label">BRANDS</div><div class="metric-value" id="brandCount">0</div><div class="metric-note">Registered manufacturers</div></div>
+        <div class="metric"><small>TOTAL SPARE PARTS</small><div id="mParts">0</div></div>
+        <div class="metric m2"><small>TOTAL STOCK UNITS</small><div id="mStock">0</div></div>
+        <div class="metric m3"><small>LOW STOCK</small><div id="mLow">0</div></div>
+        <div class="metric m4"><small>OUT OF STOCK</small><div id="mOut">0</div></div>
+        <div class="metric m5"><small>CATEGORIES</small><div id="mCat">0</div></div>
+        <div class="metric m6"><small>BRANDS</small><div id="mBrand">0</div></div>
     </section>
 
     <section class="panel">
-        <div class="panel-head">
-            <div class="panel-title">
-                <h2>Inventory Register</h2>
-                <p>Search parts and review stock quantities by location.</p>
-            </div>
-            <div class="panel-tools">
-                <input class="input search" id="searchInput" type="search" placeholder="Search code, name, brand..." oninput="renderActiveTab()">
-                <select class="select filter" id="categoryFilter" onchange="renderActiveTab()"><option value="">All categories</option></select>
-                <select class="select filter" id="stockFilter" onchange="renderActiveTab()">
-                    <option value="">All stock levels</option>
-                    <option value="OK">Available</option>
-                    <option value="LOW">Low stock</option>
-                    <option value="OUT">Out of stock</option>
-                </select>
-                <button class="btn btn-dark" onclick="loadAllData()">Refresh</button>
-            </div>
+        <div class="panel-head"><h2>Inventory Register</h2>
+            <div class="tools">
+                <input class="input" id="q" type="search" placeholder="Search..." oninput="render()">
+                <select class="select" id="fCat" onchange="render()"><option value="">All categories</option></select>
+                <select class="select" id="fStock" onchange="render()"><option value="">All stock levels</option><option value="OK">Available</option><option value="LOW">Low stock</option><option value="OUT">Out of stock</option></select>
+                <button class="btn btn-k" onclick="loadAll()">Refresh</button>
+            </div></div>
+        <div class="tabs" id="tabs">
+            <button class="tab active" data-t="parts">Spare Parts</button>
+            <button class="tab" data-t="stocks">Stock by Location</button>
+            <button class="tab" data-t="categories">Categories</button>
+            <button class="tab" data-t="brands">Brands</button>
         </div>
-
-        <div class="tabs">
-            <button class="tab active" id="partsTabBtn" onclick="switchTab('parts')">Spare Parts</button>
-            <button class="tab" id="stocksTabBtn" onclick="switchTab('stocks')">Stock by Location</button>
-        </div>
-
-        <div class="tab-view active" id="partsView">
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Part</th><th>Category</th><th>Brand</th><th>Unit Price</th><th>Reorder Level</th><th>Total Stock</th><th>Status</th><th>Active</th></tr></thead>
-                    <tbody id="partsTableBody"></tbody>
-                </table>
-                <div class="empty" id="partsEmpty" style="display:none">No spare parts match the current filters.</div>
-            </div>
-        </div>
-
-        <div class="tab-view" id="stocksView">
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Stock ID</th><th>Part</th><th>Location</th><th>Location Type</th><th>Quantity</th><th>Reorder Level</th><th>Status</th><th>Last Updated</th></tr></thead>
-                    <tbody id="stocksTableBody"></tbody>
-                </table>
-                <div class="empty" id="stocksEmpty" style="display:none">No stock records match the current filters.</div>
-            </div>
-        </div>
+        <div class="view active" id="partsView"><table><thead><tr><th>Part</th><th>Category</th><th>Brand</th><th>Unit Price</th><th>Reorder</th><th>Total Stock</th><th>Status</th><th>Active</th><th>Actions</th></tr></thead><tbody id="partsBody"></tbody></table><div class="empty" id="partsEmpty">No spare parts found.</div></div>
+        <div class="view" id="stocksView"><table><thead><tr><th>ID</th><th>Part</th><th>Location</th><th>Type</th><th>Qty</th><th>Reorder</th><th>Status</th><th>Updated</th></tr></thead><tbody id="stocksBody"></tbody></table><div class="empty" id="stocksEmpty">No stock records found.</div></div>
+        <div class="view" id="categoriesView"><table><thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Active</th><th>Actions</th></tr></thead><tbody id="categoriesBody"></tbody></table><div class="empty" id="categoriesEmpty">No categories found.</div></div>
+        <div class="view" id="brandsView"><table><thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Active</th><th>Actions</th></tr></thead><tbody id="brandsBody"></tbody></table><div class="empty" id="brandsEmpty">No brands found.</div></div>
     </section>
 </main>
 
-<!-- Add Spare Part -->
-<div class="modal" id="partModal">
-    <div class="modal-card">
-        <div class="modal-head">
-            <div><h3>Add Spare Part</h3><p>Create a new spare-part master record. Stock can be added afterward using Adjust Stock.</p></div>
-            <button class="modal-close" onclick="closeModal('partModal')">×</button>
-        </div>
-        <form id="partForm" onsubmit="submitPart(event)">
-            <div class="modal-body">
-                <div class="form-grid">
-                    <div class="form-group"><label for="partCode">Part Code *</label><input class="input" id="partCode" maxlength="50" required placeholder="e.g. CPU-I5-12400"></div>
-                    <div class="form-group"><label for="partName">Part Name *</label><input class="input" id="partName" maxlength="150" required placeholder="e.g. Intel Core i5-12400"></div>
-                    <div class="form-group"><label for="partCategory">Category *</label><select class="select" id="partCategory" required></select></div>
-                    <div class="form-group"><label for="partBrand">Brand *</label><select class="select" id="partBrand" required></select></div>
-                    <div class="form-group"><label for="unitPrice">Unit Price (LKR) *</label><input class="input" id="unitPrice" type="number" min="0" step="0.01" required placeholder="0.00"></div>
-                    <div class="form-group"><label for="reorderLevel">Reorder Level *</label><input class="input" id="reorderLevel" type="number" min="0" step="1" required value="0"></div>
-                    <div class="form-group full"><label for="partDescription">Description</label><textarea class="textarea" id="partDescription" rows="3" maxlength="500" placeholder="Optional part description"></textarea></div>
-                </div>
-            </div>
-            <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeModal('partModal')">Cancel</button><button class="btn btn-primary" type="submit">Save Spare Part</button></div>
-        </form>
-    </div>
-</div>
+<!-- Part modal (create + edit) -->
+<div class="modal" id="partModal"><div class="card">
+    <div class="mh"><h3 id="partTitle">Add Spare Part</h3><button class="x" onclick="closeM('partModal')">×</button></div>
+    <form onsubmit="savePart(event)"><div class="mb"><div class="grid">
+        <div><label>Part Code *</label><input class="input" id="pCode" maxlength="50" required></div>
+        <div><label>Part Name *</label><input class="input" id="pName" maxlength="150" required></div>
+        <div><label>Category *</label><select class="select" id="pCat" required></select></div>
+        <div><label>Brand *</label><select class="select" id="pBrand" required></select></div>
+        <div><label>Unit Price (LKR) *</label><input class="input" id="pPrice" type="number" min="0" step="0.01" required></div>
+        <div><label>Reorder Level *</label><input class="input" id="pReorder" type="number" min="0" step="1" required value="0"></div>
+        <div class="full"><label>Description</label><textarea class="textarea" id="pDesc" rows="3" maxlength="500"></textarea></div>
+        <div class="full chk"><input type="checkbox" id="pActive" checked><label style="margin:0" for="pActive">Active</label></div>
+    </div></div>
+        <div class="ma"><button type="button" class="btn btn-s" onclick="closeM('partModal')">Cancel</button><button class="btn btn-p" type="submit">Save</button></div></form>
+</div></div>
 
-<!-- Adjust Stock -->
-<div class="modal" id="adjustModal">
-    <div class="modal-card small">
-        <div class="modal-head">
-            <div><h3>Adjust Stock</h3><p>Add or reduce stock for a selected spare part and location.</p></div>
-            <button class="modal-close" onclick="closeModal('adjustModal')">×</button>
-        </div>
-        <form id="adjustForm" onsubmit="submitAdjustment(event)">
-            <div class="modal-body">
-                <div class="form-grid">
-                    <div class="form-group full"><label for="adjustPart">Spare Part *</label><select class="select" id="adjustPart" required onchange="updateAdjustmentPreview()"></select></div>
-                    <div class="form-group full"><label for="adjustLocation">Location *</label><select class="select" id="adjustLocation" required onchange="updateAdjustmentPreview()"></select></div>
-                    <div class="form-group full"><label for="quantityChange">Quantity Change *</label><input class="input" id="quantityChange" type="number" step="1" required placeholder="Use +10 to add or -5 to reduce" oninput="updateAdjustmentPreview()"><div class="field-note">Positive value adds stock. Negative value reduces stock. The backend prevents negative final stock.</div></div>
-                </div>
-                <div class="adjust-preview" id="adjustPreview">Select a part and location to view the current stock.</div>
-            </div>
-            <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeModal('adjustModal')">Cancel</button><button class="btn btn-success" type="submit">Save Adjustment</button></div>
-        </form>
+<!-- Category / Brand modal (create + edit) -->
+<div class="modal" id="simpleModal"><div class="card sm">
+    <div class="mh"><h3 id="simpleTitle">Add</h3><button class="x" onclick="closeM('simpleModal')">×</button></div>
+    <form onsubmit="saveSimple(event)"><div class="mb">
+        <label>Name *</label><input class="input" id="sName" maxlength="100" required>
+        <label style="margin-top:14px">Description</label><textarea class="textarea" id="sDesc" rows="3" maxlength="255"></textarea>
+        <div class="chk" style="margin-top:14px"><input type="checkbox" id="sActive" checked><label style="margin:0" for="sActive">Active</label></div>
     </div>
-</div>
+        <div class="ma"><button type="button" class="btn btn-s" onclick="closeM('simpleModal')">Cancel</button><button class="btn btn-p" type="submit">Save</button></div></form>
+</div></div>
 
-<!-- Add Category -->
-<div class="modal" id="categoryModal">
-    <div class="modal-card small">
-        <div class="modal-head"><div><h3>Add Category</h3><p>Create a category used when registering spare parts.</p></div><button class="modal-close" onclick="closeModal('categoryModal')">×</button></div>
-        <form id="categoryForm" onsubmit="submitCategory(event)">
-            <div class="modal-body">
-                <div class="form-group"><label for="categoryName">Category Name *</label><input class="input" id="categoryName" required maxlength="100" placeholder="e.g. Processor"></div>
-                <div class="form-group" style="margin-top:14px"><label for="categoryDescription">Description</label><textarea class="textarea" id="categoryDescription" rows="3" maxlength="255" placeholder="Optional description"></textarea></div>
-            </div>
-            <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeModal('categoryModal')">Cancel</button><button class="btn btn-primary" type="submit">Save Category</button></div>
-        </form>
+<!-- Adjust stock modal -->
+<div class="modal" id="adjustModal"><div class="card sm">
+    <div class="mh"><h3>Adjust Stock</h3><button class="x" onclick="closeM('adjustModal')">×</button></div>
+    <form onsubmit="saveAdjust(event)"><div class="mb">
+        <label>Spare Part *</label><select class="select" id="aPart" required onchange="preview()"></select>
+        <label style="margin-top:14px">Location *</label><select class="select" id="aLoc" required onchange="preview()"></select>
+        <label style="margin-top:14px">Quantity Change * (+10 adds, -5 reduces)</label><input class="input" id="aQty" type="number" step="1" required oninput="preview()">
+        <div class="prev" id="aPrev">Select a part and location.</div>
     </div>
-</div>
-
-<!-- Add Brand -->
-<div class="modal" id="brandModal">
-    <div class="modal-card small">
-        <div class="modal-head"><div><h3>Add Brand</h3><p>Create a brand used when registering spare parts.</p></div><button class="modal-close" onclick="closeModal('brandModal')">×</button></div>
-        <form id="brandForm" onsubmit="submitBrand(event)">
-            <div class="modal-body">
-                <div class="form-group"><label for="brandName">Brand Name *</label><input class="input" id="brandName" required maxlength="100" placeholder="e.g. Intel"></div>
-                <div class="form-group" style="margin-top:14px"><label for="brandDescription">Description</label><textarea class="textarea" id="brandDescription" rows="3" maxlength="255" placeholder="Optional description"></textarea></div>
-            </div>
-            <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeModal('brandModal')">Cancel</button><button class="btn btn-primary" type="submit">Save Brand</button></div>
-        </form>
-    </div>
-</div>
-
-<footer>© Lanka Tech Components (Pvt) Ltd · Computer Spare Parts Management System</footer>
+        <div class="ma"><button type="button" class="btn btn-s" onclick="closeM('adjustModal')">Cancel</button><button class="btn btn-g" type="submit">Save Adjustment</button></div></form>
+</div></div>
 
 <script>
-    const API = {
-        categories: '/api/inventory/categories',
-        brands: '/api/inventory/brands',
-        parts: '/api/inventory/parts',
-        stocks: '/api/inventory/stocks',
-        adjust: '/api/inventory/stocks/adjust',
-        locations: '/api/stock-transfers/locations',
-        currentUser: '/api/auth/me'
-    };
+    const API={categories:'/api/inventory/categories',brands:'/api/inventory/brands',parts:'/api/inventory/parts',stocks:'/api/inventory/stocks',adjust:'/api/inventory/stocks/adjust',locations:'/api/stock-transfers/locations',me:'/api/auth/me'};
+    const ENT={category:{url:API.categories,id:'categoryId',name:'categoryName',label:'Category',list:'categories'},brand:{url:API.brands,id:'brandId',name:'brandName',label:'Brand',list:'brands'}};
+    let D={categories:[],brands:[],parts:[],stocks:[],locations:[]},tab='parts',editPartId=null,simple={type:null,id:null},timer;
+    const $=id=>document.getElementById(id);
+    const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    const money=v=>Number(v||0).toLocaleString('en-LK',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-    let categories = [];
-    let brands = [];
-    let parts = [];
-    let stocks = [];
-    let locations = [];
-    let activeTab = 'parts';
-    let toastTimer;
-
-    document.addEventListener('DOMContentLoaded', async () => {
-        await loadCurrentUser();
-        await loadAllData();
+    document.addEventListener('DOMContentLoaded',async()=>{
+      $('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)switchTab(b.dataset.t)});
+      document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+      await loadUser();await loadAll();
     });
+    async function loadUser(){try{const r=await fetch(API.me);if(!r.ok)return;const u=await r.json();
+      $('userName').textContent=u.fullName||u.name||u.email||'User';
+      $('userRole').textContent=String(u.role?.roleName||u.roleName||u.role||'').replace(/^ROLE_/,'').replaceAll('_',' ');}catch(e){}}
 
-    async function loadCurrentUser(){
-        try{
-            const response = await fetch(API.currentUser, {headers:{'Accept':'application/json'}});
-            if(!response.ok) return;
-            const user = await response.json();
-            document.getElementById('siteUserName').textContent = user.fullName || user.name || user.email || 'Signed in user';
-            const roleName = user.role?.roleName || user.roleName || user.role || '';
-            document.getElementById('siteUserRole').textContent = String(roleName).replace(/^ROLE_/, '').replaceAll('_',' ');
-        }catch(error){console.warn('Unable to load current user', error);}
+    async function call(url,method='GET',body){
+      const r=await fetch(url,{method,headers:body?{'Content-Type':'application/json'}:{'Accept':'application/json'},body:body?JSON.stringify(body):undefined});
+      if(!r.ok){let m=`${r.status} ${r.statusText}`;
+        try{const b=await r.json();m=b.message||(b.fieldErrors?Object.entries(b.fieldErrors).map(([f,x])=>`${f}: ${x}`).join(' · '):b.error)||m}catch(e){}
+        throw new Error(m)}
+      const t=await r.text();return t?JSON.parse(t):null;
+    }
+    async function loadAll(){
+      $('main').classList.add('loading');
+      try{
+        const [c,b,p,s]=await Promise.all([call(API.categories),call(API.brands),call(API.parts),call(API.stocks)]);
+        D.categories=c;D.brands=b;D.parts=p;D.stocks=s;
+        try{D.locations=await call(API.locations)}catch(e){D.locations=[...new Map(s.filter(x=>x.location).map(x=>[x.location.locationId,x.location])).values()]}
+        fillSelects();dashboard();render();
+      }catch(e){toast(e.message,'error')}finally{$('main').classList.remove('loading')}
+    }
+    function fillSelects(){
+      const opt=(a,id,nm)=>a.filter(x=>x.active!==false).map(x=>`<option value="${x[id]}">${esc(x[nm])}</option>`).join('');
+      $('pCat').innerHTML='<option value="">Select category</option>'+opt(D.categories,'categoryId','categoryName');
+      $('pBrand').innerHTML='<option value="">Select brand</option>'+opt(D.brands,'brandId','brandName');
+      $('aPart').innerHTML='<option value="">Select spare part</option>'+D.parts.filter(x=>x.active!==false).map(p=>`<option value="${p.sparePartId}">${esc(p.partCode)} — ${esc(p.partName)}</option>`).join('');
+      $('aLoc').innerHTML='<option value="">Select location</option>'+D.locations.filter(x=>x.active!==false).map(l=>`<option value="${l.locationId}">${esc(l.locationName)}${l.locationType?' ('+esc(l.locationType)+')':''}</option>`).join('');
+      const f=$('fCat'),sel=f.value;
+      f.innerHTML='<option value="">All categories</option>'+D.categories.map(c=>`<option value="${c.categoryId}">${esc(c.categoryName)}</option>`).join('');
+      f.value=sel;
+    }
+    const total=id=>D.stocks.filter(s=>String(s.sparePart?.sparePartId)===String(id)).reduce((a,s)=>a+Number(s.quantity||0),0);
+    function status(q,r){q=Number(q||0);r=Number(r||0);return q<=0?{k:'OUT',l:'Out of Stock',c:'out'}:q<=r?{k:'LOW',l:'Low Stock',c:'low'}:{k:'OK',l:'Available',c:'ok'}}
+    function dashboard(){
+      let low=0,out=0;D.parts.forEach(p=>{const t=total(p.sparePartId);if(t<=0)out++;else if(t<=Number(p.reorderLevel||0))low++});
+      $('mParts').textContent=D.parts.length;$('mStock').textContent=D.stocks.reduce((a,s)=>a+Number(s.quantity||0),0).toLocaleString();
+      $('mLow').textContent=low;$('mOut').textContent=out;$('mCat').textContent=D.categories.length;$('mBrand').textContent=D.brands.length;
+    }
+    function switchTab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.t===t));
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(t+'View').classList.add('active');render()}
+    const pill=a=>`<span class="pill ${a!==false?'active-p':'inactive'}">${a!==false?'Active':'Inactive'}</span>`;
+
+    function render(){
+      const q=$('q').value.trim().toLowerCase(),cat=$('fCat').value,st=$('fStock').value;let rows,html;
+      if(tab==='parts'){
+        rows=D.parts.filter(p=>{const s=status(total(p.sparePartId),p.reorderLevel);
+          return(!q||`${p.partCode} ${p.partName} ${p.category?.categoryName} ${p.brand?.brandName}`.toLowerCase().includes(q))&&(!cat||String(p.category?.categoryId)===cat)&&(!st||s.k===st)});
+        html=rows.map(p=>{const t=total(p.sparePartId),s=status(t,p.reorderLevel);
+          return `<tr><td><div class="nm">${esc(p.partCode)} · ${esc(p.partName)}</div><div class="sub">${esc(p.description||'No description')}</div></td>
+          <td>${esc(p.category?.categoryName||'—')}</td><td>${esc(p.brand?.brandName||'—')}</td><td><b>LKR ${money(p.unitPrice)}</b></td>
+          <td>${Number(p.reorderLevel||0)}</td><td><b>${t}</b></td><td><span class="pill ${s.c}">${s.l}</span></td><td>${pill(p.active)}</td>
+          <td><div class="row-act"><button class="btn btn-s btn-sm" onclick="openPart(${p.sparePartId})">Edit</button><button class="btn btn-d btn-sm" onclick="del('${API.parts}',${p.sparePartId},'spare part')">Delete</button></div></td></tr>`}).join('');
+      }else if(tab==='stocks'){
+        rows=D.stocks.filter(i=>{const p=i.sparePart||{},s=status(i.quantity,p.reorderLevel);
+          return(!q||`${p.partCode} ${p.partName} ${p.brand?.brandName} ${i.location?.locationName}`.toLowerCase().includes(q))&&(!cat||String(p.category?.categoryId)===cat)&&(!st||s.k===st)});
+        html=rows.map(i=>{const p=i.sparePart||{},l=i.location||{},s=status(i.quantity,p.reorderLevel);
+          return `<tr><td>#${esc(i.stockId)}</td><td><div class="nm">${esc(p.partCode||'—')} · ${esc(p.partName||'—')}</div><div class="sub">${esc(p.brand?.brandName||'')}</div></td>
+          <td>${esc(l.locationName||'—')}</td><td>${esc(l.locationType||'—')}</td><td><b>${Number(i.quantity||0)}</b></td><td>${Number(p.reorderLevel||0)}</td>
+          <td><span class="pill ${s.c}">${s.l}</span></td><td>${i.lastUpdated?new Date(i.lastUpdated).toLocaleString('en-LK'):'—'}</td></tr>`}).join('');
+      }else{
+        const type=tab==='categories'?'category':'brand',E=ENT[type];
+        rows=D[tab].filter(x=>!q||`${x[E.name]} ${x.description}`.toLowerCase().includes(q));
+        html=rows.map(x=>`<tr><td>#${x[E.id]}</td><td class="nm">${esc(x[E.name])}</td><td>${esc(x.description||'—')}</td><td>${pill(x.active)}</td>
+          <td><div class="row-act"><button class="btn btn-s btn-sm" onclick="openSimple('${type}',${x[E.id]})">Edit</button><button class="btn btn-d btn-sm" onclick="del('${E.url}',${x[E.id]},'${E.label.toLowerCase()}')">Delete</button></div></td></tr>`).join('');
+      }
+      $(tab+'Body').innerHTML=html;$(tab+'Empty').style.display=rows.length?'none':'block';
     }
 
-    async function loadAllData(){
-        setLoading(true);
-        try{
-            const [categoryRes, brandRes, partRes, stockRes] = await Promise.all([
-                fetch(API.categories), fetch(API.brands), fetch(API.parts), fetch(API.stocks)
-            ]);
-            await ensureOk(categoryRes); await ensureOk(brandRes); await ensureOk(partRes); await ensureOk(stockRes);
-            categories = await categoryRes.json();
-            brands = await brandRes.json();
-            parts = await partRes.json();
-            stocks = await stockRes.json();
-
-            try{
-                const locationRes = await fetch(API.locations);
-                if(locationRes.ok) locations = await locationRes.json();
-                else locations = deriveLocationsFromStocks();
-            }catch(e){ locations = deriveLocationsFromStocks(); }
-
-            populateSelections();
-            updateDashboard();
-            renderActiveTab();
-        }catch(error){
-            showMessage(readError(error), 'error');
-        }finally{setLoading(false);}
+    /* ---- Spare parts: create / update ---- */
+    function openPart(id){
+      editPartId=id||null;fillSelects();
+      const p=id?D.parts.find(x=>x.sparePartId===id):null;
+      $('partTitle').textContent=p?'Edit Spare Part':'Add Spare Part';
+      $('pCode').value=p?.partCode||'';$('pName').value=p?.partName||'';$('pCat').value=p?.category?.categoryId||'';
+      $('pBrand').value=p?.brand?.brandId||'';$('pPrice').value=p?.unitPrice??'';$('pReorder').value=p?.reorderLevel??0;
+      $('pDesc').value=p?.description||'';$('pActive').checked=p?p.active!==false:true;openM('partModal');
+    }
+    async function savePart(e){
+      e.preventDefault();
+      const b={partCode:$('pCode').value.trim(),partName:$('pName').value.trim(),description:$('pDesc').value.trim(),
+        categoryId:Number($('pCat').value),brandId:Number($('pBrand').value),unitPrice:Number($('pPrice').value),reorderLevel:Number($('pReorder').value),active:$('pActive').checked};
+      if(!b.partCode||!b.partName||!b.categoryId||!b.brandId||b.unitPrice<0||b.reorderLevel<0)return toast('Please complete all required fields correctly.','error');
+      try{await call(editPartId?`${API.parts}/${editPartId}`:API.parts,editPartId?'PUT':'POST',b);
+        closeM('partModal');toast(editPartId?'Spare part updated.':'Spare part created.','success');await loadAll()}catch(err){toast(err.message,'error')}
     }
 
-    function deriveLocationsFromStocks(){
-        const map = new Map();
-        stocks.forEach(stock => {
-            const loc = stock.location;
-            if(loc?.locationId != null) map.set(String(loc.locationId), loc);
-        });
-        return [...map.values()];
+    /* ---- Category / Brand: create / update ---- */
+    function openSimple(type,id){
+      const E=ENT[type],x=id?D[E.list].find(i=>i[E.id]===id):null;
+      simple={type,id:id||null};$('simpleTitle').textContent=(x?'Edit ':'Add ')+E.label;
+      $('sName').value=x?.[E.name]||'';$('sDesc').value=x?.description||'';$('sActive').checked=x?x.active!==false:true;openM('simpleModal');
+    }
+    async function saveSimple(e){
+      e.preventDefault();const E=ENT[simple.type];
+      const b={[E.name]:$('sName').value.trim(),description:$('sDesc').value.trim(),active:$('sActive').checked};
+      if(!b[E.name])return toast('Name is required.','error');
+      try{await call(simple.id?`${E.url}/${simple.id}`:E.url,simple.id?'PUT':'POST',b);
+        closeM('simpleModal');toast(`${E.label} ${simple.id?'updated':'created'}.`,'success');await loadAll()}catch(err){toast(err.message,'error')}
     }
 
-    function populateSelections(){
-        const categoryOptions = categories.filter(x => x.active !== false).map(c => `<option value="${escapeAttr(c.categoryId)}">${escapeHtml(c.categoryName)}</option>`).join('');
-        const brandOptions = brands.filter(x => x.active !== false).map(b => `<option value="${escapeAttr(b.brandId)}">${escapeHtml(b.brandName)}</option>`).join('');
-        const partOptions = parts.filter(x => x.active !== false).map(p => `<option value="${escapeAttr(p.sparePartId)}">${escapeHtml(p.partCode)} — ${escapeHtml(p.partName)}</option>`).join('');
-        const locationOptions = locations.filter(x => x.active !== false).map(l => `<option value="${escapeAttr(l.locationId)}">${escapeHtml(l.locationName)}${l.locationType ? ` (${escapeHtml(l.locationType)})` : ''}</option>`).join('');
-
-        document.getElementById('partCategory').innerHTML = `<option value="">Select category</option>${categoryOptions}`;
-        document.getElementById('partBrand').innerHTML = `<option value="">Select brand</option>${brandOptions}`;
-        document.getElementById('adjustPart').innerHTML = `<option value="">Select spare part</option>${partOptions}`;
-        document.getElementById('adjustLocation').innerHTML = `<option value="">Select location</option>${locationOptions}`;
-
-        const categoryFilter = document.getElementById('categoryFilter');
-        const selected = categoryFilter.value;
-        categoryFilter.innerHTML = `<option value="">All categories</option>${categories.map(c => `<option value="${escapeAttr(c.categoryId)}">${escapeHtml(c.categoryName)}</option>`).join('')}`;
-        if([...categoryFilter.options].some(o => o.value === selected)) categoryFilter.value = selected;
+    /* ---- Delete (parts, categories, brands) ---- */
+    async function del(url,id,label){
+      if(!confirm(`Delete this ${label}? This cannot be undone.`))return;
+      try{await call(`${url}/${id}`,'DELETE');toast(`${label[0].toUpperCase()+label.slice(1)} deleted.`,'success');await loadAll()}
+      catch(err){toast(err.message,'error')}
     }
 
-    function updateDashboard(){
-        const totalStock = stocks.reduce((sum,s) => sum + Number(s.quantity || 0), 0);
-        let low = 0, out = 0;
-        parts.forEach(part => {
-            const total = getPartTotalStock(part.sparePartId);
-            if(total <= 0) out++;
-            else if(total <= Number(part.reorderLevel || 0)) low++;
-        });
-        document.getElementById('totalParts').textContent = parts.length;
-        document.getElementById('totalStock').textContent = totalStock.toLocaleString();
-        document.getElementById('lowStockCount').textContent = low;
-        document.getElementById('outStockCount').textContent = out;
-        document.getElementById('categoryCount').textContent = categories.length;
-        document.getElementById('brandCount').textContent = brands.length;
+    /* ---- Stock adjustment ---- */
+    function openAdjust(){fillSelects();$('aPart').value='';$('aLoc').value='';$('aQty').value='';preview();
+      if(!D.locations.length)toast('No locations could be loaded.','info');openM('adjustModal')}
+    function preview(){
+      const p=$('aPart').value,l=$('aLoc').value,c=Number($('aQty').value||0);
+      const r=D.stocks.find(s=>String(s.sparePart?.sparePartId)===p&&String(s.location?.locationId)===l),cur=Number(r?.quantity||0),n=cur+c;
+      $('aPrev').innerHTML=p&&l?`Current stock: <b>${cur}</b> → After adjustment: <b style="color:${n<0?'#b42323':'#126b3c'}">${n}</b>`:'Select a part and location.';
+    }
+    async function saveAdjust(e){
+      e.preventDefault();const q=Number($('aQty').value);
+      const b={sparePartId:Number($('aPart').value),locationId:Number($('aLoc').value),quantityChange:q};
+      if(!b.sparePartId||!b.locationId||!Number.isInteger(q)||q===0)return toast('Select a part and location, and enter a non-zero whole number.','error');
+      try{await call(API.adjust,'POST',b);closeM('adjustModal');toast('Stock adjusted.','success');await loadAll()}catch(err){toast(err.message,'error')}
     }
 
-    function getPartTotalStock(partId){
-        return stocks.filter(s => String(s.sparePart?.sparePartId) === String(partId)).reduce((sum,s) => sum + Number(s.quantity || 0), 0);
-    }
-
-    function stockStatus(quantity, reorderLevel){
-        const qty = Number(quantity || 0); const reorder = Number(reorderLevel || 0);
-        if(qty <= 0) return {key:'OUT', label:'Out of Stock', cls:'out'};
-        if(qty <= reorder) return {key:'LOW', label:'Low Stock', cls:'low'};
-        return {key:'OK', label:'Available', cls:'ok'};
-    }
-
-    function getFilters(){
-        return {
-            q: document.getElementById('searchInput').value.trim().toLowerCase(),
-            category: document.getElementById('categoryFilter').value,
-            stock: document.getElementById('stockFilter').value
-        };
-    }
-
-    function renderActiveTab(){ activeTab === 'parts' ? renderParts() : renderStocks(); }
-
-    function switchTab(tab){
-        activeTab = tab;
-        document.getElementById('partsView').classList.toggle('active', tab === 'parts');
-        document.getElementById('stocksView').classList.toggle('active', tab === 'stocks');
-        document.getElementById('partsTabBtn').classList.toggle('active', tab === 'parts');
-        document.getElementById('stocksTabBtn').classList.toggle('active', tab === 'stocks');
-        renderActiveTab();
-    }
-
-    function renderParts(){
-        const {q, category, stock} = getFilters();
-        const rows = parts.filter(part => {
-            const total = getPartTotalStock(part.sparePartId);
-            const status = stockStatus(total, part.reorderLevel);
-            const searchable = `${part.partCode||''} ${part.partName||''} ${part.category?.categoryName||''} ${part.brand?.brandName||''}`.toLowerCase();
-            return (!q || searchable.includes(q)) && (!category || String(part.category?.categoryId) === category) && (!stock || status.key === stock);
-        });
-        const body = document.getElementById('partsTableBody');
-        body.innerHTML = rows.map(part => {
-            const total = getPartTotalStock(part.sparePartId);
-            const status = stockStatus(total, part.reorderLevel);
-            return `<tr>
-                <td><div class="part-name">${escapeHtml(part.partCode)} · ${escapeHtml(part.partName)}</div><div class="subtext">${escapeHtml(part.description || 'No description')}</div></td>
-                <td>${escapeHtml(part.category?.categoryName || '—')}</td>
-                <td>${escapeHtml(part.brand?.brandName || '—')}</td>
-                <td class="money">LKR ${formatMoney(part.unitPrice)}</td>
-                <td>${Number(part.reorderLevel || 0)}</td>
-                <td class="${total > 0 ? 'qty-positive' : 'qty-zero'}">${total}</td>
-                <td><span class="pill ${status.cls}">${status.label}</span></td>
-                <td><span class="pill ${part.active !== false ? 'active' : 'inactive'}">${part.active !== false ? 'Active' : 'Inactive'}</span></td>
-            </tr>`;
-        }).join('');
-        document.getElementById('partsEmpty').style.display = rows.length ? 'none' : 'block';
-    }
-
-    function renderStocks(){
-        const {q, category, stock} = getFilters();
-        const rows = stocks.filter(item => {
-            const part = item.sparePart || {};
-            const status = stockStatus(item.quantity, part.reorderLevel);
-            const searchable = `${part.partCode||''} ${part.partName||''} ${part.category?.categoryName||''} ${part.brand?.brandName||''} ${item.location?.locationName||''}`.toLowerCase();
-            return (!q || searchable.includes(q)) && (!category || String(part.category?.categoryId) === category) && (!stock || status.key === stock);
-        });
-        const body = document.getElementById('stocksTableBody');
-        body.innerHTML = rows.map(item => {
-            const part = item.sparePart || {}; const loc = item.location || {};
-            const status = stockStatus(item.quantity, part.reorderLevel);
-            return `<tr>
-                <td>#${escapeHtml(item.stockId)}</td>
-                <td><div class="part-name">${escapeHtml(part.partCode || '—')} · ${escapeHtml(part.partName || '—')}</div><div class="subtext">${escapeHtml(part.brand?.brandName || '')}</div></td>
-                <td>${escapeHtml(loc.locationName || '—')}</td>
-                <td>${escapeHtml(loc.locationType || '—')}</td>
-                <td class="${Number(item.quantity||0) > 0 ? 'qty-positive' : 'qty-zero'}">${Number(item.quantity || 0)}</td>
-                <td>${Number(part.reorderLevel || 0)}</td>
-                <td><span class="pill ${status.cls}">${status.label}</span></td>
-                <td>${formatDateTime(item.lastUpdated)}</td>
-            </tr>`;
-        }).join('');
-        document.getElementById('stocksEmpty').style.display = rows.length ? 'none' : 'block';
-    }
-
-    function preparePartModal(){
-        document.getElementById('partForm').reset();
-        populateSelections();
-        openModal('partModal');
-    }
-
-    function prepareAdjustModal(){
-        document.getElementById('adjustForm').reset();
-        populateSelections();
-        updateAdjustmentPreview();
-        if(!locations.length) showMessage('No locations could be loaded. Make sure the Stock Transfer locations endpoint is available in dev.', 'info');
-        openModal('adjustModal');
-    }
-
-    function updateAdjustmentPreview(){
-        const partId = document.getElementById('adjustPart').value;
-        const locationId = document.getElementById('adjustLocation').value;
-        const change = Number(document.getElementById('quantityChange').value || 0);
-        const record = stocks.find(s => String(s.sparePart?.sparePartId) === partId && String(s.location?.locationId) === locationId);
-        const current = Number(record?.quantity || 0);
-        const next = current + change;
-        document.getElementById('adjustPreview').innerHTML = partId && locationId
-            ? `Current stock: <strong>${current}</strong> &nbsp;→&nbsp; After adjustment: <strong style="color:${next < 0 ? '#b42323' : '#126b3c'}">${next}</strong>`
-            : 'Select a part and location to view the current stock.';
-    }
-
-    async function submitPart(event){
-        event.preventDefault();
-        const payload = {
-            partCode: document.getElementById('partCode').value.trim(),
-            partName: document.getElementById('partName').value.trim(),
-            description: document.getElementById('partDescription').value.trim(),
-            categoryId: Number(document.getElementById('partCategory').value),
-            brandId: Number(document.getElementById('partBrand').value),
-            unitPrice: Number(document.getElementById('unitPrice').value),
-            reorderLevel: Number(document.getElementById('reorderLevel').value)
-        };
-        if(!payload.partCode || !payload.partName || !payload.categoryId || !payload.brandId || Number.isNaN(payload.unitPrice) || payload.unitPrice < 0 || Number.isNaN(payload.reorderLevel) || payload.reorderLevel < 0){
-            showMessage('Please complete all required spare-part fields correctly.', 'error'); return;
-        }
-        try{
-            const response = await fetch(API.parts,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-            await ensureOk(response);
-            closeModal('partModal'); showMessage('Spare part created successfully.', 'success'); await loadAllData();
-        }catch(error){showMessage(readError(error), 'error');}
-    }
-
-    async function submitAdjustment(event){
-        event.preventDefault();
-        const qty = Number(document.getElementById('quantityChange').value);
-        const payload = {
-            sparePartId: Number(document.getElementById('adjustPart').value),
-            locationId: Number(document.getElementById('adjustLocation').value),
-            quantityChange: qty
-        };
-        if(!payload.sparePartId || !payload.locationId || !Number.isInteger(qty) || qty === 0){
-            showMessage('Select a spare part and location, then enter a non-zero whole-number quantity change.', 'error'); return;
-        }
-        try{
-            const response = await fetch(API.adjust,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-            await ensureOk(response);
-            closeModal('adjustModal'); showMessage('Stock adjusted successfully.', 'success'); await loadAllData();
-        }catch(error){showMessage(readError(error), 'error');}
-    }
-
-    async function submitCategory(event){
-        event.preventDefault();
-        const payload = {categoryName:document.getElementById('categoryName').value.trim(),description:document.getElementById('categoryDescription').value.trim(),active:true};
-        if(!payload.categoryName){showMessage('Category name is required.', 'error');return;}
-        try{
-            const response = await fetch(API.categories,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-            await ensureOk(response);
-            document.getElementById('categoryForm').reset(); closeModal('categoryModal'); showMessage('Category created successfully.', 'success'); await loadAllData();
-        }catch(error){showMessage(readError(error), 'error');}
-    }
-
-    async function submitBrand(event){
-        event.preventDefault();
-        const payload = {brandName:document.getElementById('brandName').value.trim(),description:document.getElementById('brandDescription').value.trim(),active:true};
-        if(!payload.brandName){showMessage('Brand name is required.', 'error');return;}
-        try{
-            const response = await fetch(API.brands,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-            await ensureOk(response);
-            document.getElementById('brandForm').reset(); closeModal('brandModal'); showMessage('Brand created successfully.', 'success'); await loadAllData();
-        }catch(error){showMessage(readError(error), 'error');}
-    }
-
-    async function ensureOk(response){
-        if(response.ok) return response;
-        let message = `${response.status} ${response.statusText}`;
-        try{
-            const body = await response.json();
-            if(body.message) message = body.message;
-            else if(body.fieldErrors) message = Object.entries(body.fieldErrors).map(([field,msg]) => `${field}: ${msg}`).join(' · ');
-            else if(body.error) message = body.error;
-        }catch(e){
-            try{ const text = await response.text(); if(text) message = text; }catch(_){}
-        }
-        throw new Error(message);
-    }
-
-    function readError(error){return error?.message || 'Something went wrong. Please try again.'}
-
-    function openModal(id){document.getElementById(id).classList.add('open')}
-    function closeModal(id){document.getElementById(id).classList.remove('open')}
-    document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', e => {if(e.target === modal) modal.classList.remove('open')}));
-    document.addEventListener('keydown', e => {if(e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'))});
-
-    function showMessage(message,type='info'){
-        const box = document.getElementById('messageBox');
-        box.className = type; box.textContent = message; box.style.display = 'block';
-        clearTimeout(toastTimer); toastTimer = setTimeout(() => {box.style.display='none';box.className='';}, 4200);
-    }
-
-    function setLoading(value){document.getElementById('mainContent').classList.toggle('loading', value)}
-    function formatMoney(value){return Number(value || 0).toLocaleString('en-LK',{minimumFractionDigits:2,maximumFractionDigits:2})}
-    function formatDateTime(value){if(!value) return '—'; const d = new Date(value); return Number.isNaN(d.getTime()) ? escapeHtml(value) : d.toLocaleString('en-LK')}
-    function escapeHtml(value){return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-    function escapeAttr(value){return escapeHtml(value)}
+    function openM(id){$(id).classList.add('open')}
+    function closeM(id){$(id).classList.remove('open')}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'))});
+    function toast(m,t='info'){const b=$('toast');b.className=t;b.textContent=m;clearTimeout(timer);timer=setTimeout(()=>{b.className='';b.style.display='none'},4200);b.style.display='block'}
 </script>
 </body>
 </html>
