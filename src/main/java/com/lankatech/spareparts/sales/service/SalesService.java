@@ -161,5 +161,18 @@ public class SalesService {
         invoices.save(invoice);
 
         return savedSale;
+
+
+    }
+    public int getAvailableStock(Long sparePartId, Long locationId) {
+
+        Stock stock = stocks
+                .findBySparePartSparePartIdAndLocationLocationId(
+                        sparePartId,
+                        locationId
+                )
+                .orElse(null);
+
+        return stock == null ? 0 : stock.getQuantity();
     }
 }

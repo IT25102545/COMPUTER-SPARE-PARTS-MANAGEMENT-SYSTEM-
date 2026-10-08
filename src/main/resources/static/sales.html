@@ -954,7 +954,7 @@
 
             <div class="form-group">
                 <label for="locationId">Location ID *</label>
-                <input id="locationId" type="number" min="1" placeholder="Example: 1" required>
+                <input id="locationId" type="number" min="1" placeholder="Example: 1" onchange="loadAvailableStock()" required>
                 <span class="hint">Branch or warehouse location used for the sale.</span>
             </div>
 
@@ -978,11 +978,17 @@
                 <div class="item-grid">
                     <div class="form-group">
                         <label for="sparePartId">Spare Part ID *</label>
-                        <input id="sparePartId" type="number" min="1" placeholder="Example: 1">
+                        <input id="sparePartId" type="number" min="1" placeholder="Example: 1" onchange="loadAvailableStock()">
                     </div>
 
                     <div class="form-group">
-                        <label for="quantity">Quantity *</label>
+                        <div>
+                            <label>Available Stock</label>
+                            <div id="availableStock"
+                                 style="font-weight: 700; color: #0b5ed7; padding-top: 10px;">
+                                Select a spare part
+                            </div>
+                        </div><label for="quantity">Quantity *</label>
                         <input id="quantity" type="number" min="1" value="1">
                     </div>
 
@@ -1119,6 +1125,33 @@
         }
     }
 
+    async function loadAvailableStock() {
+        const sparePartId = document.getElementById("sparePartId").value;
+        const locationId = document.getElementById("locationId").value;
+        const stockDisplay = document.getElementById("availableStock");
+
+        if (!sparePartId || !locationId) {
+            stockDisplay.textContent = "Select a spare part and location";
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `/api/sales/available-stock?sparePartId=${sparePartId}&locationId=${locationId}`
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to load stock");
+            }
+
+            const data = await response.json();
+            stockDisplay.textContent = data.availableStock;
+
+        } catch (error) {
+            stockDisplay.textContent = "Unable to load";
+        }
+    }
+
     function prettyRole(role) {
         return String(role || "")
             .toLowerCase()
@@ -1139,6 +1172,17 @@
 
         if (!quantity) {
             showMessage("Quantity must be at least 1.", "error");
+            return;
+        }
+        const availableStock = Number(
+            document.getElementById("availableStock").textContent
+        );
+
+        if (Number.isFinite(availableStock) && quantity > availableStock) {
+            showMessage(
+                `Insufficient stock. Only ${availableStock} available.`,
+                "error"
+            );
             return;
         }
 
