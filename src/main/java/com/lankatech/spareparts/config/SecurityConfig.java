@@ -105,6 +105,27 @@ public class SecurityConfig {
                                 "INVENTORY_SUPERVISOR"
                         )
 
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.POST,
+                                "/api/stock-transfers"
+                        )
+                        .hasRole("BRANCH_SUPERVISOR")
+
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.PUT,
+                                "/api/stock-transfers/*/approve",
+                                "/api/stock-transfers/*/reject",
+                                "/api/stock-transfers/*/dispatch",
+                                "/api/stock-transfers/*/in-transit"
+                        )
+                        .hasRole("INVENTORY_SUPERVISOR")
+
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.PUT,
+                                "/api/stock-transfers/*/receive"
+                        )
+                        .hasRole("BRANCH_SUPERVISOR")
+
                         .requestMatchers("/api/stock-transfers/**")
                         .hasAnyRole(
                                 "BRANCH_SUPERVISOR",
