@@ -4760,17 +4760,29 @@
      =====================================================
      */
 
-    function buildActionButtons(
-        id,
-        status
-    ) {
+    function buildActionButtons(id, status) {
 
         let buttons = "";
 
+        const role =
+            currentUser?.role?.roleName ||
+            currentUser?.role ||
+            "";
 
-        if (status === "PENDING") {
+        const currentRole =
+            role.toUpperCase();
 
-            buttons += `
+
+        // ==========================================
+        // INVENTORY SUPERVISOR ACTIONS
+        // Approve / Reject / Dispatch / In Transit
+        // ==========================================
+
+        if (currentRole === "INVENTORY_SUPERVISOR") {
+
+            if (status === "PENDING") {
+
+                buttons += `
 
                 <button
                     class="action-button approve"
@@ -4783,57 +4795,57 @@
                     onclick="rejectTransfer(${id})">
                     Reject
                 </button>
-
-                <button
-                    class="action-button cancel"
-                    onclick="cancelTransfer(${id})">
-                    Cancel
-                </button>
             `;
-        }
+            }
 
+            else if (status === "APPROVED") {
 
-        else if (status === "APPROVED") {
-
-            buttons += `
+                buttons += `
 
                 <button
                     class="action-button dispatch"
                     onclick="dispatchTransfer(${id})">
                     Dispatch
                 </button>
-
-                <button
-                    class="action-button cancel"
-                    onclick="cancelTransfer(${id})">
-                    Cancel
-                </button>
             `;
-        }
+            }
 
+            else if (status === "DISPATCHED") {
 
-        else if (status === "DISPATCHED") {
-
-            buttons += `
+                buttons += `
 
                 <button
                     class="action-button transit"
                     onclick="markInTransit(${id})">
                     In Transit
                 </button>
-
-                <button
-                    class="action-button receive"
-                    onclick="receiveTransfer(${id})">
-                    Receive
-                </button>
             `;
+            }
+
+            else {
+
+                buttons = `
+                <span style="
+                    color:#64748b;
+                    font-size:12px;
+                ">
+                    No action
+                </span>
+            `;
+            }
         }
 
 
-        else if (status === "IN_TRANSIT") {
+            // ==========================================
+            // BRANCH SUPERVISOR ACTIONS
+            // Receive + discrepancy recording
+        // ==========================================
 
-            buttons += `
+        else if (currentRole === "BRANCH_SUPERVISOR") {
+
+            if (status === "IN_TRANSIT") {
+
+                buttons += `
 
                 <button
                     class="action-button receive"
@@ -4841,24 +4853,38 @@
                     Receive
                 </button>
             `;
+            }
+
+            else {
+
+                buttons = `
+                <span style="
+                    color:#64748b;
+                    font-size:12px;
+                ">
+                    No action
+                </span>
+            `;
+            }
         }
 
 
         else {
 
             buttons = `
-                <span style="
-                    color:#64748b;
-                    font-size:12px;
-                ">
-                    Completed
-                </span>
-            `;
+            <span style="
+                color:#64748b;
+                font-size:12px;
+            ">
+                No access
+            </span>
+        `;
         }
 
 
         return buttons;
     }
+
 
 
     /*
