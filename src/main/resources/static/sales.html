@@ -992,7 +992,7 @@
                         <input id="quantity" type="number" min="1" value="1">
                     </div>
 
-                    <button class="btn btn-primary" type="button" onclick="addItem()">+ Add Item</button>
+                    <button class="btn btn-primary" type="button" id="addItemBtn" onclick="addItem()">+ Add Item</button>
                 </div>
 
                 <div class="selected-items-box">
@@ -1086,6 +1086,7 @@
 
     let currentUser = null;
     let cart = [];
+    let editingItemIndex = null;
     let sales = [];
     let messageTimer = null;
 
@@ -1186,6 +1187,21 @@
             return;
         }
 
+        if (editingItemIndex !== null) {
+            const duplicateIndex = cart.findIndex((item, index) =>
+                index !== editingItemIndex && item.sparePartId === sparePartId
+            );
+            if (duplicateIndex !== -1) {
+                showMessage("This spare part is already selected. Edit its existing row instead.", "error");
+                return;
+            }
+            cart[editingItemIndex] = { sparePartId, quantity };
+            cancelItemEdit();
+            renderCart();
+            showMessage("Sale item updated.", "success");
+            return;
+        }
+
         const existing = cart.find(item => item.sparePartId === sparePartId);
         if (existing) {
             existing.quantity += quantity;
@@ -1199,8 +1215,28 @@
         showMessage("Item added to the sale.", "success");
     }
 
+    function editItem(index) {
+        const item = cart[index];
+        if (!item) return;
+        editingItemIndex = index;
+        document.getElementById("sparePartId").value = item.sparePartId;
+        document.getElementById("quantity").value = item.quantity;
+        document.getElementById("addItemBtn").textContent = "Save Item";
+        loadAvailableStock();
+        document.getElementById("sparePartId").focus();
+    }
+
+    function cancelItemEdit() {
+        editingItemIndex = null;
+        document.getElementById("sparePartId").value = "";
+        document.getElementById("quantity").value = "1";
+        document.getElementById("addItemBtn").textContent = "+ Add Item";
+    }
+
     function removeItem(index) {
         cart.splice(index, 1);
+        if (editingItemIndex === index) cancelItemEdit();
+        else if (editingItemIndex !== null && index < editingItemIndex) editingItemIndex--;
         renderCart();
     }
 
@@ -1217,7 +1253,7 @@
                 <td>${index + 1}</td>
                 <td><span class="id-badge">Part #${escapeHtml(item.sparePartId)}</span></td>
                 <td>${escapeHtml(item.quantity)}</td>
-                <td><button class="btn btn-danger" type="button" onclick="removeItem(${index})">Remove</button></td>
+                <td><button class="btn btn-primary" type="button" onclick="editItem(${index})">Edit</button> <button class="btn btn-danger" type="button" onclick="removeItem(${index})">Remove</button></td>
             </tr>
         `).join("");
     }
@@ -1230,6 +1266,7 @@
         document.getElementById("quantity").value = "1";
         document.getElementById("currentTotal").textContent = "Calculated after sale";
         cart = [];
+        cancelItemEdit();
         renderCart();
     }
 
@@ -1293,6 +1330,7 @@
             showMessage(`Sale #${savedSale.saleId} completed successfully.`, "success");
 
             cart = [];
+            cancelItemEdit();
             renderCart();
             document.getElementById("customerId").value = "";
             document.getElementById("sparePartId").value = "";
@@ -1545,3 +1583,4 @@
 
 </body>
 </html>
+
