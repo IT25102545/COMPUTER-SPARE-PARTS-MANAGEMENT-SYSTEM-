@@ -208,29 +208,259 @@
     const pill=a=>`<span class="pill ${a!==false?'active-p':'inactive'}">${a!==false?'Active':'Inactive'}</span>`;
 
     function render(){
-      const q=$('q').value.trim().toLowerCase(),cat=$('fCat').value,st=$('fStock').value;let rows,html;
-      if(tab==='parts'){
-        rows=D.parts.filter(p=>{const s=status(total(p.sparePartId),p.reorderLevel);
-          return(!q||`${p.partCode} ${p.partName} ${p.category?.categoryName} ${p.brand?.brandName}`.toLowerCase().includes(q))&&(!cat||String(p.category?.categoryId)===cat)&&(!st||s.k===st)});
-        html=rows.map(p=>{const t=total(p.sparePartId),s=status(t,p.reorderLevel);
-          return `<tr><td><div class="nm">${esc(p.partCode)} · ${esc(p.partName)}</div><div class="sub">${esc(p.description||'No description')}</div></td>
-          <td>${esc(p.category?.categoryName||'—')}</td><td>${esc(p.brand?.brandName||'—')}</td><td><b>LKR ${money(p.unitPrice)}</b></td>
-          <td>${Number(p.reorderLevel||0)}</td><td><b>${t}</b></td><td><span class="pill ${s.c}">${s.l}</span></td><td>${pill(p.active)}</td>
-          <td><div class="row-act"><button class="btn btn-s btn-sm" onclick="openPart(${p.sparePartId})">Edit</button><button class="btn btn-d btn-sm" onclick="del('${API.parts}',${p.sparePartId},'spare part')">Delete</button></div></td></tr>`}).join('');
-      }else if(tab==='stocks'){
-        rows=D.stocks.filter(i=>{const p=i.sparePart||{},s=status(i.quantity,p.reorderLevel);
-          return(!q||`${p.partCode} ${p.partName} ${p.brand?.brandName} ${i.location?.locationName}`.toLowerCase().includes(q))&&(!cat||String(p.category?.categoryId)===cat)&&(!st||s.k===st)});
-        html=rows.map(i=>{const p=i.sparePart||{},l=i.location||{},s=status(i.quantity,p.reorderLevel);
-          return `<tr><td>#${esc(i.stockId)}</td><td><div class="nm">${esc(p.partCode||'—')} · ${esc(p.partName||'—')}</div><div class="sub">${esc(p.brand?.brandName||'')}</div></td>
-          <td>${esc(l.locationName||'—')}</td><td>${esc(l.locationType||'—')}</td><td><b>${Number(i.quantity||0)}</b></td><td>${Number(p.reorderLevel||0)}</td>
-          <td><span class="pill ${s.c}">${s.l}</span></td><td>${i.lastUpdated?new Date(i.lastUpdated).toLocaleString('en-LK'):'—'}</td></tr>`}).join('');
-      }else{
-        const type=tab==='categories'?'category':'brand',E=ENT[type];
-        rows=D[tab].filter(x=>!q||`${x[E.name]} ${x.description}`.toLowerCase().includes(q));
-        html=rows.map(x=>`<tr><td>#${x[E.id]}</td><td class="nm">${esc(x[E.name])}</td><td>${esc(x.description||'—')}</td><td>${pill(x.active)}</td>
-          <td><div class="row-act"><button class="btn btn-s btn-sm" onclick="openSimple('${type}',${x[E.id]})">Edit</button><button class="btn btn-d btn-sm" onclick="del('${E.url}',${x[E.id]},'${E.label.toLowerCase()}')">Delete</button></div></td></tr>`).join('');
-      }
-      $(tab+'Body').innerHTML=html;$(tab+'Empty').style.display=rows.length?'none':'block';
+        const q = $('q').value.trim().toLowerCase(),
+            cat = $('fCat').value,
+            st = $('fStock').value;
+
+        let rows, html;
+
+        // =========================
+        // SPARE PARTS
+        // =========================
+        if(tab === 'parts'){
+
+            rows = D.parts.filter(p => {
+                const s = status(total(p.sparePartId), p.reorderLevel);
+
+                return (
+                        !q ||
+                        `${p.partCode} ${p.partName} ${p.category?.categoryName} ${p.brand?.brandName}`
+                            .toLowerCase()
+                            .includes(q)
+                    )
+                    &&
+                    (
+                        !cat ||
+                        String(p.category?.categoryId) === cat
+                    )
+                    &&
+                    (
+                        !st ||
+                        s.k === st
+                    );
+            });
+
+            html = rows.map(p => {
+                const t = total(p.sparePartId);
+                const s = status(t, p.reorderLevel);
+
+                return `
+                <tr>
+                    <td>
+                        <div class="nm">
+                            ${esc(p.partCode)} · ${esc(p.partName)}
+                        </div>
+                        <div class="sub">
+                            ${esc(p.description || 'No description')}
+                        </div>
+                    </td>
+
+                    <td>${esc(p.category?.categoryName || '—')}</td>
+
+                    <td>${esc(p.brand?.brandName || '—')}</td>
+
+                    <td>
+                        <b>LKR ${money(p.unitPrice)}</b>
+                    </td>
+
+                    <td>${Number(p.reorderLevel || 0)}</td>
+
+                    <td>
+                        <b>${t}</b>
+                    </td>
+
+                    <td>
+                        <span class="pill ${s.c}">
+                            ${s.l}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${pill(p.active)}
+                    </td>
+
+                    <td>
+                        <div class="row-act">
+                            <button
+                                class="btn btn-s btn-sm"
+                                onclick="openPart(${p.sparePartId})">
+                                Edit
+                            </button>
+
+                            <button
+                                class="btn btn-d btn-sm"
+                                onclick="del('${API.parts}', ${p.sparePartId}, 'spare part')">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            }).join('');
+        }
+
+            // =========================
+            // STOCK BY LOCATION
+        // =========================
+        else if(tab === 'stocks'){
+
+            rows = D.stocks
+                .filter(i => {
+
+                    const p = i.sparePart || {};
+                    const s = status(i.quantity, p.reorderLevel);
+
+                    return (
+                            !q ||
+                            `${p.partCode} ${p.partName} ${p.brand?.brandName} ${i.location?.locationName}`
+                                .toLowerCase()
+                                .includes(q)
+                        )
+                        &&
+                        (
+                            !cat ||
+                            String(p.category?.categoryId) === cat
+                        )
+                        &&
+                        (
+                            !st ||
+                            s.k === st
+                        );
+                })
+
+                // NEWEST UPDATED STOCK FIRST
+                .sort((a, b) =>
+                    new Date(b.lastUpdated || 0) -
+                    new Date(a.lastUpdated || 0)
+                );
+
+            html = rows.map(i => {
+
+                const p = i.sparePart || {};
+                const l = i.location || {};
+                const s = status(i.quantity, p.reorderLevel);
+
+                return `
+                <tr>
+
+                    <td>
+                        #${esc(i.stockId)}
+                    </td>
+
+                    <td>
+                        <div class="nm">
+                            ${esc(p.partCode || '—')} · ${esc(p.partName || '—')}
+                        </div>
+
+                        <div class="sub">
+                            ${esc(p.brand?.brandName || '')}
+                        </div>
+                    </td>
+
+                    <td>
+                        ${esc(l.locationName || '—')}
+                    </td>
+
+                    <td>
+                        ${esc(l.locationType || '—')}
+                    </td>
+
+                    <td>
+                        <b>${Number(i.quantity || 0)}</b>
+                    </td>
+
+                    <td>
+                        ${Number(p.reorderLevel || 0)}
+                    </td>
+
+                    <td>
+                        <span class="pill ${s.c}">
+                            ${s.l}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${
+                    i.lastUpdated
+                        ? new Date(i.lastUpdated).toLocaleString('en-LK')
+                        : '—'
+                }
+                    </td>
+
+                </tr>
+            `;
+            }).join('');
+        }
+
+            // =========================
+            // CATEGORIES / BRANDS
+        // =========================
+        else{
+
+            const type =
+                tab === 'categories'
+                    ? 'category'
+                    : 'brand';
+
+            const E = ENT[type];
+
+            rows = D[tab].filter(x =>
+                !q ||
+                `${x[E.name]} ${x.description}`
+                    .toLowerCase()
+                    .includes(q)
+            );
+
+            html = rows.map(x => `
+            <tr>
+
+                <td>
+                    #${x[E.id]}
+                </td>
+
+                <td class="nm">
+                    ${esc(x[E.name])}
+                </td>
+
+                <td>
+                    ${esc(x.description || '—')}
+                </td>
+
+                <td>
+                    ${pill(x.active)}
+                </td>
+
+                <td>
+                    <div class="row-act">
+
+                        <button
+                            class="btn btn-s btn-sm"
+                            onclick="openSimple('${type}', ${x[E.id]})">
+                            Edit
+                        </button>
+
+                        <button
+                            class="btn btn-d btn-sm"
+                            onclick="del('${E.url}', ${x[E.id]}, '${E.label.toLowerCase()}')">
+                            Delete
+                        </button>
+
+                    </div>
+                </td>
+
+            </tr>
+        `).join('');
+        }
+
+        // =========================
+        // DISPLAY RESULT
+        // =========================
+        $(tab + 'Body').innerHTML = html;
+
+        $(tab + 'Empty').style.display =
+            rows.length
+                ? 'none'
+                : 'block';
     }
 
     /* ---- Spare parts: create / update ---- */
