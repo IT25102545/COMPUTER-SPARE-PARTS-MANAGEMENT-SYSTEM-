@@ -433,11 +433,11 @@
             <button class="btn btn-secondary" type="button" onclick="hideSupplierForm()">Close</button>
         </div>
         <div class="form-grid">
-            <div class="form-group"><label for="supplierName">Supplier Name *</label><input id="supplierName" type="text" maxlength="150" placeholder="Example: Tech Distribution Lanka"></div>
-            <div class="form-group"><label for="contactPerson">Contact Person</label><input id="contactPerson" type="text" maxlength="100" placeholder="Example: Nimal Perera"></div>
-            <div class="form-group"><label for="supplierPhone">Phone</label><input id="supplierPhone" type="text" maxlength="30" placeholder="Example: 0771234567"></div>
-            <div class="form-group"><label for="supplierEmail">Email</label><input id="supplierEmail" type="email" maxlength="120" placeholder="supplier@example.com"></div>
-            <div class="form-group full-width"><label for="supplierAddress">Address</label><textarea id="supplierAddress" maxlength="255" placeholder="Enter supplier address..."></textarea></div>
+            <div class="form-group"><label for="supplierName">Supplier Name *</label><input id="supplierName" type="text" minlength="2" maxlength="150" placeholder="Example: Tech Distribution Lanka" required><span class="hint">2 to 150 characters. Letters, numbers, spaces, and . , &amp; ' ( ) -</span></div>
+            <div class="form-group"><label for="contactPerson">Contact Person</label><input id="contactPerson" type="text" maxlength="100" placeholder="Example: Nimal Perera"><span class="hint">Optional. 2 to 100 letters.</span></div>
+            <div class="form-group"><label for="supplierPhone">Phone</label><input id="supplierPhone" type="tel" inputmode="tel" maxlength="12" placeholder="0771234567"><span class="hint">Optional. Sri Lankan number: 0771234567 or +94771234567</span></div>
+            <div class="form-group"><label for="supplierEmail">Email</label><input id="supplierEmail" type="email" maxlength="120" placeholder="supplier@example.com"><span class="hint">Optional. Example: supplier@example.com</span></div>
+            <div class="form-group full-width"><label for="supplierAddress">Address</label><textarea id="supplierAddress" maxlength="255" placeholder="Enter supplier address..."></textarea><span class="hint">Optional. Up to 255 characters.</span></div>
         </div>
         <div class="form-actions">
             <button class="btn btn-secondary" type="button" onclick="resetSupplierForm()">Reset</button>
@@ -475,11 +475,11 @@
                     </div>
                     <div class="form-group">
                         <label for="orderQuantity">Quantity *</label>
-                        <input id="orderQuantity" type="number" min="1" value="1">
+                        <input id="orderQuantity" type="number" min="1" max="10000" step="1" value="1">
                     </div>
                     <div class="form-group">
                         <label for="orderUnitCost">Unit Cost (LKR) *</label>
-                        <input id="orderUnitCost" type="number" min="0" step="0.01" placeholder="0.00">
+                        <input id="orderUnitCost" type="number" min="0" max="9999999999.99" step="0.01" placeholder="0.00">
                     </div>
                     <button class="btn btn-primary" type="button" onclick="addPurchaseItem()">+ Add Item</button>
                 </div>
@@ -717,18 +717,39 @@
     }
 
     async function saveSupplier() {
-        const supplierName = document.getElementById("supplierName").value.trim();
-        if (!supplierName) {
-            showMessage("Supplier name is required.", "error");
+        const supplierName = document.getElementById("supplierName").value.trim().replace(/\s+/g, " ");
+        const contactPerson = blankToNull(document.getElementById("contactPerson").value);
+        const phone = normalizePhone(document.getElementById("supplierPhone").value);
+        const email = blankToNull(document.getElementById("supplierEmail").value);
+        const address = blankToNull(document.getElementById("supplierAddress").value);
+
+        if (!NAME_PATTERN.test(supplierName)) {
+            showMessage("Supplier name must be 2 to 150 characters and use letters, numbers, spaces, or . , & ' ( ) -", "error");
+            return;
+        }
+        if (contactPerson && !CONTACT_PATTERN.test(contactPerson)) {
+            showMessage("Contact person must be 2 to 100 letters and may include spaces, . ' -", "error");
+            return;
+        }
+        if (phone === false) {
+            showMessage("Phone must be a Sri Lankan number such as 0771234567 or +94771234567.", "error");
+            return;
+        }
+        if (email && (email.length > 120 || !EMAIL_PATTERN.test(email))) {
+            showMessage("Enter a valid email address, up to 120 characters.", "error");
+            return;
+        }
+        if (address && address.length > 255) {
+            showMessage("Address must be 255 characters or fewer.", "error");
             return;
         }
 
         const payload = {
             supplierName,
-            contactPerson: blankToNull(document.getElementById("contactPerson").value),
-            phone: blankToNull(document.getElementById("supplierPhone").value),
-            email: blankToNull(document.getElementById("supplierEmail").value),
-            address: blankToNull(document.getElementById("supplierAddress").value),
+            contactPerson,
+            phone,
+            email: email ? email.toLowerCase() : null,
+            address,
             active: true
         };
 
@@ -771,8 +792,8 @@
         const unitCost = positiveMoney(document.getElementById("orderUnitCost").value);
 
         if (!sparePartId) { showMessage("Please select a spare part.", "error"); return; }
-        if (!quantity) { showMessage("Quantity must be at least 1.", "error"); return; }
-        if (unitCost === null) { showMessage("Unit cost must be 0 or greater.", "error"); return; }
+        if (!quantity || quantity > 10000) { showMessage("Quantity must be a whole number from 1 to 10000.", "error"); return; }
+        if (unitCost === null || unitCost > 9999999999.99) { showMessage("Unit cost must be 0 or greater, with at most 2 decimal places.", "error"); return; }
 
         const part = parts.find(p => Number(p.sparePartId) === Number(sparePartId));
         const existing = purchaseItems.find(item => item.sparePartId === sparePartId);
@@ -1005,16 +1026,27 @@
         return Number.isInteger(number) && number > 0 ? number : null;
     }
 
+    const NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9 .,&'()\-]{1,149}$/;
+    const CONTACT_PATTERN = /^[A-Za-z][A-Za-z .'\-]{1,99}$/;
+    const PHONE_PATTERN = /^(?:07\d{8}|0\d{9}|\+94\d{9})$/;
+    const EMAIL_PATTERN = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
     function positiveMoney(value) {
         const text = String(value ?? "").trim();
-        if (text === "") return null;
+        if (text === "" || !/^\d+(\.\d{1,2})?$/.test(text)) return null;
         const number = Number(text);
-        return Number.isFinite(number) && number >= 0 ? Number(number.toFixed(2)) : null;
+        return Number.isFinite(number) && number >= 0 && number <= 9999999999.99 ? Number(number.toFixed(2)) : null;
     }
 
     function blankToNull(value) {
-        const text = String(value ?? "").trim();
+        const text = String(value ?? "").trim().replace(/\s+/g, " ");
         return text === "" ? null : text;
+    }
+
+    function normalizePhone(value) {
+        const text = String(value ?? "").trim().replace(/[\s-]/g, "");
+        if (text === "") return null;
+        return PHONE_PATTERN.test(text) ? text : false;
     }
 
     function formatMoney(value) {
@@ -1034,6 +1066,10 @@
             const contentType = response.headers.get("content-type") || "";
             if (contentType.includes("application/json")) {
                 const data = await response.json();
+                if (data.fieldErrors) {
+                    const details = Object.values(data.fieldErrors).filter(Boolean).join(" ");
+                    if (details) return details;
+                }
                 return data.message || data.error || data.detail || `Request failed (${response.status}).`;
             }
             const text = await response.text();

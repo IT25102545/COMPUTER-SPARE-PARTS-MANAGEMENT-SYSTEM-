@@ -2,6 +2,8 @@ package com.lankatech.spareparts.supplier.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -36,10 +38,12 @@ public class PurchaseOrderRequestDTO {
 
         @NotNull
         @Min(1)
+        @Max(10000)
         private Integer quantity;
 
         @NotNull
         @DecimalMin("0.00")
+        @Digits(integer = 10, fraction = 2)
         private BigDecimal unitCost;
     }
 }
