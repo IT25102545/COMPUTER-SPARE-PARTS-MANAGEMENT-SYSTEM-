@@ -28,6 +28,21 @@ public class CustomerService {
     public List<Stock> getStocks(){return stocks.findAll();}
     public List<Customer> getCustomers(){return customers.findAll();}
     public Customer addCustomer(Customer c){c.setCustomerId(null);return customers.save(c);}
+    public Customer updateCustomer(Long id, Customer input) {
+        Customer customer = customers.findById(id).orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        customer.setCustomerName(input.getCustomerName());
+        customer.setPhone(input.getPhone());
+        customer.setEmail(input.getEmail());
+        customer.setAddress(input.getAddress());
+        return customers.save(customer);
+    }
+    public void deleteCustomer(Long id) {
+        Customer customer = customers.findById(id).orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        if (reservations.existsByCustomerCustomerId(id) || complaints.existsByCustomerCustomerId(id))
+            throw new IllegalStateException("This customer has reservations or complaints and cannot be deleted. You can edit their details.");
+        customers.delete(customer);
+        customers.flush();
+    }
     public List<Complaint> getComplaints(){return complaints.findAll();}
     public List<Reservation> getReservations(){return reservations.findAll();}
     public Complaint addComplaint(ComplaintRequestDTO r){Customer c=customers.findById(r.getCustomerId()).orElseThrow(()->new

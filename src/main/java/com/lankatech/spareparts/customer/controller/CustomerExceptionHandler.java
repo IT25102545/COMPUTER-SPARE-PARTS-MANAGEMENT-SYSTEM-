@@ -34,6 +34,10 @@ public class CustomerExceptionHandler {
                 ApiErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "Validation failed", messages));
     }
 
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ApiErrorResponse> handleIntegrityConflict(org.springframework.dao.DataIntegrityViolationException ex) {
+        return error(HttpStatus.CONFLICT, "This change conflicts with existing records. Customers with linked records cannot be deleted.");
+    }
     private ResponseEntity<ApiErrorResponse> error(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(
                 ApiErrorResponse.of(status.value(), status.getReasonPhrase(), List.of(message)));

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 public interface ComplaintRepository extends JpaRepository<Complaint,Long> {
+    boolean existsByCustomerCustomerId(Long customerId);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select c from Complaint c where c.complaintId = :id")
     Optional<Complaint> findForUpdate(@Param("id") Long id);
