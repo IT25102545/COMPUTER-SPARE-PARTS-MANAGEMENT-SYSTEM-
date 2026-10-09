@@ -8,6 +8,9 @@ public class CustomerController {
     @GetMapping("/stocks") public List<com.lankatech.spareparts.inventory.entity.Stock> stocks(){return s.getStocks();}
     @GetMapping("/customers") public List<Customer> customers(){return s.getCustomers();}
     @PostMapping("/customers") public Customer add(@Valid @RequestBody Customer c){return s.addCustomer(c);}
+    @PutMapping("/customers/{id}") public Customer updateCustomer(@PathVariable Long id, @Valid @RequestBody Customer c){return s.updateCustomer(id, c);}
+    @DeleteMapping("/customers/{id}") @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
+    public void deleteCustomer(@PathVariable Long id){s.deleteCustomer(id);}
     @GetMapping("/complaints") public List<Complaint> complaints(){return s.getComplaints();}
     @PostMapping("/complaints") public Complaint complaint(@Valid @RequestBody ComplaintRequestDTO r){return
             s.addComplaint(r);}

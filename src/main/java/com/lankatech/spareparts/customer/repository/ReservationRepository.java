@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 public interface ReservationRepository extends JpaRepository<Reservation,Long> {
+    boolean existsByCustomerCustomerId(Long customerId);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select r from Reservation r where r.reservationId = :id")
     Optional<Reservation> findForUpdate(@Param("id") Long id);

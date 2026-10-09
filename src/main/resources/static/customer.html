@@ -312,7 +312,7 @@
             <button class="btn btn-primary" onclick="openCustomerModal()">+ Add Customer</button>
         </div>
         <div class="table-wrap"><table>
-            <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Created</th></tr></thead>
+            <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Created</th><th>Actions</th></tr></thead>
             <tbody id="customersBody"></tbody>
         </table></div>
     </section>
@@ -347,7 +347,7 @@
 <!-- Customer Modal -->
 <div class="modal-backdrop" id="customerModal">
     <div class="modal">
-        <div class="modal-head"><h3>Add New Customer</h3><button class="close" onclick="closeModal('customerModal')">×</button></div>
+        <div class="modal-head"><h3 id="customerModalTitle">Add New Customer</h3><button class="close" onclick="closeModal('customerModal')">×</button></div>
         <div class="modal-body">
             <form id="customerForm" onsubmit="submitCustomer(event)">
                 <div class="form-grid">
@@ -358,7 +358,7 @@
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-light" onclick="closeModal('customerModal')">Cancel</button>
-                    <button type="submit" class="btn btn-success">Save Customer</button>
+                    <button id="saveCustomerButton" type="submit" class="btn btn-success">Save Customer</button>
                 </div>
             </form>
         </div>
@@ -567,8 +567,8 @@
             <tr>
                 <td>${esc(c.customerId)}</td><td><strong>${esc(c.customerName)}</strong></td>
                 <td>${esc(c.phone || '-')}</td><td>${esc(c.email || '-')}</td>
-                <td>${esc(c.address || '-')}</td><td>${esc(fmtDate(c.createdAt))}</td>
-            </tr>`).join('') : `<tr><td colspan="6" class="empty">No customer records found.</td></tr>`;
+                <td>${esc(c.address || '-')}</td><td>${esc(fmtDate(c.createdAt))}</td><td><button type="button" class="btn btn-light btn-sm" onclick="editCustomer(${Number(c.customerId)})">Edit</button> <button type="button" class="btn btn-danger btn-sm" onclick="deleteCustomer(${Number(c.customerId)})">Delete</button></td>
+            </tr>`).join('') : `<tr><td colspan="7" class="empty">No customer records found.</td></tr>`;
     }
 
     function reservationActions(r) {
@@ -673,7 +673,37 @@
 
     function openModal(id) { $(id).classList.add('show'); }
     function closeModal(id) { $(id).classList.remove('show'); }
-    function openCustomerModal() { $('customerForm').reset(); openModal('customerModal'); }
+    let editingCustomerId = null;
+    function openCustomerModal() {
+        editingCustomerId = null;
+        $('customerForm').reset();
+        $('customerModalTitle').textContent = 'Add New Customer';
+        $('saveCustomerButton').textContent = 'Save Customer';
+        openModal('customerModal');
+    }
+    function editCustomer(id) {
+        const customer = state.customers.find(c => Number(c.customerId) === id);
+        if (!customer) return;
+        editingCustomerId = id;
+        $('customerName').value = customer.customerName || '';
+        $('customerPhone').value = customer.phone || '';
+        $('customerEmail').value = customer.email || '';
+        $('customerAddress').value = customer.address || '';
+        $('customerModalTitle').textContent = 'Edit Customer';
+        $('saveCustomerButton').textContent = 'Save Changes';
+        openModal('customerModal');
+    }
+    async function deleteCustomer(id) {
+        const customer = state.customers.find(c => Number(c.customerId) === id);
+        if (!customer || !confirm('Delete customer "' + customer.customerName + '"? This cannot be undone.')) return;
+        setLoading(true);
+        try {
+            await api(API.customers + '/' + id, {method:'DELETE'});
+            showToast('Customer deleted successfully.', 'success');
+            await refreshAll(); switchTab('customers');
+        } catch (e) { showToast(e.message, 'error'); }
+        finally { setLoading(false); }
+    }
     function openReservationModal() {
         if (!state.customers.length) { showToast('Add a customer before creating a reservation.', 'info'); openCustomerModal(); return; }
         $('reservationForm').reset(); fillCustomerSelects(); fillPartSelect(); $('reservationQuantity').value = 1; openModal('reservationModal');
@@ -686,13 +716,13 @@
     async function submitCustomer(event) {
         event.preventDefault(); setLoading(true);
         try {
-            await api(API.customers, { method: 'POST', body: JSON.stringify({
+            await api(editingCustomerId === null ? API.customers : API.customers + '/' + editingCustomerId, { method: editingCustomerId === null ? 'POST' : 'PUT', body: JSON.stringify({
                 customerName: $('customerName').value.trim(),
                 phone: $('customerPhone').value.trim() || null,
                 email: $('customerEmail').value.trim() || null,
                 address: $('customerAddress').value.trim() || null
             })});
-            closeModal('customerModal'); showToast('Customer added successfully.', 'success'); await refreshAll(); switchTab('customers');
+            closeModal('customerModal'); showToast(editingCustomerId === null ? 'Customer added successfully.' : 'Customer updated successfully.', 'success'); editingCustomerId = null; await refreshAll(); switchTab('customers');
         } catch (e) { showToast(e.message, 'error'); } finally { setLoading(false); }
     }
 
